@@ -12,6 +12,7 @@
         "sourceMap": true,
         "skipLibCheck": true,
         "allowJs": true,
+        "noImplicitAny": false,
         "jsx": "preserve"
     },
     "exclude": [

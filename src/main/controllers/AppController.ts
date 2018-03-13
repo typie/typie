@@ -11,13 +11,7 @@ export default class AppController
 
         // just for testing
         setTimeout(function () {
-            new Haste().fuzzySearch('hello').orderBy('score').desc().go()
-                .then((data) => {
-                    console.log('returned', data);
-                })
-                .catch((data) => {
-                    console.log('error', data);
-                })
+
         }, 5000);
     }
 

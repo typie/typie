@@ -1,31 +1,14 @@
-
-
 import GoDispatcher from "./GoDispatcher";
-
-class Packet
-{
-    private command: string = '';
-    private payload: object = {};
-    constructor(command: string, payload: object) {
-        this.command = command;
-        this.payload = payload;
-    }
-}
-class SearchPayload
-{
-    public type: string = 'fuzzy';   // can be 'fuzzy' | '' |
-    public value: string = '';  // the actual search valu
-    public orderBy: string = 'score'; // the name of the field to be ordered by
-    public direction: string = 'desc';
-    public package: string = '';
-}
+import Packet from "../models/Packet";
+import SearchPayload from "../models/SearchPayload";
+import AbstractHastePackage from "../models/AbstractHastePackage";
 
 export default class Haste
 {
     private search: SearchPayload = new SearchPayload;
 
-    constructor() {
-        this.search.packageName = 'caller';
+    constructor(hastePackage: AbstractHastePackage) {
+        this.search.packageName = hastePackage.packageName;
     }
 
     fuzzySearch(value: string) {

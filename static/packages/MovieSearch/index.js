@@ -1,17 +1,17 @@
 const {app, shell} = require('electron');
 const skullIco = 'static/themes/default/images/skull.png';
 import Haste from '../../../src/main/services/Haste';
+import AbstractHastePackage from "../../../src/main/models/AbstractHastePackage";
 
-class MovieSearch {
+class MovieSearch extends AbstractHastePackage
+{
     constructor(win){
-        this.win = win;
+        super(win);
+        this.haste = new Haste(this);
     }
+
     search(value){
-        let res = new Haste()
-            .fuzzySearch(value)
-            .orderBy('score')
-            .desc()
-            .go()
+        let res = this.haste.fuzzySearch(value).orderBy('score').desc().go()
             .then((data) => {
                 console.log('returned', data);
             })
@@ -19,15 +19,15 @@ class MovieSearch {
                 console.log('error', data);
             });
 
-        let res = this.searchIt(this.db.catalog, value, 'MovieSearch')
-        let newSearch = [{title: value, icon: skullIco, d:'Search Movie / Tv Show', t: 'MovieSearch', path: value}]
+        let newSearch = [{title: value, icon: skullIco, d:'Search Movie / Tv Show', t: 'MovieSearch', path: value}];
         if (res.length > 0 && res[0].path === value) {
           return res
         }
         return newSearch.concat(res)
     }
-    activate(record) {
-        this.updateCalled(record)
+
+    action(item) {
+        this.updateCalled(item);
         let eleet = 'http://1337x.to/sort-search/'+record.path+'/seeders/desc/1/';
         let imdb = 'https://www.imdb.com/find?s=all&q='+record.path+'';
         let youtube = 'https://www.youtube.com/results?search_query='+record.path+'';
