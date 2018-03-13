@@ -1,0 +1,64 @@
+const {app, shell} = require('electron');
+const skullIco = 'static/themes/default/images/skull.png';
+import Haste from '../../../src/main/services/Haste';
+
+class MovieSearch {
+    constructor(win){
+        this.win = win;
+    }
+    search(value){
+        let res = new Haste()
+            .fuzzySearch(value)
+            .orderBy('score')
+            .desc()
+            .go()
+            .then((data) => {
+                console.log('returned', data);
+            })
+            .catch((data) => {
+                console.log('error', data);
+            });
+
+        let res = this.searchIt(this.db.catalog, value, 'MovieSearch')
+        let newSearch = [{title: value, icon: skullIco, d:'Search Movie / Tv Show', t: 'MovieSearch', path: value}]
+        if (res.length > 0 && res[0].path === value) {
+          return res
+        }
+        return newSearch.concat(res)
+    }
+    activate(record) {
+        this.updateCalled(record)
+        let eleet = 'http://1337x.to/sort-search/'+record.path+'/seeders/desc/1/';
+        let imdb = 'https://www.imdb.com/find?s=all&q='+record.path+'';
+        let youtube = 'https://www.youtube.com/results?search_query='+record.path+'';
+        let subscene = 'https://subscene.com/subtitles/title?q='+record.path+'&l=';
+        let opensubs = 'https://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-'+record.path+'';
+        shell.openItem(opensubs);
+        shell.openItem(subscene);
+        shell.openItem(youtube);
+        shell.openItem(imdb);
+        shell.openItem(eleet);
+        this.win.send('action', 'hide');
+    }
+
+    refresh() {
+        let res = this.db.catalog.chain().where((obj)=>obj.t=='MovieSearch').simplesort("$loki", 'desc').limit(10).data();
+        return [res, this.db.catalog.data.length];
+    }
+    searchIt(catalog, searchValue) {
+      return catalog.chain()
+        .where(function (obj) {
+          let score = obj.title.score(searchValue, 0.5) * 1000
+          if (score > 200) {
+            obj.score = obj.called ? (score + (obj.called) * 200) : score
+            return true
+          }
+          return false
+        })
+        .simplesort('score', 'desc')
+        .limit(10)
+        .data()
+    }
+}
+module.exports = MovieSearch;
+

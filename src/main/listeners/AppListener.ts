@@ -7,6 +7,6 @@ export default class AppListener
     public static listen(win: MainWindowController):void {
         app.on('window-all-closed', () => AppController.windowAllClosed());
         app.on('activate', () => win.activate());
-        app.on('ready', () => win.createWindow());
+        app.on('ready', () => AppController.bootstrapApp(win));
     }
 }
