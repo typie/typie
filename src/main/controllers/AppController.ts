@@ -1,7 +1,7 @@
 import {app} from 'electron';
 import MainWindowController from "./MainWindowController";
 import GoDispatcher from "../services/GoDispatcher";
-import Haste from "../services/Haste";
+import MovieSearch from "../../../static/packages/MovieSearch/index.js";
 
 export default class AppController
 {
@@ -9,9 +9,16 @@ export default class AppController
         win.createWindow();
         GoDispatcher.startListen();
 
+        let movieSearch = new MovieSearch(win);
         // just for testing
         setTimeout(function () {
+            movieSearch.insert('rotem1 more some');
+            //movieSearch.insert('rotem2 more some');
+            // movieSearch.insert('rotem3 3more some');
+        }, 3000);
 
+        setTimeout(function () {
+            movieSearch.search('rotem1');
         }, 5000);
     }
 

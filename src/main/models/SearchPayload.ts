@@ -6,4 +6,5 @@ export default class SearchPayload
     public orderBy: string = 'score'; // the name of the field to be ordered by
     public direction: string = 'desc';
     public packageName: string = '';
+    public db: string = '';
 }

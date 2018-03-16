@@ -1,7 +1,7 @@
-import Haste from "../services/Haste";
-import AbstractHastePackage from "../models/AbstractHastePackage";
+//import Haste from "../services/Haste";
+/*
 
-export default class PackagesController extends AbstractHastePackage
+export default class PackagesController
 {
     public static init()
     {
@@ -21,4 +21,4 @@ export default class PackagesController extends AbstractHastePackage
             //}
         }
     }
-}
+}*/

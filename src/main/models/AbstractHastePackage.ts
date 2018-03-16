@@ -5,13 +5,16 @@ import HasteRowItem from "./HasteRowItem";
 
 export default class AbstractHastePackage implements HastePackageInterface
 {
-    public packageData: object;
-    public packageName: string;
+    protected packageData: object;
+    protected packageName: string;
     protected win: MainWindowController;
     constructor(win) {
         this.packageData = {name: this.constructor.name, path: __dirname};
         this.packageName = this.constructor.name;
         this.win = win;
+    }
+    getPackageName(): string {
+        return this.packageName;
     }
     search(value: string) {console.error('No override "search" method found in ' + this.packageName)}
     action(rowItem: HasteRowItem) {console.error('No override "action" method found in ' + this.packageName)}

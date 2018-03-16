@@ -2,12 +2,27 @@ const {app, shell} = require('electron');
 const skullIco = 'static/themes/default/images/skull.png';
 import Haste from '../../../src/main/services/Haste';
 import AbstractHastePackage from "../../../src/main/models/AbstractHastePackage";
+import HasteRowItem from "../../../src/main/models/HasteRowItem";
 
-class MovieSearch extends AbstractHastePackage
+export default class MovieSearch extends AbstractHastePackage
 {
+
     constructor(win){
         super(win);
-        this.haste = new Haste(this);
+        this.packageName = 'MovieSearch';
+        this.db          = 'MovieSearch';
+        this.haste       = new Haste(this);
+    }
+
+    insert(value) {
+        let item = new HasteRowItem();
+        item.title = value;
+        item.description = "";
+        item.icon = skullIco;
+        item.path = "";
+        let res = this.haste.insert(item).go()
+            .then((data) => console.log(data))
+            .catch((err) => console.error(err));
     }
 
     search(value){
@@ -60,5 +75,5 @@ class MovieSearch extends AbstractHastePackage
         .data()
     }
 }
-module.exports = MovieSearch;
+//module.exports = MovieSearch;
 

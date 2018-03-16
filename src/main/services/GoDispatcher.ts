@@ -1,6 +1,3 @@
-import { resolve } from "url";
-
-//import * as Go from 'gonode';
 const Go = require('gonode').Go;
 
 export default class GoDispatcher
@@ -8,8 +5,9 @@ export default class GoDispatcher
     private static go: any;
 
     public static startListen() {
-        console.log('start GO service');
-        GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\main.go"});
+        console.log('Starting Haste Service');
+        //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\main.go"});
+        GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\haste.exe"});
         GoDispatcher.go.init(this.register) // We must always initialize gonode before executing any commands
     }
 
@@ -25,10 +23,10 @@ export default class GoDispatcher
     }
 
     private static register(): any {
-        GoDispatcher.go.execute({text: 'listening'}, (result: any, response: any) => {
+        GoDispatcher.go.execute({command: 'start'}, (result: any, response: any) => {
             if (result.ok) { // Check if response is ok
                 // In our case we just echo the command, so we can get our text back
-                console.log('Go responded: ' + response.text);
+                console.log('Haste responded: ', response);
             }
         });
     }

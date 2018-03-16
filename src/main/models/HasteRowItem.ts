@@ -1,9 +1,11 @@
 
 export default class HasteRowItem
 {
-    public title: string = '';
-    public packageName: string = '';
-    public description: string = '';
-    public path: string = '';
-    public icon: string = '';
+    public db: string | undefined;
+    public description: string | undefined;
+    public icon: string | undefined;
+    public packageName: string | undefined;
+    public path: string | undefined;
+    public title: string | undefined;
+    public unixTime?: string | undefined;
 }
