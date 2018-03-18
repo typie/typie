@@ -1,23 +1,23 @@
 const {app, shell} = require('electron');
 const skullIco = 'static/themes/default/images/skull.png';
-import Haste from '../../../src/main/services/Haste';
-import AbstractHastePackage from "../../../src/main/models/AbstractHastePackage";
-import HasteRowItem from "../../../src/main/models/HasteRowItem";
+const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
 
-export default class MovieSearch extends AbstractHastePackage
+class MovieSearch extends AbstractHastePackage
 {
 
-    constructor(win){
-        super(win);
+    constructor(Haste){
+        super();
         this.packageName = 'MovieSearch';
-        this.db          = 'MovieSearch';
-        this.haste       = new Haste(this);
+        this.haste       = new Haste(this.packageName);
+
+        this.insert('supernatural');
+        this.insert('the walking dead');
     }
 
     insert(value) {
         let item = new HasteRowItem();
         item.title = value;
-        item.description = "";
+        item.description = "movie search";
         item.icon = skullIco;
         item.path = "";
         let res = this.haste.insert(item).go()
@@ -26,9 +26,11 @@ export default class MovieSearch extends AbstractHastePackage
     }
 
     search(value){
+        let startTime = Date.now();
         let res = this.haste.fuzzySearch(value).orderBy('score').desc().go()
             .then((data) => {
                 console.log('returned', data);
+                console.log('time:', (Date.now() - startTime));
             })
             .catch((data) => {
                 console.log('error', data);
@@ -75,5 +77,5 @@ export default class MovieSearch extends AbstractHastePackage
         .data()
     }
 }
-//module.exports = MovieSearch;
+module.exports = MovieSearch;
 

@@ -3,6 +3,7 @@ const Go = require('gonode').Go;
 export default class GoDispatcher
 {
     private static go: any;
+    public static listening: boolean = false;
 
     public static startListen() {
         console.log('Starting Haste Service');
@@ -27,6 +28,9 @@ export default class GoDispatcher
             if (result.ok) { // Check if response is ok
                 // In our case we just echo the command, so we can get our text back
                 console.log('Haste responded: ', response);
+                if (response.err == 0) {
+                    GoDispatcher.listening = true;
+                }
             }
         });
     }

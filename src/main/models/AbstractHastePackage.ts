@@ -7,11 +7,9 @@ export default class AbstractHastePackage implements HastePackageInterface
 {
     protected packageData: object;
     protected packageName: string;
-    protected win: MainWindowController;
-    constructor(win) {
+    constructor() {
         this.packageData = {name: this.constructor.name, path: __dirname};
         this.packageName = this.constructor.name;
-        this.win = win;
     }
     getPackageName(): string {
         return this.packageName;

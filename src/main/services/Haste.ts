@@ -1,7 +1,6 @@
 import GoDispatcher from "./GoDispatcher";
 import Packet from "../models/Packet";
 import SearchPayload from "../models/SearchPayload";
-import AbstractHastePackage from "../models/AbstractHastePackage";
 import HasteRowItem from "../models/HasteRowItem";
 
 export default class Haste
@@ -13,11 +12,17 @@ export default class Haste
     private command: string;
     private payload: object;
 
-    constructor(hastePackage: AbstractHastePackage) {
-        this.db = hastePackage.getPackageName();
-        this.packageName = hastePackage.getPackageName();
+    constructor(packageName: string, db?: string) {
+        this.db = db ? db : packageName;
+        this.packageName = packageName;
         this.command = '';
         this.payload = {};
+    }
+
+    addCollection() {
+        this.command = 'addCollection';
+        this.payload = {name: this.packageName};
+        return this;
     }
 
     insert(item: HasteRowItem) {

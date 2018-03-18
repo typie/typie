@@ -1,25 +1,30 @@
 import {app} from 'electron';
 import MainWindowController from "./MainWindowController";
 import GoDispatcher from "../services/GoDispatcher";
-import MovieSearch from "../../../static/packages/MovieSearch/index.js";
+import PackageLoader from "../services/PackageLoader"
+//import MovieSearch from "../../../static/packages/MovieSearch/index.js";
 
 export default class AppController
 {
+    public static randomStr() {
+        let text = "";
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (let i = 0; i < 100; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
     public static bootstrapApp(win: MainWindowController) {
-        win.createWindow();
         GoDispatcher.startListen();
+        let bootstrap = setInterval(() => {
+            if (GoDispatcher.listening) {
+                clearInterval(bootstrap);
+                PackageLoader.init();
+            }
+        }, 1);
 
-        let movieSearch = new MovieSearch(win);
-        // just for testing
-        setTimeout(function () {
-            movieSearch.insert('rotem1 more some');
-            //movieSearch.insert('rotem2 more some');
-            // movieSearch.insert('rotem3 3more some');
-        }, 3000);
-
-        setTimeout(function () {
-            movieSearch.search('rotem1');
-        }, 5000);
+        win.createWindow();
     }
 
     public static windowAllClosed() {

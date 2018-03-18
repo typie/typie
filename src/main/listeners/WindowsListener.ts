@@ -1,8 +1,10 @@
+import {ipcMain} from 'electron';
 import AbstractWindowController from "../controllers/AbstractWindowController";
+import SearchController from "../controllers/SearchController";
 
-export default class WindowsListener
+class WindowsListener
 {
-    protected static start(win: AbstractWindowController) {
+    protected start(win: AbstractWindowController) {
 
         win.on('resize',    () => console.log('resize happen'));
         win.on('blur',      () => console.log('blur happen'));
@@ -10,9 +12,11 @@ export default class WindowsListener
 
         win.onWebContent('did-finish-load', () => win.init());
         win.onWebContent('devtools-opened', () => win.setFocusAfterDevToolOpen());
+
+        ipcMain.on('search', (event, data) => SearchController.search(event, data));
     }
 
-    public static listen(win: AbstractWindowController):void {
+    public listen(win: AbstractWindowController):void {
         let bootstrap = setInterval(() => {
             if (win.isExist) {
                 clearInterval(bootstrap);
@@ -21,3 +25,4 @@ export default class WindowsListener
         }, 5);
     }
 }
+export default new WindowsListener();
