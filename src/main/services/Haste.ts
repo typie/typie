@@ -10,7 +10,7 @@ export default class Haste
     private packageName: string;
 
     private command: string;
-    private payload: object;
+    private payload: any;
 
     constructor(packageName: string, db?: string) {
         this.db = db ? db : packageName;

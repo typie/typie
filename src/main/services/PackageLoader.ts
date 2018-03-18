@@ -1,7 +1,6 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import GoDispatcher from "./GoDispatcher";
 import Haste from "./Haste";
 import AbstractHastePackage from "../../../src/main/models/AbstractHastePackage";
 import HasteRowItem from "../models/HasteRowItem";

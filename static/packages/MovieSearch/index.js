@@ -1,4 +1,4 @@
-const {app, shell} = require('electron');
+const {shell} = require('electron');
 const skullIco = 'static/themes/default/images/skull.png';
 const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
 

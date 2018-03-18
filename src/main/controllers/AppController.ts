@@ -1,20 +1,11 @@
 import {app} from 'electron';
 import MainWindowController from "./MainWindowController";
 import GoDispatcher from "../services/GoDispatcher";
-import PackageLoader from "../services/PackageLoader"
+import PackageLoader from "../services/PackageLoader";
 //import MovieSearch from "../../../static/packages/MovieSearch/index.js";
 
 export default class AppController
 {
-    public static randomStr() {
-        let text = "";
-        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for (let i = 0; i < 100; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
-    }
     public static bootstrapApp(win: MainWindowController) {
         GoDispatcher.startListen();
         let bootstrap = setInterval(() => {
@@ -23,7 +14,6 @@ export default class AppController
                 PackageLoader.init();
             }
         }, 1);
-
         win.createWindow();
     }
 

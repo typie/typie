@@ -2,6 +2,7 @@
     "compileOnSave": false,
     "compilerOptions": {
         "target": "es2016",
+        //"module": "system",
         "moduleResolution": "node",
         "pretty": true,
         "newLine": "LF",
@@ -14,8 +15,14 @@
         "allowJs": true,
         "noImplicitAny": false,
         "jsx": "preserve"
+        //"noEmit": true,
+        //"preserveConstEnums": true,
+        //"removeComments": false
     },
     "exclude": [
-      "node_modules"
-    ]
+      //"node_modules"
+    ],
+    "typeAcquisition": {
+        "enable": true
+    }
 }
