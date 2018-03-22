@@ -8,7 +8,8 @@ export default class GoDispatcher
     public static startListen() {
         console.log('Starting Haste Service');
         //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\main.go"});
-        GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\haste.exe"});
+        //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\haste.exe"});
+        GoDispatcher.go = new Go({path: "static/bin/haste/haste"});
         GoDispatcher.go.init(this.register) // We must always initialize gonode before executing any commands
     }
 

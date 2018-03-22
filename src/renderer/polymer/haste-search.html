@@ -1,0 +1,69 @@
+<link rel="import"  href="./bower_components/polymer/polymer-element.html">
+<link rel="import"  href="./haste-styles.html">
+
+<dom-module id="haste-search">
+
+    <template>
+        <style include="haste-styles"></style>
+        <input placeholder="Your name here...">
+    </template>
+
+    <script>
+        //import { default as minifyCssString } from 'minify-css-string';
+        class HasteSearch extends Polymer.Element {
+            static get is() { return "haste-search"; }
+
+            constructor() {
+                super();
+                document.addEventListener('keydown', e => {
+                    //e.preventDefault();
+                    console.log(e);
+                    switch (e.code) {
+                        case "Tab": this.onTab(e);
+                        case "Enter": this.onEnter(e);
+                        case "ArrowUp": this.onArrowUp(e);
+                        case "ArrowDown": this.onArrowDown(e);
+                        case "Backspace": this.onBackspace(e);
+                    }
+                });
+            }
+            onTab(e) {e.preventDefault();}
+            onEnter(e) {e.preventDefault();}
+            onArrowUp(e) {e.preventDefault();}
+            onArrowDown(e) {e.preventDefault();}
+            onBackspace(e) {}
+
+            // configure the owner property
+            static get properties() {
+                return {
+                    owner: {
+                        type: String
+                    }
+                };
+            }
+
+            removeStyles() {
+                let styles = this.shadowRoot.querySelectorAll('style');
+                console.log(styles);
+                for (let i in styles) {
+                    if (styles[i] instanceof Node) {
+                        this.shadowRoot.removeChild(styles[i]);
+                    }
+                }
+            }
+            loadStyles() {
+                console.log('Loading styles...');
+                let cssString = minifyCssString("input {color: blue;}");
+                let style = document.createElement('style');
+                style.appendChild(document.createTextNode(cssString));
+                //style.setAttribute('include', 'haste-styles');
+                this.shadowRoot.appendChild(style);
+                //location.reload();
+            }
+
+
+        }
+        customElements.define(HasteSearch.is, HasteSearch);
+    </script>
+
+</dom-module>

@@ -13,6 +13,7 @@
     "@types/js-yaml": "^3.10.1",
     "gonode": "rotemgrim/gonode",
     "js-yaml": "^3.11.0",
+    "minify-css-string": "^1.0.0",
     "source-map-support": "^0.5.3",
     "vue": "^2.5.14",
     "vue-round-filter": "^1.1.2"
