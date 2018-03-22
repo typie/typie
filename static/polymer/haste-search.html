@@ -53,7 +53,8 @@
             }
             loadStyles() {
                 console.log('Loading styles...');
-                let cssString = minifyCssString("input {color: blue;}");
+                //let cssString = minifyCssString("input {color: blue;}");
+                let cssString = "input {color: blue;}";
                 let style = document.createElement('style');
                 style.appendChild(document.createTextNode(cssString));
                 //style.setAttribute('include', 'haste-styles');
