@@ -1,15 +1,16 @@
-
+import * as fs from 'fs';
+import * as path from "path";
 import {BrowserWindowConstructorOptions} from 'electron';
 import AbstractWindowController from "./AbstractWindowController";
 import AppGlobal from "../helpers/AppGlobal";
-
+import StyleLoader from "../services/StyleLoader";
 
 export default class MainWindowController extends AbstractWindowController
 {
     private options: BrowserWindowConstructorOptions = {
         show: false,
-        width: 200,
-        height: 600,
+        width: 475,
+        height: 300,
     };
 
     // create main BrowserWindow when electron is ready
@@ -27,6 +28,7 @@ export default class MainWindowController extends AbstractWindowController
 
     public init() {
         console.log('content window finished loading in ' + (AppGlobal.getTimeSinceInit() / 1000) + ' seconds');
+        new StyleLoader(this);
         this.show();
     }
 }

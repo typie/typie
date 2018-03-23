@@ -1,5 +1,3 @@
-//import MovieSearch from "../../../static/packages/MovieSearch/index.js";
-
 
 import Haste from "../services/Haste";
 export default class SearchController
@@ -12,12 +10,9 @@ export default class SearchController
         } else {
             new Haste('global').fuzzySearch(search.value).go()
                 .then(res => {
-                    console.log(res);
-                    event.sender.send('resultList', res.data);
+                    event.sender.send('resultList', res);
                 })
                 .catch(err => console.error(err))
         }
-        //let movieSearch = new MovieSearch();
-        //movieSearch.search(value);
     }
 }

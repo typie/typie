@@ -8,16 +8,19 @@ export default class GoDispatcher
     public static startListen() {
         console.log('Starting Haste Service');
         //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\main.go"});
-        //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\haste.exe"});
-        GoDispatcher.go = new Go({path: "static/bin/haste/haste"});
+        GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\haste.exe"});
+        //GoDispatcher.go = new Go({path: "static/bin/haste/haste"});
         GoDispatcher.go.init(this.register) // We must always initialize gonode before executing any commands
     }
 
     public static send(packet: any) {
+        //let sendTime = Date.now();
+        console.log('packet', packet);
         return new Promise((resolve, reject) => {
             GoDispatcher.go.execute(packet, (result: any, response: any) => {
                 if (result.ok) {
-                   return resolve(response);
+                    //console.log('golang time: ', Date.now() - sendTime);
+                    return resolve(response);
                 }
                 return reject(response);
             });

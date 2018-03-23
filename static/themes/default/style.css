@@ -48,7 +48,7 @@
     margin: 3px 5px 0 5px; }
   .results li {
     cursor: pointer;
-    height: 36px;
+    height: 38px;
     list-style-type: none;
     color: #fff;
     padding: 0 4px 0 2px;
@@ -87,7 +87,7 @@
         color: #a6e5ff; }
     .results li > img {
       float: left;
-      width: 32px;
+      min-width: 32px;
       height: 32px;
       margin-right: 4px; }
 
@@ -168,6 +168,11 @@ body {
     align-items: center;
     justify-content: flex-start;
     flex-direction: column; }
+    #app .footer .search-time, #consoleVue .footer .search-time {
+      position: absolute;
+      left: 22px;
+      line-height: 13px;
+      font-family: "Roboto Condensed", sans-serif; }
     #app .footer .handle, #consoleVue .footer .handle {
       text-align: center;
       text-shadow: 0px -1px 0px #000;

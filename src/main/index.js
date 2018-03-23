@@ -1,3 +1,5 @@
+global.__static = "";
+
 import Settings from "./services/Settings";
 import AppGlobal from './helpers/AppGlobal';
 import AppListener from './listeners/AppListener';

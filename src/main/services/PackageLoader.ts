@@ -1,4 +1,4 @@
-
+declare const __static: any;
 import * as fs from "fs";
 import * as path from "path";
 import Haste from "./Haste";
@@ -22,22 +22,20 @@ export default class PackageLoader
         let packagesDirs = PackageLoader.getDirectories(packagesPath);
         console.log(packagesDirs);
         packagesDirs.forEach((dirName) => {
-            let absPath = path.join(packagesPath, dirName + "/index.js");
-            console.log('absPath', absPath);
-            if (fs.existsSync(absPath)) {
-                console.log('absPath2', absPath);
+            let absPath = path.join(packagesPath, dirName);
+            //console.log('absPath', absPath);
+            if (fs.existsSync(absPath + '\\index.js')) {
                 PackageLoader.loadPackage(dirName, absPath);
             }
         });
     }
 
     public static loadPackage(packageName, absPath) {
-        let packagePath = '../../static/packages/MovieSearch/index.js';
-        //path.relative(__dirname, absPath);
-        //let packagePath = path.normalize(path.relative(__static, absPath)).replace(/\\/g, "/");
-        //let packagePath = absPath;
+        absPath = path.relative(__static, absPath);
+        absPath = absPath.replace(/\\/g, '/');
+        let packagePath = '../../static/' + absPath + '/index.js';
         console.log('trying to load package from1 ' + packagePath);
-        //eval("console.log(path.relative(__dirname,absPath))");
+
         let tmp = new Haste(packageName);
         tmp.addCollection().go()
             .then((data) => {
@@ -51,12 +49,12 @@ export default class PackageLoader
 
                 let item = new HasteRowItem();
                 item.description = "Plugin";
-                item.icon = "./skull.png";
+                item.icon = absPath + '/' +packages[packageName].icon;
                 item.title = packageName;
                 new Haste('global').insert(item).go().then(res => console.log(res))
                     .catch(err => console.error(err))
             })
-            .catch((err) => console.error('trying to load package from2 '+packagePath, err));
+            .catch((err) => console.error('cannot load package from: '+packagePath, err));
     }
 
     public static getDirectories(path) {

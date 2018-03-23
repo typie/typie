@@ -1,11 +1,37 @@
 <link rel="import"  href="./bower_components/polymer/polymer-element.html">
-<link rel="import"  href="./haste-styles.html">
+<link rel="import" href="./bower_components/polymer/lib/elements/dom-repeat.html">
 
 <dom-module id="haste-search">
-
     <template>
-        <style include="haste-styles"></style>
-        <input placeholder="Your name here...">
+        <div id="app">
+            <div class="icon"></div>
+            <div class="search">
+                <span class="prefix" v-if="currentPackage!=defaultPackage">[[currentPackage]]</span>
+                <input autofocus id="inputField" type="text" placeholder=""/>
+                <div class="close" onclick="close()">x</div>
+            </div>
+            <ul class="results">
+                <template id="resultList" is="dom-repeat" items="{{itemList}}" as="item">
+                    <li onclick="click()" class$="[[item.selected]]">
+                        <img src="[[item.icon]]">
+                        <div class="texts">
+                            <span>{{ item.title }}</span>
+                            <p v-if="item.d !== undefined">[[item.d]]</p>
+                            <p v-else>[[item.path]]</p>
+                        </div>
+                        <div class="score">
+                            [[item.score]]<span v-if="item.called"> + [[item.called]]</span>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+            <div class="footer">
+                <div class="search-time">[[searchTime]]</div>
+                <div class="handle">· · · ·</div>
+                <div class="status"><span v-if="workers > 0"> items in Catalog · Haste 1.0</span>
+                </div>
+            </div>
+        </div>
     </template>
 
     <script>
@@ -15,54 +41,128 @@
 
             constructor() {
                 super();
-                document.addEventListener('keydown', e => {
-                    //e.preventDefault();
-                    console.log(e);
-                    switch (e.code) {
-                        case "Tab": this.onTab(e);
-                        case "Enter": this.onEnter(e);
-                        case "ArrowUp": this.onArrowUp(e);
-                        case "ArrowDown": this.onArrowDown(e);
-                        case "Backspace": this.onBackspace(e);
-                    }
-                });
+                this.input = null;
+                this.searchTimer;
             }
-            onTab(e) {e.preventDefault();}
-            onEnter(e) {e.preventDefault();}
-            onArrowUp(e) {e.preventDefault();}
-            onArrowDown(e) {e.preventDefault();}
-            onBackspace(e) {}
 
-            // configure the owner property
             static get properties() {
                 return {
-                    owner: {
-                        type: String
-                    }
-                };
+                    selectedIndex: {
+                        type: Number,
+                        observer: '_indexChange'
+                    },
+                    selectedItem: Object,
+                    currentPackage: String,
+                    itemList: Array,
+                    jsonList: String,
+                    searchTime: String,
+                }
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+                this.input = this.shadowRoot.getElementById("inputField");
+                this.input.addEventListener('input', () => this.inputChange());
+                this.input.addEventListener('keydown', e => this.keyDown(e));
+            }
+
+            click(d) {
+                console.log('click');
+                console.log(d);
+                console.log(this.selectedItem);
+                console.log( this.get('selectedItem'));
+            }
+            keyDown(e) {
+                switch (e.code) {
+                    case "Tab":         this.onTab(e); break;
+                    case "Enter":       this.onEnter(e); break;
+                    case "ArrowUp":     this.onArrowUp(e); break;
+                    case "ArrowDown":   this.onArrowDown(e); break;
+                    case "Backspace":   this.onBackspace(e); break;
+                }
+            }
+            onTab(e) {
+                e.preventDefault();
+            }
+            onEnter(e) {
+                e.preventDefault();
+                console.log('enter');
+                console.log(this.itemList[this.selectedIndex]);
+            }
+            onArrowUp(e) {
+                this.searchTimer = Date.now();
+                e.preventDefault();
+                if (this.selectedIndex > 0) {
+                    this.set('selectedIndex', this.selectedIndex-1);
+                }
+            }
+            onArrowDown(e) {
+                this.searchTimer = Date.now();
+                e.preventDefault();
+                if (this.selectedIndex < this.itemList.length-1) {
+                    this.set('selectedIndex', this.selectedIndex+1);
+                }
+            }
+            onBackspace(e) {}
+            inputChange() {
+                if (this.input.value.length > 0) {
+                    this.searchTimer = Date.now();
+                    let payload = {val: this.input.value, package: 'global'};
+                    this.dispatchEvent(new CustomEvent('search', {detail: payload}));
+                } else {
+                    this.clearList();
+                }
+            }
+
+            updateList(data) {
+                console.log(data);
+                if (data && data.data) {
+                    this.set('jsonList', data.data);
+                    this.set('itemList', JSON.parse(data.data));
+                    this.set('selectedIndex', 0);
+                } else {
+                    this.clearList();
+                }
+                this.set('searchTime', (Date.now() - this.searchTimer) + " ms");
+            }
+
+            _indexChange() {
+                console.log('active change');
+                if (this.jsonList) {
+                    let tmp = JSON.parse(this.jsonList);
+                    tmp[this.selectedIndex].selected = "selected";
+                    this.set('itemList', tmp);
+                    this.set('searchTime', (Date.now() - this.searchTimer) + " ms");
+                }
+            }
+
+            clearList() {
+                this.set('jsonList', "");
+                this.set('itemList', []);
+                this.set('selectedIndex', -1);
+                this.set('searchTime', "");
             }
 
             removeStyles() {
                 let styles = this.shadowRoot.querySelectorAll('style');
-                console.log(styles);
                 for (let i in styles) {
                     if (styles[i] instanceof Node) {
                         this.shadowRoot.removeChild(styles[i]);
                     }
                 }
             }
-            loadStyles() {
+
+            loadStyles(cssString) {
                 console.log('Loading styles...');
-                //let cssString = minifyCssString("input {color: blue;}");
-                let cssString = "input {color: blue;}";
                 let style = document.createElement('style');
                 style.appendChild(document.createTextNode(cssString));
-                //style.setAttribute('include', 'haste-styles');
                 this.shadowRoot.appendChild(style);
-                //location.reload();
             }
 
-
+            disconnectedCallback() {
+                this.input.removeEventListener('input', () => this.change());
+                this.input.removeEventListener('keydown', e => this.keyDown(e));
+            }
         }
         customElements.define(HasteSearch.is, HasteSearch);
     </script>

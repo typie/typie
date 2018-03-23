@@ -1,5 +1,5 @@
 const {shell} = require('electron');
-const skullIco = 'static/themes/default/images/skull.png';
+const skullIco = 'themes/default/images/skull.png';
 const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
 
 class MovieSearch extends AbstractHastePackage
@@ -9,6 +9,7 @@ class MovieSearch extends AbstractHastePackage
         super();
         this.packageName = 'MovieSearch';
         this.haste       = new Haste(this.packageName);
+        this.icon        = 'skull.png';
 
         this.insert('supernatural');
         this.insert('the walking dead');

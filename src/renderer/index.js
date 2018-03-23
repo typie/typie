@@ -1,12 +1,6 @@
-const path = require('path');
-
-// just some stuff for playing - feel free to delete
 'use strict';
-
-// const styles=document.createElement('style');
-// styles.innerText=`@import url(https://unpkg.com/spectre.css/dist/spectre.min.css);
-// .empty{display:flex;flex-direction:column;justify-content:center;height:100vh;position:relative}.footer{bottom:0;font-size:13px;left:50%;opacity:.9;position:absolute;transform:translateX(-50%);width:100%}`;
-
+const {remote, ipcRenderer} = require('electron');
+const MainRendererWindow = require('./MainRendererWindow');
 const polymer=document.createElement('script');
 polymer.setAttribute('type','text/javascript');
 polymer.setAttribute('src','polymer/bower_components/webcomponentsjs/webcomponents-loader.js');
@@ -20,8 +14,19 @@ const hasteSearch=document.createElement('haste-search');
 //vueScript.onload = init;
 document.head.appendChild(polymer);
 document.head.appendChild(importElement);
+document.getElementById("app").appendChild(hasteSearch);
 
+let win = new MainRendererWindow(remote.getCurrentWindow());
 
-document.body.appendChild(hasteSearch);
-
+hasteSearch.addEventListener('search', (e) => {
+    let payload = e.detail;
+    ipcRenderer.send('search', {value: payload.val, currentPackage: payload.package});
+});
+ipcRenderer.on('resultList', (event, data) => {
+    hasteSearch.updateList(data);
+});
+ipcRenderer.on('injectCss', (event, css) => {
+    hasteSearch.removeStyles();
+    hasteSearch.loadStyles(css);
+});
 
