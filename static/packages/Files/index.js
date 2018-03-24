@@ -42,9 +42,13 @@ class Files extends AbstractHastePackage
             item.icon = o.icon;
             item.path = o.path;
             this.haste.insert(item).go()
-                .then(() => countComplete++);
+                .then(() => {
+                    countComplete++;
+                    //if (countComplete >= objectsArray.length) {
+                        //console.log('done ' + countComplete + ' out of ' + objectsArray.length);
+                    //}
+                });
         }
-        console.log('done ' + countComplete + ' out of ' + objectsArray.length);
     }
 
     search(value, callback){

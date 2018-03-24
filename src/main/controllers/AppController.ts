@@ -3,6 +3,7 @@ import MainWindowController from "./MainWindowController";
 import GoDispatcher from "../services/GoDispatcher";
 import PackageLoader from "../services/PackageLoader";
 import HasteListener from "../listeners/HasteListener";
+import Packet from "../models/Packet";
 
 export default class AppController
 {
@@ -26,7 +27,12 @@ export default class AppController
     }
 
     public static quit() {
-        app.quit();
+        GoDispatcher.send(new Packet('persist'))
+            .then(res => {
+                console.log('Quiting:',res);
+                GoDispatcher.close();
+                app.quit();
+            });
     }
 }
 

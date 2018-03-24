@@ -12,8 +12,8 @@ class MovieSearch extends AbstractHastePackage
         this.icon        = 'skull.png';
 
         // Example
-        this.insert('supernatural');
-        this.insert('the walking dead');
+        // this.insert('supernatural');
+        // this.insert('the walking dead');
     }
 
     insert(value) {
@@ -34,7 +34,7 @@ class MovieSearch extends AbstractHastePackage
     }
 
     activate(item) {
-        //this.updateCalled(item);
+        this.haste.updateCalled(item).go();
         let eleet = 'http://1337x.to/sort-search/'+item.title+'/seeders/desc/1/';
         let imdb = 'https://www.imdb.com/find?s=all&q='+item.title+'';
         let youtube = 'https://www.youtube.com/results?search_query='+item.title+'';

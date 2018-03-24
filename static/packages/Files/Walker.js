@@ -22,7 +22,7 @@ exports.run = function(dir, extArray, haste) {
                                 getRowFromPath(results, fileFull, fileExt, next);
                             });
                         } else {
-                            console.log('skip', fileStats.name);
+                            // Skip file for it is already in memory
                             next();
                         }
                     })

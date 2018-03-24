@@ -28,6 +28,11 @@ export default class GoDispatcher
         });
     }
 
+    public static close() {
+        GoDispatcher.go.close();
+        GoDispatcher.listening = false;
+    }
+
     private static register(): any {
         GoDispatcher.go.execute({command: 'start'}, (result: any, response: any) => {
             if (result.ok) { // Check if response is ok

@@ -25,6 +25,11 @@ export default class Haste
         return this;
     }
 
+    updateCalled(item) {
+        item.count = item.c + 1;
+        return this.insert(item, true);
+    }
+
     insert(item: HasteRowItem, persist: boolean = true) {
         let compactItem = {
             db: this.db,
@@ -33,6 +38,7 @@ export default class Haste
             p: item.path,
             d: item.description,
             i: item.icon,
+            c: item.count ? item.count : 0,
         };
         this.command = persist ? 'insertPersist' : 'insert';
         this.payload = compactItem;

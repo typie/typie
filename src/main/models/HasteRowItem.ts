@@ -7,5 +7,6 @@ export default class HasteRowItem
     public packageName: string | undefined;
     public path: string | undefined;
     public title: string | undefined;
+    public count: number | undefined;
     public unixTime?: string | undefined;
 }
