@@ -2,7 +2,7 @@ import {app} from 'electron';
 import MainWindowController from "./MainWindowController";
 import GoDispatcher from "../services/GoDispatcher";
 import PackageLoader from "../services/PackageLoader";
-//import MovieSearch from "../../../static/packages/MovieSearch/index.js";
+import HasteListener from "../listeners/HasteListener";
 
 export default class AppController
 {
@@ -11,7 +11,7 @@ export default class AppController
         let bootstrap = setInterval(() => {
             if (GoDispatcher.listening) {
                 clearInterval(bootstrap);
-                PackageLoader.init();
+                new HasteListener(new PackageLoader());
             }
         }, 1);
         win.createWindow();

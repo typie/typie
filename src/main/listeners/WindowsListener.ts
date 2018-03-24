@@ -1,6 +1,5 @@
 import {ipcMain} from 'electron';
 import AbstractWindowController from "../controllers/AbstractWindowController";
-import SearchController from "../controllers/SearchController";
 
 class WindowsListener
 {
@@ -13,7 +12,6 @@ class WindowsListener
         win.onWebContent('did-finish-load', () => win.init());
         win.onWebContent('devtools-opened', () => win.setFocusAfterDevToolOpen());
 
-        ipcMain.on('search', (event, data) => SearchController.search(event, data));
     }
 
     public listen(win: AbstractWindowController):void {

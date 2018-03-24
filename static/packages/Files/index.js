@@ -9,7 +9,8 @@ class Files extends AbstractHastePackage
     constructor(Haste){
         super();
         this.packageName = 'Files';
-        this.haste       = new Haste(this.packageName);
+        this.db          = 'global';
+        this.haste       = new Haste(this.packageName, this.db);
         this.icon        = 'skull.png';
 
         // for (let i = 0; i < 1000; i++) {
@@ -30,22 +31,10 @@ class Files extends AbstractHastePackage
             .catch((err) => console.error(err));
     }
 
-    search(value){
-        let startTime = Date.now();
-        let res = this.haste.fuzzySearch(value).orderBy('score').desc().go()
-            .then((data) => {
-                console.log('returned', data);
-                console.log('time:', (Date.now() - startTime));
-            })
-            .catch((data) => {
-                console.log('error', data);
-            });
-
-        let newSearch = [{title: value, icon: skullIco, d:'files', t: 'Files', path: value}];
-        if (res.length > 0 && res[0].path === value) {
-          return res
-        }
-        return newSearch.concat(res)
+    search(value, callback){
+        this.haste.fuzzySearch(value).orderBy('score').desc().go()
+            .then(data => callback(data))
+            .catch(err => console.error(err));
     }
 
 }
