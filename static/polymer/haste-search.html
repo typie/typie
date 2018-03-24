@@ -66,12 +66,10 @@
                 this.input.addEventListener('keydown', e => this.keyDown(e));
             }
 
-            click(d) {
-                console.log('click');
-                console.log(d);
-                console.log(this.selectedItem);
-                console.log( this.get('selectedItem'));
-            }
+//            click() {
+//                console.log('click');
+//                console.log(this.itemList[this.selectedIndex]);
+//            }
             keyDown(e) {
                 switch (e.code) {
                     case "Tab":         this.onTab(e); break;
@@ -96,6 +94,8 @@
                 }
                 console.log('enter');
                 console.log(this.itemList[this.selectedIndex]);
+                let payload = {item: this.itemList[this.selectedIndex], package: this.currentPackage};
+                this.dispatchEvent(new CustomEvent('activate', {detail: payload}));
             }
             onArrowUp(e) {
                 e.preventDefault();

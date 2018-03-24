@@ -39,6 +39,14 @@ export default class Haste
         return this;
     }
 
+    getKey(value: string) {
+        this.payload.value = value;
+        this.payload.db = this.db;
+        this.payload.packageName = this.packageName;
+        this.command = 'getKey';
+        return this;
+    }
+
     fuzzySearch(value: string) {
         this._search.value = value;
         this._search.type = 'fuzzy';

@@ -18,6 +18,15 @@ class HasteListener
                     .catch(err => console.error(err))
             }
         });
+
+        ipcMain.on('activate', (event, data) => {
+            if (data.currentPackage && data.currentPackage !== 'global') {
+                packageLoader.getPackage(data.currentPackage)
+                    .activate(data.item, (result) => {
+                        event.sender.send('activatedResult', result);
+                    });
+            }
+        });
     }
 }
 export default HasteListener;

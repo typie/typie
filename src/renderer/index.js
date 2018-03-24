@@ -22,6 +22,10 @@ hasteSearch.addEventListener('search', (e) => {
     let payload = e.detail;
     ipcRenderer.send('search', {value: payload.val, currentPackage: payload.package});
 });
+hasteSearch.addEventListener('activate', (e) => {
+    let payload = e.detail;
+    ipcRenderer.send('activate', {item: payload.item, currentPackage: payload.package});
+});
 ipcRenderer.on('resultList', (event, data) => {
     hasteSearch.updateList(data);
 });
