@@ -51,7 +51,8 @@ export default class PackageLoader
                 item.description = "Plugin";
                 item.icon = absPath + '/' +packages[packageName].icon;
                 item.title = packageName;
-                new Haste('global').insert(item).go().then(res => console.log(res))
+                new Haste('global').insert(item, false).go()
+                    .then(res => console.log(res))
                     .catch(err => console.error(err))
             })
             .catch((err) => console.error('cannot load package from: '+packagePath, err));

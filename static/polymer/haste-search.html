@@ -6,7 +6,7 @@
         <div id="app">
             <div class="icon"></div>
             <div class="search">
-                <span class="prefix" v-if="currentPackage!=defaultPackage">[[currentPackage]]</span>
+                <span class="prefix">[[currentPackage]]</span>
                 <input autofocus id="inputField" type="text" placeholder=""/>
                 <div class="close" onclick="close()">x</div>
             </div>
@@ -28,8 +28,7 @@
             <div class="footer">
                 <div class="search-time">[[searchTime]]</div>
                 <div class="handle">· · · ·</div>
-                <div class="status"><span v-if="workers > 0"> items in Catalog · Haste 1.0</span>
-                </div>
+                <div class="status">[[totalItems]] items in Catalog · Haste 1.0</div>
             </div>
         </div>
     </template>
@@ -56,6 +55,7 @@
                     itemList: Array,
                     jsonList: String,
                     searchTime: String,
+                    totalItems: Number,
                 }
             }
 
@@ -83,31 +83,42 @@
             }
             onTab(e) {
                 e.preventDefault();
+                if (this.itemList[this.selectedIndex].d === "Plugin") {
+                    this.set('currentPackage', this.itemList[this.selectedIndex].title);
+                    this.input.value = "";
+                    this.clearList();
+                }
             }
             onEnter(e) {
                 e.preventDefault();
+                if (this.itemList[this.selectedIndex].d === "Plugin") {
+                    this.onTab(e);
+                }
                 console.log('enter');
                 console.log(this.itemList[this.selectedIndex]);
             }
             onArrowUp(e) {
-                this.searchTimer = Date.now();
                 e.preventDefault();
                 if (this.selectedIndex > 0) {
                     this.set('selectedIndex', this.selectedIndex-1);
                 }
             }
             onArrowDown(e) {
-                this.searchTimer = Date.now();
                 e.preventDefault();
                 if (this.selectedIndex < this.itemList.length-1) {
                     this.set('selectedIndex', this.selectedIndex+1);
                 }
             }
-            onBackspace(e) {}
+            onBackspace(e) {
+                if (this.input.value.length === 0) {
+                    this.set('currentPackage', "");
+                    this.clearList();
+                }
+            }
             inputChange() {
                 if (this.input.value.length > 0) {
                     this.searchTimer = Date.now();
-                    let payload = {val: this.input.value, package: 'global'};
+                    let payload = {val: this.input.value, package: this.currentPackage};
                     this.dispatchEvent(new CustomEvent('search', {detail: payload}));
                 } else {
                     this.clearList();
@@ -115,10 +126,12 @@
             }
 
             updateList(data) {
-                console.log(data);
+                console.log('updateList', data);
                 if (data && data.data) {
                     this.set('jsonList', data.data);
                     this.set('itemList', JSON.parse(data.data));
+                    this.set('selectedIndex', -1);
+                    this.set('totalItems', data.total);
                     this.set('selectedIndex', 0);
                 } else {
                     this.clearList();
@@ -128,11 +141,10 @@
 
             _indexChange() {
                 console.log('active change');
-                if (this.jsonList) {
+                if (this.jsonList && this.selectedIndex >= 0) {
                     let tmp = JSON.parse(this.jsonList);
                     tmp[this.selectedIndex].selected = "selected";
                     this.set('itemList', tmp);
-                    this.set('searchTime', (Date.now() - this.searchTimer) + " ms");
                 }
             }
 

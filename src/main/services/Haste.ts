@@ -25,11 +25,17 @@ export default class Haste
         return this;
     }
 
-    insert(item: HasteRowItem) {
-        item.db = this.db;
-        item.packageName = this.packageName;
-        this.command = 'insert';
-        this.payload = item;
+    insert(item: HasteRowItem, persist: boolean = true) {
+        let compactItem = {
+            db: this.db,
+            t: this.packageName,
+            title: item.title,
+            p: item.path,
+            d: item.description,
+            i: item.icon,
+        };
+        this.command = persist ? 'insertPersist' : 'insert';
+        this.payload = compactItem;
         return this;
     }
 

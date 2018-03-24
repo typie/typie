@@ -3,26 +3,20 @@ const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
 const skullIco = 'packages/Files/skull.png';
 
 
-function randomStr() {
-    let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i = 0; i < 100; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
-}
-
 class Files extends AbstractHastePackage
 {
 
     constructor(Haste){
         super();
         this.packageName = 'Files';
-        this.haste       = new Haste(this.packageName, 'global');
+        this.haste       = new Haste(this.packageName);
         this.icon        = 'skull.png';
 
-        // for (let i = 0; i < 100000; i++) {
+        // for (let i = 0; i < 1000; i++) {
         //     this.insert(randomStr());
         // }
+        this.insert('some file');
+        this.insert('another file');
     }
 
     insert(value) {
