@@ -2,24 +2,26 @@ const {app, shell} = require('electron');
 const path = require('path');
 const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
 const skullIco = 'packages/Files/skull.png';
-const Walker = require('./walker.js');
+
 const is = require('electron-is');
 
+let Walker;
 let pathList = [];
 let fileExtensions = [];
 
 if (is.windows()) {
+    Walker = require('./walker.js');
     fileExtensions = ['.exe', '.lnk', '.url', '.mkv', '.mp4'];
     pathList = [
         path.join(app.getPath('home'), 'Desktop'),
         "C:\\Windows\\System32"
     ];
-
 } else if (is.osx()) {
+    Walker = require('./walker-osx.js');
     fileExtensions = ['.exe', '.app', '.url'];
     pathList = [
-        path.join(app.getPath('home'), 'Desktop/'),
-        //path.normalize("/Applications/")
+        //path.join(app.getPath('home'), 'Desktop/'),
+        path.normalize("/Applications/")
     ];
 }
 
@@ -41,7 +43,10 @@ class Files extends AbstractHastePackage
 
         for (let dir of pathList) {
             Walker.run(dir, fileExtensions, this.haste)
-                .then(res => this.insertAll(res));
+                .then(res => {
+                    console.log('results', res);
+                    this.insertAll(res)
+                });
         }
     }
 
