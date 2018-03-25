@@ -12,8 +12,8 @@ class MovieSearch extends AbstractHastePackage
         this.icon        = 'skull.png';
 
         // Example
-        // this.insert('supernatural');
-        // this.insert('the walking dead');
+        this.insert('supernatural');
+        this.insert('the walking dead');
     }
 
     insert(value) {

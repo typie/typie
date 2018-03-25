@@ -6,6 +6,7 @@ const lnk = require('./icons');
 const is = require('electron-is');
 
 exports.run = function(dir, extArray, haste) {
+    console.log(dir);
     return new Promise((resolve, reject) => {
         let walker = walk.walk(dir);
         let results = [];
@@ -14,7 +15,9 @@ exports.run = function(dir, extArray, haste) {
             let fileExt = path.extname(fileStats.name);
             let fileFull = path.join(root, fileStats.name);
             let basename = path.basename(fileStats.name, fileExt);
+            console.log('fileFull', fileFull);
             if (extArray.includes(fileExt)) {
+                console.log('haste get key', basename);
                 haste.getKey(basename).go()
                     .then((res) => {
                         if (res.err === 1) {
@@ -23,6 +26,7 @@ exports.run = function(dir, extArray, haste) {
                             });
                         } else {
                             // Skip file for it is already in memory
+                            console.log('skip', fileStats.name);
                             next();
                         }
                     })
@@ -36,6 +40,7 @@ exports.run = function(dir, extArray, haste) {
         });
 
         walker.on("errors", function (root, nodeStatsArray, next) {
+            console.log('some error2', root);
             next();
         });
 

@@ -1,5 +1,5 @@
 
-import Electron from "electron";
+import * as Electron from "electron";
 import { format as formatUrl } from 'url';
 import * as path from 'path'
 

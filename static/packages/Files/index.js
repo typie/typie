@@ -3,13 +3,25 @@ const path = require('path');
 const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
 const skullIco = 'packages/Files/skull.png';
 const Walker = require('./walker.js');
+const is = require('electron-is');
 
-const pathList = [
-    path.join(app.getPath('home'), 'Desktop'),
-    "C:\\Windows\\System32"
-];
+let pathList = [];
+let fileExtensions = [];
 
-const fileExtensions = ['.exe', '.lnk', '.url', '.mkv', '.mp4'];
+if (is.windows()) {
+    fileExtensions = ['.exe', '.lnk', '.url', '.mkv', '.mp4'];
+    pathList = [
+        path.join(app.getPath('home'), 'Desktop'),
+        "C:\\Windows\\System32"
+    ];
+
+} else if (is.osx()) {
+    fileExtensions = ['.exe', '.app', '.url'];
+    pathList = [
+        path.join(app.getPath('home'), 'Desktop/'),
+        //path.normalize("/Applications/")
+    ];
+}
 
 
 

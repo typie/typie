@@ -20,11 +20,11 @@ export default class MainWindowController extends AbstractWindowController
     }
 
     // on macOS it is common to re-create a window even after all windows have been closed
-    public activate() {
-        if (this.isExist) {
-            this.createWindow()
-        }
-    }
+    // public activate() {
+    //     if (this.isExist) {
+    //         this.createWindow()
+    //     }
+    // }
 
     public init() {
         console.log('content window finished loading in ' + (AppGlobal.getTimeSinceInit() / 1000) + ' seconds');

@@ -9,7 +9,7 @@ const packagesPath = path.join(__static, '/packages');
 
 export default class PackageLoader
 {
-    private packages: object;
+    private packages: Object;
 
     constructor() {
         this.packages = {};
@@ -32,8 +32,8 @@ export default class PackageLoader
         console.log(packagesDirs);
         packagesDirs.forEach((dirName) => {
             let absPath = path.join(packagesPath, dirName);
-            //console.log('absPath', absPath);
-            if (fs.existsSync(absPath + '\\index.js')) {
+            console.log('absPath', absPath);
+            if (fs.existsSync(path.join(absPath, 'index.js'))) {
                 this.loadPackage(dirName, absPath);
             }
         });
