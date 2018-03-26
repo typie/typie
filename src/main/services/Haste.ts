@@ -53,6 +53,13 @@ export default class Haste
         return this;
     }
 
+    getExecList() {
+        this.payload.db = this.db;
+        this.payload.packageName = this.packageName;
+        this.command = 'getExecList';
+        return this;
+    }
+
     fuzzySearch(value: string) {
         this._search.value = value;
         this._search.type = 'fuzzy';

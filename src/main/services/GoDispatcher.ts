@@ -1,4 +1,5 @@
 const Go = require('gonode').Go;
+const path = require('path');
 
 export default class GoDispatcher
 {
@@ -9,7 +10,8 @@ export default class GoDispatcher
         console.log('Starting Haste Service');
         //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\main.go"});
         //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\haste.exe"});
-        GoDispatcher.go = new Go({path: "static/bin/haste/haste-go"});
+        //GoDispatcher.go = new Go({path: "static/bin/haste/haste-go"});
+        GoDispatcher.go = new Go({path: path.normalize("/Users/rotemgrimberg/go/src/haste-go/haste-go")});
         GoDispatcher.go.init(this.register) // We must always initialize gonode before executing any commands
     }
 

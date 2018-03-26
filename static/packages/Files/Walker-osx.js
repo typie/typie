@@ -8,87 +8,33 @@ const is = require('electron-is');
 exports.run = function(dir, extArray, haste) {
     console.log(dir);
     return new Promise((resolve, reject) => {
-        let walker = walk.walk(dir);
         let results = [];
 
-        walker.on("directory", (root, fileStats, next) => {
-            let fileExt = path.extname(fileStats.name);
-            let fileFull = path.join(root, fileStats.name);
-
-            if (fileExt === '.app') {
-                console.log(fileStats.name);
-                results.push({title: fileStats.name, t: 'Files', d: "", path: fileFull, icon: defaultFileIco});
-                next();
-                /*
-                haste.getKey(fileStats.name).go()
-                    .then((res) => {
-                        if (res.err === 1) {
-                            // app.getFileIcon(fileFull, {size: 'normal'}, function (err, res) {
-                            //     if (err) {
-                            //         console.log(err);
-                            //         results.push(item);
-                            //         next();
-                            //     } else {
-                            //         console.log('getFileIcon', res);
-                            //         item.icon = res.toDataURL();
-                            //         results.push(item);
-                            //         next();
-                            //     }
-                            // })
-                            results.push(item);
-                            next();
+        haste.getExecList().go()
+            .then((data) => {
+                console.log('walker-osx', data);
+                let list = JSON.parse(data.data);
+                for (let fileFull of list) {
+                    console.log(fileFull);
+                    let file = path.basename(fileFull);
+                    let item = {title: file, t: 'Files', d: "", path: fileFull, icon: defaultFileIco};
+                    app.getFileIcon(fileFull, {size: 'normal'}, (err, res) => {
+                        if (err) {
+                            console.log(err);
                         } else {
-                            // Skip file for it is already in memory
-                            next();
+                            item.icon = res.toDataURL();
+                        }
+                        results.push(item);
+                        if (results.length >= list.length) {
+                            resolve(results);
                         }
                     })
-                    .catch(err => {
-                        next();
-                    });
-                    */
-            } else {
-                next();
-            }
-        });
-        /*
-        walker.on("file", (root, fileStats, next) => {
-            let fileExt = path.extname(fileStats.name);
-            let fileFull = path.join(root, fileStats.name);
-            let basename = path.basename(fileStats.name, fileExt);
-            //console.log('fileFull', fileFull);
-            if (extArray.includes(fileExt)) {
-                //console.log('haste get key', basename);
-                haste.getKey(basename).go()
-                    .then((res) => {
-                        if (res.err === 1) {
-                            fs.readFile(fileStats.name, function () {
-                                getRowFromPath(results, fileFull, fileExt, next);
-                            });
-                        } else {
-                            // Skip file for it is already in memory
-                            console.log('skip', fileStats.name);
-                            next();
-                        }
-                    })
-                    .catch(err => {
-                        console.log('some error', err);
-                        next();
-                    });
-            } else {
-                next();
-            }
-        });
-        */
-
-        walker.on("errors", function (root, nodeStatsArray, next) {
-            console.log('some error2', root);
-            next();
-        });
-
-        walker.on("end", function () {
-            console.log('end walk');
-            resolve(results);
-        });
+                }
+            })
+            .catch((err) => {
+                console.log('error', err);
+                reject(err);
+            });
     });
 };
 

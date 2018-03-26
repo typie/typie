@@ -41,13 +41,13 @@ class Files extends AbstractHastePackage
         // this.insert('some file');
         // this.insert('another file');
 
-        for (let dir of pathList) {
-            Walker.run(dir, fileExtensions, this.haste)
-                .then(res => {
-                    console.log('results', res);
-                    this.insertAll(res)
-                });
-        }
+        // for (let dir of pathList) {
+        //     Walker.run(dir, fileExtensions, this.haste)
+        //         .then(res => {
+        //             console.log('results', res);
+        //             this.insertAll(res)
+        //         });
+        // }
     }
 
     insertAll(objectsArray) {
@@ -55,15 +55,15 @@ class Files extends AbstractHastePackage
         for (let o of objectsArray) {
             let item = new HasteRowItem();
             item.title = o.title;
-            item.description = o.description;
+            item.description = o.d;
             item.icon = o.icon;
             item.path = o.path;
             this.haste.insert(item).go()
                 .then(() => {
                     countComplete++;
-                    //if (countComplete >= objectsArray.length) {
-                        //console.log('done ' + countComplete + ' out of ' + objectsArray.length);
-                    //}
+                    if (countComplete >= objectsArray.length) {
+                        console.log('done ' + countComplete + ' out of ' + objectsArray.length);
+                    }
                 });
         }
     }
