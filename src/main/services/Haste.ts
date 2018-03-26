@@ -30,6 +30,12 @@ export default class Haste
         return this.insert(item, true);
     }
 
+    multipleInsert(itemList) {
+        this.command = 'multipleInsert';
+        this.payload = itemList;
+        return this;
+    }
+
     insert(item: HasteRowItem, persist: boolean = true) {
         let compactItem = {
             db: this.db,

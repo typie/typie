@@ -5,54 +5,43 @@ const {app} = require('electron');
 const lnk = require('./icons');
 const is = require('electron-is');
 
-exports.run = function(dir, extArray, haste) {
-    console.log(dir);
+exports.run = function(pathList, extArray, haste) {
+    console.log(pathList);
     return new Promise((resolve, reject) => {
-        let walker = walk.walk(dir);
         let results = [];
 
-        walker.on("file", (root, fileStats, next) => {
-            let fileExt = path.extname(fileStats.name);
-            let fileFull = path.join(root, fileStats.name);
-            let basename = path.basename(fileStats.name, fileExt);
-            console.log('fileFull', fileFull);
-            if (extArray.includes(fileExt)) {
-                console.log('haste get key', basename);
-                haste.getKey(basename).go()
-                    .then((res) => {
-                        if (res.err === 1) {
-                            fs.readFile(fileStats.name, function () {
-                                getRowFromPath(results, fileFull, fileExt, next);
-                            });
-                        } else {
-                            // Skip file for it is already in memory
-                            console.log('skip', fileStats.name);
-                            next();
+        haste.getExecList().go()
+            .then((data) => {
+                let list = JSON.parse(data.data);
+                if (list === null) {
+                    reject("not files got back");
+                } else {
+                    for (let fileFull of list) {
+                        let file = path.basename(fileFull);
+                        let item = {title: file, t: 'Files', d: "", p: fileFull, i: defaultFileIco, db:'global', c:0};
+                        getRowFromPath(results, fileFull, item);
+                    }
+                    let tmp = setInterval(() => {
+                        if (results.length >= list.length) {
+                            clearInterval(tmp);
+                            console.log('got back '+list.length+' items');
+                            resolve(results);
                         }
-                    })
-                    .catch(err => {
-                        console.log('some error', err);
-                        next();
-                    });
-            } else {
-                next();
-            }
-        });
+                    }, 5)
+                }
+            })
+            .catch((err) => {
+                console.log('error', err);
+                reject(err);
+            });
 
-        walker.on("errors", function (root, nodeStatsArray, next) {
-            console.log('some error2', root);
-            next();
-        });
-
-        walker.on("end", function () {
-            resolve(results);
-        });
     });
 };
 
 
-function getRowFromPath (results, fileFull, fileExt, next) {
+function getRowFromPath (results, fileFull, item) {
     let file = path.basename(fileFull);
+    let fileExt = path.extname(file);
     let basename = path.basename(file, fileExt);
     let fileDir = path.parse(fileFull).dir;
     let description = '';
@@ -65,68 +54,59 @@ function getRowFromPath (results, fileFull, fileExt, next) {
     //     }
     // }
 
-    let item = {title: basename, t: 'Files', d: description, path: fileFull, icon: defaultFileIco};
-
     if (fileExt === '.lnk' && is.windows()) {
-        getIconFromLnk(fileFull, item, results, next);
+        getIconFromLnk(fileFull, item, results);
     } else if (fileExt === '.url' && is.windows()) {
-        item.icon = defaultUrlIco;
-        getIconFromUrl(fileFull, item, results, next);
+        item.i = defaultUrlIco;
+        getIconFromUrl(fileFull, item, results);
     } else {
         app.getFileIcon(fileFull, {size: 'normal'}, function (err, res) {
             if (err) {
                 console.log(err);
                 results.push(item);
-                next();
             } else {
-                item.icon = res.toDataURL();
+                item.i = res.toDataURL();
                 results.push(item);
-                next();
             }
         })
     }
 }
 
-function getIconFromLnk (fileFull, item, results, next) {
+function getIconFromLnk (fileFull, item, results) {
     lnk.queryLnk(fileFull, function (err, iconFile, icon) {
         if (err) {
             console.log(err);
             results.push(item);
-            next();
         } else {
             if (icon) {
-                item.icon = icon;
+                item.i = icon;
                 results.push(item);
-                next();
             } else {
                 app.getFileIcon(path.resolve(iconFile), {size: 'normal'}, function (err, res) {
                     if (err) {
                         console.log(err);
                     } else {
-                        item.icon = res.toDataURL();
+                        item.i = res.toDataURL();
                     }
                     results.push(item);
-                    next();
                 })
             }
         }
     })
 }
 
-function getIconFromUrl (fileFull, item, results, next) {
+function getIconFromUrl (fileFull, item, results) {
     lnk.queryUrl(fileFull, (err, iconFile) => {
         if (err) {
             results.push(item);
-            next();
         } else {
             app.getFileIcon(path.resolve(iconFile), {size: 'normal'}, function (err, res) {
                 if (err) {
                     console.log(err);
                 } else {
-                    item.icon = res.toDataURL();
+                    item.i = res.toDataURL();
                 }
                 results.push(item);
-                next();
             })
         }
     })
