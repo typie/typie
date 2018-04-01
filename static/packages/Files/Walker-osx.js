@@ -5,6 +5,9 @@ const {app} = require('electron');
 const lnk = require('./icons');
 const is = require('electron-is');
 
+const {writeFileSync} = require('fs');
+const {getIconForPath, ICON_SIZE_MEDIUM} = require('system-icon');
+
 exports.run = function(dir, extArray, haste) {
     console.log(dir);
     return new Promise((resolve, reject) => {
@@ -13,22 +16,36 @@ exports.run = function(dir, extArray, haste) {
         haste.getExecList().go()
             .then((data) => {
                 console.log('walker-osx', data);
+
                 let list = JSON.parse(data.data);
+                let resolveInterval = setInterval(() => {
+                    if (results.length >= list.length) {
+                        clearInterval(resolveInterval);
+                        resolve(results);
+                    }
+                })
+
                 for (let fileFull of list) {
                     console.log(fileFull);
                     let file = path.basename(fileFull);
-                    let item = {title: file, t: 'Files', d: "", path: fileFull, icon: defaultFileIco};
-                    app.getFileIcon(fileFull, {size: 'normal'}, (err, res) => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            item.icon = res.toDataURL();
-                        }
-                        results.push(item);
-                        if (results.length >= list.length) {
-                            resolve(results);
-                        }
-                    })
+                    let item = {title: file, t: 'Files', d: "", p: fileFull, i: defaultFileIco, db:'global', c:0};
+                    //let iconPath = path.join(__dirname, "/icons/"+file+".png"));
+
+                    //if (!fs.existsSync(iconPath)) {
+                        getIconForPath(fileFull, ICON_SIZE_MEDIUM, (err, bitmap) => {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                //writeFileSync(iconPath, bitmap);
+                                item.i = "data:image/png;base64," + base64_encode(bitmap);
+                                //item.i = iconPath;
+                            }
+                            results.push(item);
+                        });
+                    //} else {
+                    //    item.i = iconPath;
+                    //}
+
                 }
             })
             .catch((err) => {
@@ -37,6 +54,11 @@ exports.run = function(dir, extArray, haste) {
             });
     });
 };
+
+function base64_encode(bitmap) {
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+}
 
 
 function getRowFromPath (results, fileFull, fileExt, next) {

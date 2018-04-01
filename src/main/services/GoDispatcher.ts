@@ -10,7 +10,8 @@ export default class GoDispatcher
         console.log('Starting Haste Service');
         //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\main.go"});
         GoDispatcher.go = new Go({
-            path: "C:\\projects\\Go\\src\\haste\\haste.exe",
+            //path: "C:\\projects\\Go\\src\\haste\\haste.exe",
+            path: path.normalize("/Users/rotemgrimberg/go/src/haste-go/haste-go"),
             defaultCommandTimeoutSec: 60,
             maxCommandsRunning: 10,
         });
@@ -24,7 +25,7 @@ export default class GoDispatcher
         //console.log('packet', packet);
         return new Promise((resolve, reject) => {
             GoDispatcher.go.execute(packet, (result: any, response: any) => {
-                //console.log('got back', response);
+                console.log('got back', response);
                 if (result.ok) {
                     //console.log('golang time: ', Date.now() - sendTime);
                     return resolve(response);

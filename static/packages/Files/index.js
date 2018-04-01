@@ -41,9 +41,9 @@ class Files extends AbstractHastePackage
         // this.insert('some file');
         // this.insert('another file');
 
-        Walker.run(pathList, fileExtensions, this.haste)
-            .then(res => this.insertAll(res))
-            .catch(err => console.log(err));
+        //Walker.run(pathList, fileExtensions, this.haste)
+        //    .then(res => this.insertAll(res))
+        //    .catch(err => console.log(err));
 
     }
 
@@ -61,6 +61,13 @@ class Files extends AbstractHastePackage
             .catch(err => console.log(err));
     }
 
+    activate(item, cb) {
+        this.haste.updateCalled(item).go()
+            .then(()=>{})
+            .catch(()=>{});
+        console.log("open in files", item);
+        shell.openItem(item.path);
+    }
 }
 module.exports = Files;
 
