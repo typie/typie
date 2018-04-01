@@ -93,8 +93,11 @@
                     this.onTab(e);
                 }
                 console.log('enter');
-                console.log(this.itemList[this.selectedIndex]);
-                let payload = {item: this.itemList[this.selectedIndex], package: this.currentPackage};
+                let payload = {
+                    item: this.itemList[this.selectedIndex],
+                    currentPackage: this.currentPackage ? this.currentPackage:"global",
+                };
+                console.log(payload);
                 this.dispatchEvent(new CustomEvent('activate', {detail: payload}));
             }
             onArrowUp(e) {

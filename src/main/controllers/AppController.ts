@@ -27,12 +27,15 @@ export default class AppController
     }
 
     public static quit() {
-        GoDispatcher.send(new Packet('persist'))
-            .then(res => {
-                console.log('Quiting:',res);
-                GoDispatcher.close();
-                app.quit();
-            });
+        // GoDispatcher.send(new Packet('persist'))
+        //     .then(res => {
+        //         console.log('Quiting:',res);
+        //         GoDispatcher.close();
+        //         app.quit();
+        //     });
+
+        GoDispatcher.close();
+        app.quit();
     }
 }
 

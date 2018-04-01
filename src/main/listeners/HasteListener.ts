@@ -20,12 +20,16 @@ class HasteListener
         });
 
         ipcMain.on('activate', (event, data) => {
-            if (data.currentPackage && data.currentPackage !== 'global') {
-                packageLoader.getPackage(data.currentPackage)
-                    .activate(data.item, (result) => {
-                        event.sender.send('activatedResult', result);
-                    });
+            console.log('activate', data);
+            let pkg = "global";
+            if (data.currentPackage !== 'global') {
+                pkg = data.currentPackage;
+            } else {
+                pkg = data.item.t;
             }
+            packageLoader.getPackage(pkg).activate(data.item, (result) => {
+                event.sender.send('activatedResult', result);
+            });
         });
     }
 }

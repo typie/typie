@@ -19,6 +19,12 @@ export default class Haste
         this.payload = {};
     }
 
+    pasteText() {
+        this.command = 'pasteText';
+        this.payload = {};
+        return this;
+    }
+
     addCollection() {
         this.command = 'addCollection';
         this.payload = {name: this.packageName};

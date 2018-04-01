@@ -55,16 +55,19 @@ class Files extends AbstractHastePackage
 
     }
 
-    search(value, callback){
+    search(value, callback) {
         this.haste.fuzzySearch(value).orderBy('score').desc().go()
             .then(data => callback(data))
             .catch(err => console.log(err));
     }
 
     activate(item, cb) {
+        // this.haste.pasteText().go()
+        //     .then((res)=>console.log(res))
+        //     .catch(()=>{});
         this.haste.updateCalled(item).go()
-            .then(()=>{})
-            .catch(()=>{});
+           .then(()=>{})
+           .catch(()=>{});
         console.log("open in files", item);
         shell.openItem(item.path);
     }
