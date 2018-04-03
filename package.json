@@ -13,6 +13,7 @@
     "@types/js-yaml": "^3.10.1",
     "electron-is": "^2.4.0",
     "gonode": "rotemgrim/gonode",
+    "iohook": "^0.1.13",
     "js-yaml": "^3.11.0",
     "source-map-support": "^0.5.3",
     "system-icon": "github:mtojo/node-system-icon",
@@ -30,5 +31,20 @@
   },
   "resolutions": {
     "webpack-sources": "1.0.1"
+  },
+  "iohook": {
+    "targets": [
+      "node-51",
+      "electron-53"
+    ],
+    "platforms": [
+      "win32",
+      "darwin",
+      "linux"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }

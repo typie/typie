@@ -103,4 +103,14 @@ export default class Haste
         return GoDispatcher.send(packet);
     }
 
+    mouse() {
+        return {
+            up() {
+                GoDispatcher.send(new Packet("mouseMovement", {direction: "up"})).then().catch();
+            },
+            down() {
+                GoDispatcher.send(new Packet("mouseMovement", {direction: "down"})).then().catch();
+            }
+        }
+    }
 }

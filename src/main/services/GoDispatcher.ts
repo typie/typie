@@ -10,8 +10,8 @@ export default class GoDispatcher
         console.log('Starting Haste Service');
         //GoDispatcher.go = new Go({path: "C:\\projects\\Go\\src\\haste\\main.go"});
         GoDispatcher.go = new Go({
-            path: "C:\\projects\\Go\\src\\haste\\haste.exe",
-            //path: path.normalize("/Users/rotemgrimberg/go/src/haste-go/haste-go"),
+            //path: "C:\\projects\\Go\\src\\haste\\haste.exe",
+            path: path.normalize("/Users/rotemgrimberg/go/src/haste-go/haste-go"),
             defaultCommandTimeoutSec: 60,
             maxCommandsRunning: 10,
         });
