@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
   "scripts": {
-    "dev": "electron-webpack dev --inspect",
+    "dev": "electron-webpack dev --inspect --disable-gpu --enable-transparent-visuals",
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
@@ -13,10 +13,8 @@
     "@types/js-yaml": "^3.10.1",
     "electron-is": "^2.4.0",
     "gonode": "rotemgrim/gonode",
-    "iohook": "^0.1.13",
     "js-yaml": "^3.11.0",
     "source-map-support": "^0.5.3",
-    "system-icon": "github:mtojo/node-system-icon",
     "vue": "^2.5.14",
     "vue-round-filter": "^1.1.2"
   },
@@ -31,20 +29,5 @@
   },
   "resolutions": {
     "webpack-sources": "1.0.1"
-  },
-  "iohook": {
-    "targets": [
-      "node-51",
-      "electron-53"
-    ],
-    "platforms": [
-      "win32",
-      "darwin",
-      "linux"
-    ],
-    "arches": [
-      "x64",
-      "ia32"
-    ]
   }
 }

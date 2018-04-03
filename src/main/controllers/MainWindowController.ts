@@ -10,7 +10,9 @@ export default class MainWindowController extends AbstractWindowController
     private options: BrowserWindowConstructorOptions = {
         show: false,
         width: 475,
-        height: 300,
+        height: 900,
+        transparent: true,
+        frame: false
     };
 
     // create main BrowserWindow when electron is ready

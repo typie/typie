@@ -8,14 +8,14 @@ import Packet from "../models/Packet";
 export default class AppController
 {
     public static bootstrapApp(win: MainWindowController) {
+        win.createWindow();
         GoDispatcher.startListen();
         let bootstrap = setInterval(() => {
-            if (GoDispatcher.listening) {
+            if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);
-                new HasteListener(new PackageLoader());
+                new HasteListener(new PackageLoader(win));
             }
         }, 1);
-        win.createWindow();
     }
 
     public static windowAllClosed() {

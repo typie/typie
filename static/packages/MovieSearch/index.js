@@ -33,7 +33,7 @@ class MovieSearch extends AbstractHastePackage
             .catch(err => console.error(err));
     }
 
-    activate(item) {
+    activate(item, cb) {
         this.haste.updateCalled(item).go();
         let eleet = 'http://1337x.to/sort-search/'+item.title+'/seeders/desc/1/';
         let imdb = 'https://www.imdb.com/find?s=all&q='+item.title+'';

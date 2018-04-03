@@ -3,8 +3,7 @@ import AbstractWindowController from "../controllers/AbstractWindowController";
 
 class WindowsListener
 {
-    protected start(win: AbstractWindowController) {
-
+    public listen(win: AbstractWindowController):void {
         win.on('resize',    () => console.log('resize happen'));
         win.on('blur',      () => console.log('blur happen'));
         win.on('closed',    () => win.closed());
@@ -12,15 +11,7 @@ class WindowsListener
         win.onWebContent('did-finish-load', () => win.init());
         win.onWebContent('devtools-opened', () => win.setFocusAfterDevToolOpen());
 
-    }
-
-    public listen(win: AbstractWindowController):void {
-        let bootstrap = setInterval(() => {
-            if (win.isExist) {
-                clearInterval(bootstrap);
-                this.start(win);
-            }
-        }, 5);
+        ipcMain.on('hide', () => win.hide());
     }
 }
 export default new WindowsListener();

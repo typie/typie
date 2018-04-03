@@ -30,8 +30,9 @@ if (is.windows()) {
 class Files extends AbstractHastePackage
 {
 
-    constructor(Haste){
+    constructor(Haste, win){
         super();
+        this.win         = win;
         this.packageName = 'Files';
         this.db          = 'global';
         this.haste       = new Haste(this.packageName, this.db);
@@ -70,6 +71,7 @@ class Files extends AbstractHastePackage
            .catch(()=>{});
         console.log("open in files", item);
         shell.openItem(item.path);
+        this.win.hide();
     }
 }
 module.exports = Files;

@@ -1,3 +1,4 @@
+import MainWindowController from "../controllers/MainWindowController";
 declare const __static: any;
 import * as fs from "fs";
 import * as path from "path";
@@ -10,8 +11,10 @@ const packagesPath = path.join(__static, '/packages');
 export default class PackageLoader
 {
     private packages: Object;
+    private win: MainWindowController;
 
-    constructor() {
+    constructor(win: MainWindowController) {
+        this.win = win;
         this.packages = {};
         fs.watch(packagesPath, (event, path) => {
             console.log('packages changed', event, path);
@@ -53,7 +56,7 @@ export default class PackageLoader
                  * @type {AbstractHastePackage}
                  */
                 let Package = eval("require('"+packagePath+"')");
-                this.packages[packageName] = new Package(Haste);
+                this.packages[packageName] = new Package(Haste, this.win);
                 console.log("Loaded package " + packageName + " from " + packagePath);
 
                 let item = new HasteRowItem();

@@ -73,6 +73,19 @@ class AbstractWindowController
         this.isVisible = true;
     }
 
+    public hide(): void {
+        this.win.hide();
+        this.isVisible = false;
+    }
+
+    public toggle(): void {
+        if (this._isVisible) {
+            this.hide();
+        } else {
+            this.show();
+        }
+    }
+
     public focus(): void {
         this.win.focus();
     }
