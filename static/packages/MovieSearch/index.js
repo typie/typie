@@ -27,12 +27,6 @@ class MovieSearch extends AbstractHastePackage
             .catch((err) => console.error(err));
     }
 
-    search(value, callback){
-        this.haste.fuzzySearch(value).orderBy('score').desc().go()
-            .then(data => callback(data))
-            .catch(err => console.error(err));
-    }
-
     activate(item, cb) {
         this.haste.updateCalled(item).go();
         let eleet = 'http://1337x.to/sort-search/'+item.title+'/seeders/desc/1/';

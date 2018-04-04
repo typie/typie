@@ -1,9 +1,8 @@
 import {app} from 'electron';
 import MainWindowController from "./MainWindowController";
-import GoDispatcher from "../services/GoDispatcher";
+import {GoDispatcher} from "haste-sdk";
 import PackageLoader from "../services/PackageLoader";
 import HasteListener from "../listeners/HasteListener";
-import Packet from "../models/Packet";
 
 export default class AppController
 {

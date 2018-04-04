@@ -1,6 +1,6 @@
 import {ipcMain} from 'electron';
 import PackageLoader from "../services/PackageLoader";
-import Haste from "../services/Haste";
+import {Haste} from "haste-sdk";
 
 class HasteListener
 {

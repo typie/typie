@@ -2,9 +2,7 @@ import MainWindowController from "../controllers/MainWindowController";
 declare const __static: any;
 import * as fs from "fs";
 import * as path from "path";
-import Haste from "./Haste";
-import AbstractHastePackage from "../../../src/main/models/AbstractHastePackage";
-import HasteRowItem from "../models/HasteRowItem";
+import {AbstractHastePackage, HasteRowItem, Haste} from "haste-sdk";
 
 const packagesPath = path.join(__static, '/packages');
 

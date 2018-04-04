@@ -1,6 +1,5 @@
-const {shell, globalShortcut} = require('electron');
-const skullIco = 'themes/default/images/skull.png';
-const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
+const {globalShortcut} = require('electron');
+const {AbstractHastePackage} = require('haste-sdk');
 const ioHook = require('iohook');
 const robot = require("robotjs");
 
@@ -9,42 +8,46 @@ class Mouse extends AbstractHastePackage
 
     constructor(Haste){
         super();
-        this.packageName = 'Mouse';
+
         this.haste       = new Haste(this.packageName);
-        this.icon        = 'skull.png';
+        this.packageName = 'Mouse';
 
         this.intervalLoop = null;
-        this.keys = {up: false, left: false, down: false, right: false};
+        this.keys = {
+            up: false, left: false, down: false, right: false,
+            speed: false, click: false, rightClick: false,
+        };
 
         // Example
-        this.insert('start listen for keys');
-    }
-
-    insert(value) {
-        let item = new HasteRowItem();
-        item.title = value;
-        item.description = "action";
-        item.icon = skullIco;
-        item.path = "";
-        let res = this.haste.insert(item).go()
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
-    }
-
-    search(value, callback){
-        this.haste.fuzzySearch(value).orderBy('score').desc().go()
-            .then(data => callback(data))
-            .catch(err => console.error(err));
+        this.insert('Start Mouse Control <ESC for cancel>', "Press ESC to Exit");
     }
 
     getPressesObj(event, type) {
-        if ([23, 36, 37, 38].includes(event.keycode)) {
-            switch (event.keycode) {
-                case 23: this.keys.up = type; break;
-                case 36: this.keys.left = type; break;
-                case 37: this.keys.down = type; break;
-                case 38: this.keys.right = type; break;
+        let k = event.keycode;
+        if ([23, 36, 37, 38, 32].includes(k)) {
+            if (k === 23 && type !== this.keys.up) {this.keys.up = type}
+            if (k === 36 && type !== this.keys.left) {this.keys.left = type}
+            if (k === 37 && type !== this.keys.down) {this.keys.down = type}
+            if (k === 38 && type !== this.keys.right) {this.keys.right = type}
+            if (k === 32 && type !== this.keys.speed) {this.keys.speed = type}
+        } else if ([33, 31].includes(k)) {
+            if (k === 33 && type !== this.keys.click) {
+                this.keys.click = type;
+                if (type) { // f was clicked
+                    robot.mouseToggle('down', 'left');
+                } else { // f was released
+                    robot.mouseToggle('up', 'left');
+                }
             }
+            if (k === 31 && type !== this.keys.rightClick) {
+                this.keys.rightClick = type;
+                if (type) { // f was clicked
+                    robot.mouseToggle('down', 'right');
+                } else { // f was released
+                    robot.mouseToggle('up', 'right');
+                }
+            }
+            //case 38: this.keys.doubleClick = type; break;
         }
     }
 
@@ -54,33 +57,28 @@ class Mouse extends AbstractHastePackage
         globalShortcut.register('j', () => {});
         globalShortcut.register('k', () => {});
         globalShortcut.register('l', () => {});
+        globalShortcut.register('f', () => {});
+        globalShortcut.register('d', () => {});
+        globalShortcut.register('s', () => {});
 
         ioHook.on("keyup", event => this.getPressesObj(event, false));
         ioHook.on("keydown", event => this.getPressesObj(event, true));
 
-        let amount = 5;
         let keys = this.keys;
         this.intervalLoop = setInterval(() => {
             if (keys.up || keys.left || keys.down || keys.right) {
                 let pos = robot.getMousePos();
                 let newX = pos.x;
                 let newY = pos.y;
-
-                if (keys.up) {
-                    newY -= amount;
-                }
-                if (keys.left) {
-                    newX -= amount;
-                }
-                if (keys.down) {
-                    newY += amount;
-                }
-                if (keys.right) {
-                    newX += amount;
-                }
+                let amount = 7;
+                if (keys.speed) {amount = 25}
+                if (keys.up) {newY -= amount}
+                if (keys.left) {newX -= amount}
+                if (keys.down) {newY += amount}
+                if (keys.right) {newX += amount}
                 robot.moveMouse(newX, newY);
             }
-        }, 25);
+        }, 10);
         ioHook.start();
     }
 
@@ -91,7 +89,13 @@ class Mouse extends AbstractHastePackage
         globalShortcut.unregister('j');
         globalShortcut.unregister('k');
         globalShortcut.unregister('l');
-        this.keys = {up: false, left: false, down: false, right: false};
+        globalShortcut.unregister('f');
+        globalShortcut.unregister('d');
+        globalShortcut.unregister('s');
+        this.keys = {
+            up: false, left: false, down: false, right: false,
+            speed: false, click: false, rightClick: false,
+        };
         clearInterval(this.intervalLoop);
     }
 }
