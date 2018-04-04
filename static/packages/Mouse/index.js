@@ -13,6 +13,9 @@ class Mouse extends AbstractHastePackage
         this.haste       = new Haste(this.packageName);
         this.icon        = 'skull.png';
 
+        this.intervalLoop = null;
+        this.keys = {up: false, left: false, down: false, right: false};
+
         // Example
         this.insert('start listen for keys');
     }
@@ -34,68 +37,62 @@ class Mouse extends AbstractHastePackage
             .catch(err => console.error(err));
     }
 
+    getPressesObj(event, type) {
+        if ([23, 36, 37, 38].includes(event.keycode)) {
+            switch (event.keycode) {
+                case 23: this.keys.up = type; break;
+                case 36: this.keys.left = type; break;
+                case 37: this.keys.down = type; break;
+                case 38: this.keys.right = type; break;
+            }
+        }
+    }
+
     activate(item) {
-        let doObj = {up: false, left: false, down: false, right: false};
-        ioHook.on("keyup", event => {
-            if ([23, 36, 37, 38].includes(event.keycode)) {
-                switch (event.keycode) {
-                    case 23: // UP
-                        doObj.up = false;
-                        break;
-                    case 36: // LEFT
-                        doObj.left = false;
-                        break;
-                    case 37: // Down
-                        doObj.down = false;
-                        break;
-                    case 38: // Right
-                        doObj.right = false;
-                        break;
-                }
-            }
-        });
-        ioHook.on("keydown", event => {
-            event.preventDefault;
-            if ([23, 36, 37, 38].includes(event.keycode)) {
-                switch (event.keycode) {
-                    case 23: // UP
-                        doObj.up = true;
-                        break;
-                    case 36: // LEFT
-                        doObj.left = true;
-                        break;
-                    case 37: // Down
-                        doObj.down = true;
-                        break;
-                    case 38: // Right
-                        doObj.right = true;
-                        break;
-                }
-            }
-        });
+        globalShortcut.register('Esc', () => this.deactivate());
+        globalShortcut.register('i', () => {});
+        globalShortcut.register('j', () => {});
+        globalShortcut.register('k', () => {});
+        globalShortcut.register('l', () => {});
+
+        ioHook.on("keyup", event => this.getPressesObj(event, false));
+        ioHook.on("keydown", event => this.getPressesObj(event, true));
+
         let amount = 5;
-        setInterval(() => {
-            if (doObj.up || doObj.left || doObj.down || doObj.right) {
+        let keys = this.keys;
+        this.intervalLoop = setInterval(() => {
+            if (keys.up || keys.left || keys.down || keys.right) {
                 let pos = robot.getMousePos();
                 let newX = pos.x;
                 let newY = pos.y;
 
-                if (doObj.up) {
+                if (keys.up) {
                     newY -= amount;
                 }
-                if (doObj.left) {
+                if (keys.left) {
                     newX -= amount;
                 }
-                if (doObj.down) {
+                if (keys.down) {
                     newY += amount;
                 }
-                if (doObj.right) {
+                if (keys.right) {
                     newX += amount;
                 }
                 robot.moveMouse(newX, newY);
             }
         }, 25);
         ioHook.start();
+    }
+
+    deactivate() {
+        ioHook.stop();
+        globalShortcut.unregister('Esc');
+        globalShortcut.unregister('i');
+        globalShortcut.unregister('j');
+        globalShortcut.unregister('k');
+        globalShortcut.unregister('l');
+        this.keys = {up: false, left: false, down: false, right: false};
+        clearInterval(this.intervalLoop);
     }
 }
 module.exports = Mouse;
