@@ -1,5 +1,5 @@
 
-class HasteRowItem
+export default class HasteRowItem
 {
     public db: string | undefined;
     public description: string | undefined;
@@ -20,4 +20,3 @@ class HasteRowItem
         this.unixTime;
     }
 }
-module.exports = HasteRowItem;

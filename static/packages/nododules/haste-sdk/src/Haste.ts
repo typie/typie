@@ -1,9 +1,9 @@
-const GoDispatcher = require("./GoDispatcher");
-const Packet = require("./models/Packet");
-const SearchPayload = require("./models/SearchPayload");
-const HasteRowItem = require("./models/HasteRowItem");
+import GoDispatcher from "./GoDispatcher";
+import Packet from "./models/Packet";
+import SearchPayload from "./models/SearchPayload";
+import HasteRowItem from "./models/HasteRowItem";
 
-class Haste
+export default class Haste
 {
     private _search: SearchPayload = new SearchPayload;
     private db: string;
@@ -120,4 +120,3 @@ class Haste
         }
     }
 }
-module.exports = Haste;

@@ -1,15 +1,15 @@
 
 //const MainWindowController = require("../controllers/MainWindowController");
-const {HastePackageInterface} = require("./models/HastePackageInterface");
-const HasteRowItem = require("./models/HasteRowItem");
-const Haste = require("./Haste");
+//const {HastePackageInterface} = require("./models/HastePackageInterface");
+import HasteRowItem from "./models/HasteRowItem";
+import Haste from "./Haste";
 const defaultIcon = 'themes/default/images/skull.png';
 
-class AbstractHastePackage implements HastePackageInterface
+export default class AbstractHastePackage
 {
     protected packageData: object;
     protected packageName: string;
-    protected haste: Haste;
+    protected haste: any;
     protected icon: string;
     constructor() {
         this.packageData = {name: this.constructor.name, path: __dirname};
@@ -25,7 +25,7 @@ class AbstractHastePackage implements HastePackageInterface
         return this.packageName;
     }
 
-    insert(value, description=null, path=null, icon=null) {
+    insert(value, description="", path="", icon="") {
         let item = new HasteRowItem();
         item.title = value;
         item.path = path ? path : value;
@@ -36,8 +36,12 @@ class AbstractHastePackage implements HastePackageInterface
             .catch(err => console.error(err));
     }
 
-    search(value: string, callback: Function) {console.error('No override "search" method found in ' + this.packageName)}
+    search(value: string, callback: Function) {
+        this.haste.fuzzySearch(value).orderBy('score').desc().go()
+            .then(data => callback(data))
+            .catch(err => console.log(err));
+    }
+
     activate(rowItem: HasteRowItem, callback: Function) {console.error('No override "action" method found in ' + this.packageName)}
     //remove(rowItem: HasteRowItem, callback: Function) {console.error('No override "remove" method found in ' + this.packageName)}
 }
-module.exports = AbstractHastePackage;

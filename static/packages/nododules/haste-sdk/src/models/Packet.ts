@@ -1,5 +1,5 @@
 
-class Packet
+export default class Packet
 {
     private command: string = '';
     private payload: object = {};
@@ -8,4 +8,3 @@ class Packet
         this.payload = payload ? payload : {};
     }
 }
-module.exports = Packet;

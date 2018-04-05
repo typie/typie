@@ -1,4 +1,4 @@
-const HasteRowItem = require("./HasteRowItem");
+import HasteRowItem from "./HasteRowItem";
 
 export interface HastePackageInterface
 {

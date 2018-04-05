@@ -1,5 +1,5 @@
 
-class SearchPayload
+export default class SearchPayload
 {
     public type: string;
     public value: string;
@@ -16,4 +16,3 @@ class SearchPayload
         this.db = '';
     }
 }
-module.exports = SearchPayload;

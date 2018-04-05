@@ -1,7 +1,7 @@
-const Go = require('gonode').Go;
-const path = require('path');
+import {Go} from 'gonode';
+import * as path from 'path';
 
-class GoDispatcher
+export default class GoDispatcher
 {
     private static go: any;
     public static listening: boolean = false;
@@ -52,4 +52,3 @@ class GoDispatcher
         });
     }
 }
-module.exports = GoDispatcher;
