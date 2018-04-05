@@ -32,7 +32,7 @@ export default class Haste
     }
 
     updateCalled(item) {
-        item.count = item.c + 1;
+        item.countUp();
         return this.insert(item, true);
     }
 
@@ -43,17 +43,10 @@ export default class Haste
     }
 
     insert(item: HasteRowItem, persist: boolean = true) {
-        let compactItem = {
-            db: this.db,
-            t: this.packageName,
-            title: item.title,
-            p: item.path,
-            d: item.description,
-            i: item.icon,
-            c: item.count ? item.count : 0,
-        };
+        item.setDB(this.db);
+        item.setPackage(this.packageName);
         this.command = persist ? 'insertPersist' : 'insert';
-        this.payload = compactItem;
+        this.payload = item.toPayload();
         return this;
     }
 

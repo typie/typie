@@ -1,6 +1,6 @@
 import {ipcMain} from 'electron';
 import PackageLoader from "../services/PackageLoader";
-import {Haste} from "haste-sdk";
+import {Haste, HasteRowItem} from "haste-sdk";
 
 class HasteListener
 {
@@ -22,14 +22,22 @@ class HasteListener
         ipcMain.on('activate', (event, data) => {
             console.log('activate', data);
             let pkg = "global";
+            let item = HasteRowItem.create(data.item);
             if (data.currentPackage !== 'global') {
                 pkg = data.currentPackage;
             } else {
                 pkg = data.item.t;
             }
-            packageLoader.getPackage(pkg).activate(data.item, (result) => {
-                event.sender.send('activatedResult', result);
-            });
+            if (pkg === 'global') {
+                item.countUp();
+                new Haste('global').insert(item).go()
+                    .then()
+                    .catch(err => console.error(err));
+            } else {
+                packageLoader.getPackage(pkg).activate(item, (result) => {
+                    event.sender.send('activatedResult', result);
+                });
+            }
         });
     }
 }

@@ -13,11 +13,11 @@
             <ul class="results">
                 <template id="resultList" is="dom-repeat" items="{{itemList}}" as="item">
                     <li onclick="click()" class$="[[item.selected]]">
-                        <img src="[[item.icon]]">
+                        <img src="[[item.i]]">
                         <div class="texts">
                             <span>{{ item.title }}</span>
                             <p v-if="item.d !== undefined">[[item.d]]</p>
-                            <p v-else>[[item.path]]</p>
+                            <p v-else>[[item.p]]</p>
                         </div>
                         <div class="score">
                             [[item.score]]<span v-if="item.called"> + [[item.c]]</span>
@@ -89,9 +89,6 @@
             }
             onEnter(e) {
                 e.preventDefault();
-                if (this.itemList[this.selectedIndex].d === "Plugin") {
-                    this.onTab(e);
-                }
                 console.log('enter');
                 let payload = {
                     item: this.itemList[this.selectedIndex],
@@ -99,6 +96,9 @@
                 };
                 console.log(payload);
                 this.dispatchEvent(new CustomEvent('activate', {detail: payload}));
+                if (this.itemList[this.selectedIndex].d === "Plugin") {
+                    this.onTab(e);
+                }
             }
             onArrowUp(e) {
                 e.preventDefault();

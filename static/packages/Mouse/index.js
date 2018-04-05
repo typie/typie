@@ -6,8 +6,8 @@ const robot = require("robotjs");
 class Mouse extends AbstractHastePackage
 {
 
-    constructor(Haste){
-        super();
+    constructor(Haste, win, pkgPath){
+        super(pkgPath);
 
         this.haste       = new Haste(this.packageName);
         this.packageName = 'Mouse';

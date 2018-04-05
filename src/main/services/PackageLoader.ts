@@ -14,12 +14,13 @@ export default class PackageLoader
     constructor(win: MainWindowController) {
         this.win = win;
         this.packages = {};
-        fs.watch(packagesPath, (event, path) => {
-            console.log('packages changed', event, path);
-        });
-
         this.loadPackages();
+        fs.watch(packagesPath, (event, dirPath) => {
+            console.log("Detect package '"+event+"', reloading '"+dirPath+"'");
+            this.loadPackage(dirPath);
+        });
     }
+
     public getPackage(pkg: string) {
         if (this.packages[pkg]) {
             return this.packages[pkg];
@@ -32,19 +33,27 @@ export default class PackageLoader
         let packagesDirs = PackageLoader.getDirectories(packagesPath);
         console.log(packagesDirs);
         packagesDirs.forEach((dirName) => {
-            let absPath = path.join(packagesPath, dirName);
-            console.log('absPath', absPath);
-            if (fs.existsSync(path.join(absPath, 'index.js'))) {
-                this.loadPackage(dirName, absPath);
-            }
+            this.loadPackage(dirName);
         });
     }
 
-    public loadPackage(packageName, absPath) {
+    public loadPackage(packageName) {
+        let absPath = path.join(packagesPath, packageName);
+        if (!fs.existsSync(path.join(absPath, 'index.js'))) {
+            console.log('Did not found any index.js at ' + absPath);
+            return;
+        }
+
+        if (this.packages[packageName]) {
+            console.log("package '" + packageName + "' already exist...");
+            this.packages[packageName].destroy();
+            this.packages[packageName] = null;
+        }
+
         absPath = path.relative(__static, absPath);
         absPath = absPath.replace(/\\/g, '/');
         let packagePath = '../../static/' + absPath + '/index.js';
-        console.log('trying to load package from1 ' + packagePath);
+        console.log('Loading package from ' + packagePath);
 
         let tmp = new Haste(packageName);
         tmp.addCollection().go()
@@ -54,15 +63,20 @@ export default class PackageLoader
                  * @type {AbstractHastePackage}
                  */
                 let Package = eval("require('"+packagePath+"')");
-                this.packages[packageName] = new Package(Haste, this.win);
-                console.log("Loaded package " + packageName + " from " + packagePath);
+                this.packages[packageName] = new Package(Haste, this.win, absPath);
+                console.log("Loaded package '" + packageName + "'");
 
                 let item = new HasteRowItem();
-                item.description = "Plugin";
-                item.icon = absPath + '/' + this.packages[packageName].icon;
-                item.title = packageName;
+                item.setDB("global");
+                item.setDescription("Plugin");
+                item.setIcon(this.packages[packageName].icon);
+                item.setTitle(packageName);
                 new Haste('global').insert(item, false).go()
-                    .then(res => console.log(res))
+                    .then(res => {
+                        if (res.err === 0) {
+                            console.log("Package '"+packageName+"' is now searchable.");
+                        }
+                    })
                     .catch(err => console.error(err))
             })
             .catch((err) => console.error('cannot load package from: '+packagePath, err));

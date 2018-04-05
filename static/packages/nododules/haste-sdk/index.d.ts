@@ -7,23 +7,56 @@ export default class AbstractHastePackage {
     protected packageName: string;
     protected haste: any;
     protected icon: string;
-    constructor();
+    constructor(pkgPath: any);
     getPackageName(): string;
+    getDefaultItem(value: any, description?: string, path?: string, icon?: string): HasteRowItem;
     insert(value: any, description?: string, path?: string, icon?: string): void;
+    insertItem(item: HasteRowItem): void;
     search(value: string, callback: Function): void;
     activate(rowItem: HasteRowItem, callback: Function): void;
+    destroy(): void;
 }
 
 export default class HasteRowItem {
-    db: string | undefined;
-    description: string | undefined;
-    icon: string | undefined;
-    packageName: string | undefined;
-    path: string | undefined;
-    title: string | undefined;
-    count: number | undefined;
-    unixTime?: string | undefined;
+    db: string;
+    d: string;
+    i: string;
+    t: string;
+    p: string;
+    title: string;
+    c: number;
+    score?: number;
+    u?: number;
     constructor();
+    setTitle(value: string): void;
+    getTitle(): string;
+    setPath(value: string): void;
+    getPath(): string;
+    setDB(value: string): void;
+    getDB(): string;
+    setDescription(value: string): void;
+    getDescription(): string;
+    setIcon(value: string): void;
+    getIcon(): string;
+    setPackage(value: string): void;
+    getPackage(): string;
+    setCount(value: number): void;
+    getCount(): number;
+    countUp(): void;
+    setUnixtime(value: number | undefined): void;
+    getUnixtime(): number | undefined;
+    setScore(value: number | undefined): void;
+    getScore(): number | undefined;
+    static create(data: any): HasteRowItem;
+    toPayload(): {
+        db: string;
+        t: string;
+        title: string;
+        p: string;
+        d: string;
+        i: string;
+        c: number;
+    };
 }
 
 export default class GoDispatcher {

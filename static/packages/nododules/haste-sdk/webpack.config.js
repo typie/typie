@@ -29,6 +29,7 @@ module.exports = {
         extensions: [ '.tsx', '.ts', '.js' ]
     },
     plugins: [
+        // That Webpack plugin generate single TypeScript *.d.ts declaration file using dts-bundle.
         new DtsPlugin({
             name: 'index'
         })

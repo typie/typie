@@ -25,7 +25,7 @@ export default class GoDispatcher
         //console.log('packet', packet);
         return new Promise((resolve, reject) => {
             GoDispatcher.go.execute(packet, (result: any, response: any) => {
-                console.log('got back', response);
+                //console.log('got back', response);
                 if (result.ok) {
                     //console.log('golang time: ', Date.now() - sendTime);
                     return resolve(response);

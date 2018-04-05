@@ -5,26 +5,20 @@ const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
 class MovieSearch extends AbstractHastePackage
 {
 
-    constructor(Haste){
-        super();
+    constructor(Haste, win, pkgPath){
+        super(pkgPath);
         this.packageName = 'MovieSearch';
         this.haste       = new Haste(this.packageName);
-        this.icon        = 'skull.png';
 
         // Example
         this.insert('supernatural');
         this.insert('the walking dead');
     }
 
-    insert(value) {
-        let item = new HasteRowItem();
-        item.title = value;
-        item.description = "movie search";
-        item.icon = skullIco;
-        item.path = "";
-        let res = this.haste.insert(item).go()
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+    insert(value, description="", path="", icon="") {
+        let item = this.getDefaultItem(value, description, path, icon);
+        item.setDescription("Activate to search");
+        this.insertItem(item);
     }
 
     activate(item, cb) {
