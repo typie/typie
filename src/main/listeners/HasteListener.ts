@@ -31,7 +31,12 @@ class HasteListener
             if (pkg === 'global') {
                 item.countUp();
                 new Haste('global').insert(item).go()
-                    .then()
+                    .then(data => {
+                        let plugin = packageLoader.getPackage(item.getTitle());
+                        if (plugin) {
+                            plugin.activateUponEntry();
+                        }
+                    })
                     .catch(err => console.error(err));
             } else {
                 packageLoader.getPackage(pkg).activate(item, (result) => {

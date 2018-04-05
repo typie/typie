@@ -11,4 +11,8 @@ export default class AppGlobal
     public static getTimeSinceInit() {
         return Date.now() - AppGlobal.startTime;
     }
+
+    public static getSettings() {
+        return AppGlobal.settings;
+    }
 }

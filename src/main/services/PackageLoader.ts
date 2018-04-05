@@ -21,11 +21,12 @@ export default class PackageLoader
         });
     }
 
-    public getPackage(pkg: string) {
+    public getPackage(pkg: string): AbstractHastePackage | null {
         if (this.packages[pkg]) {
             return this.packages[pkg];
         } else {
             console.error('did not find and package with that name: ' + pkg);
+            return null;
         }
     }
 

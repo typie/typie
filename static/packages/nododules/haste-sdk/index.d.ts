@@ -14,6 +14,7 @@ export default class AbstractHastePackage {
     insertItem(item: HasteRowItem): void;
     search(value: string, callback: Function): void;
     activate(rowItem: HasteRowItem, callback: Function): void;
+    activateUponEntry(): void;
     destroy(): void;
 }
 

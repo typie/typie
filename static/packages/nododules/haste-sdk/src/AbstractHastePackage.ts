@@ -54,6 +54,10 @@ export default class AbstractHastePackage
     activate(rowItem: HasteRowItem, callback: Function) {console.error('No override "action" method found in ' + this.packageName)}
     //remove(rowItem: HasteRowItem, callback: Function) {console.error('No override "remove" method found in ' + this.packageName)}
 
+    activateUponEntry() {
+        console.log("No override 'activateUponEntry' method found in " + this.packageName)
+    }
+
     destroy() {
         console.log('destroying the package!');
     }
