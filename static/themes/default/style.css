@@ -11,10 +11,18 @@
   align-items: center;
   justify-content: center; }
   .search .prefix, .search input {
+    white-space: nowrap;
     color: #fff;
     font-family: "Montserrat", arial;
     font-size: 20px;
     padding: 0 5px; }
+  .search .arrow {
+    font-size: 14px;
+    color: wheat;
+  }
+  .search > .arrow:last-of-type {
+    display: none;
+  }
   .search input {
     font-size: 24px;
     width: 100%;

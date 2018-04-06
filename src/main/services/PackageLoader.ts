@@ -69,7 +69,7 @@ export default class PackageLoader
 
                 let item = new HasteRowItem();
                 item.setDB("global");
-                item.setDescription("Plugin");
+                item.setDescription("Package");
                 item.setIcon(this.packages[packageName].icon);
                 item.setTitle(packageName);
                 new Haste('global').insert(item, false).go()

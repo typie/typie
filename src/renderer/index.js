@@ -20,7 +20,7 @@ let win = new MainRendererWindow(remote.getCurrentWindow());
 
 hasteSearch.addEventListener('search', (e) => {
     let payload = e.detail;
-    ipcRenderer.send('search', {value: payload.val, currentPackage: payload.package});
+    ipcRenderer.send('search', {value: payload.val, pkgList: payload.pkgList});
 });
 hasteSearch.addEventListener('activate', (e) => {
     let payload = e.detail;

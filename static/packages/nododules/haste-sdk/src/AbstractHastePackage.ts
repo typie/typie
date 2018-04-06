@@ -2,6 +2,7 @@
 //const MainWindowController = require("../controllers/MainWindowController");
 //const {HastePackageInterface} = require("./models/HastePackageInterface");
 import HasteRowItem from "./models/HasteRowItem";
+import SearchObject from "./models/SearchObject";
 import Haste from "./Haste";
 import * as Path from "path";
 const defaultIcon = 'pkg-icon.png';
@@ -10,11 +11,13 @@ export default class AbstractHastePackage
 {
     protected packageData: object;
     protected packageName: string;
+    protected packagePath: string;
     protected haste: any;
     protected icon: string;
     constructor(pkgPath) {
         this.packageData = {name: this.constructor.name, path: __dirname};
         this.packageName = this.constructor.name;
+        this.packagePath = pkgPath;
         this.icon        = Path.join(pkgPath, defaultIcon);
 
         /**
@@ -45,8 +48,8 @@ export default class AbstractHastePackage
             .catch(err => console.error(err));
     }
 
-    search(value: string, callback: Function) {
-        this.haste.fuzzySearch(value).orderBy('score').desc().go()
+    search(searchObj: SearchObject, callback: Function) {
+        this.haste.fuzzySearch(searchObj.value).orderBy('score').desc().go()
             .then(data => callback(data))
             .catch(err => console.log(err));
     }
@@ -60,5 +63,9 @@ export default class AbstractHastePackage
 
     destroy() {
         console.log('destroying the package!');
+    }
+
+    getIcon(icon) {
+        return Path.join(this.packagePath, icon);
     }
 }

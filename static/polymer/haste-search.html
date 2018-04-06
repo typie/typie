@@ -6,7 +6,10 @@
         <div id="app">
             <div class="icon"></div>
             <div class="search">
-                <span class="prefix">[[currentPackage]]</span>
+                <template id="pkgList" is="dom-repeat" items="[[pkgList]]" as="pkg">
+                    <span class="prefix">[[pkg]]</span>
+                    <span class="arrow">&#9658;</span>
+                </template>
                 <input autofocus id="inputField" type="text" placeholder=""/>
                 <div class="close" onclick="close()">x</div>
             </div>
@@ -29,7 +32,7 @@
             <div class="footer">
                 <div class="search-time">[[searchTime]]</div>
                 <div class="handle">· · · ·</div>
-                <div class="status">[[totalItems]] items in Catalog · Haste 1.0</div>
+                <div class="status">[[totalItems]] items in Catalog · Haste 2.0</div>
             </div>
         </div>
     </template>
@@ -43,6 +46,7 @@
                 super();
                 this.input = null;
                 this.searchTimer;
+                this.pkgList = [];
             }
 
             static get properties() {
@@ -52,7 +56,7 @@
                         observer: '_indexChange'
                     },
                     selectedItem: Object,
-                    currentPackage: String,
+                    pkgList: Array,
                     itemList: Array,
                     jsonList: String,
                     searchTime: String,
@@ -89,8 +93,11 @@
             }
             onTab(e) {
                 e.preventDefault();
-                if (this.itemList[this.selectedIndex].d === "Plugin") {
-                    this.set('currentPackage', this.itemList[this.selectedIndex].title);
+                if (this.isPackageSelected()) {
+                    let pkgList = JSON.parse(JSON.stringify(this.pkgList));
+                    pkgList.push(this.itemList[this.selectedIndex].title);
+                    this.set('pkgList', pkgList);
+                    console.log('pkgList', pkgList);
                     this.input.value = "";
                     this.clearList();
                 }
@@ -100,11 +107,11 @@
                 console.log('enter');
                 let payload = {
                     item: this.itemList[this.selectedIndex],
-                    currentPackage: this.currentPackage ? this.currentPackage:"global",
+                    pkgList: this.pkgList ? this.pkgList:[],
                 };
                 console.log(payload);
                 this.dispatchEvent(new CustomEvent('activate', {detail: payload}));
-                if (this.itemList[this.selectedIndex].d === "Plugin") {
+                if (this.isPackageSelected()) {
                     this.onTab(e);
                 }
             }
@@ -122,14 +129,20 @@
             }
             onBackspace(e) {
                 if (this.input.value.length === 0) {
-                    this.set('currentPackage', "");
+                    if (this.pkgList.length > 1) {
+                        console.log('pkglist', this.pkgList);
+                        let pkgList = this.pkgList.slice(0, -1);
+                        this.set('pkgList', pkgList);
+                    } else {
+                        this.set('pkgList', []);
+                    }
                     this.clearList();
                 }
             }
             inputChange() {
                 if (this.input.value.length > 0) {
                     this.searchTimer = Date.now();
-                    let payload = {val: this.input.value, package: this.currentPackage};
+                    let payload = {val: this.input.value, pkgList: this.pkgList};
                     this.dispatchEvent(new CustomEvent('search', {detail: payload}));
                 } else {
                     this.clearList();
@@ -185,6 +198,11 @@
             disconnectedCallback() {
                 this.input.removeEventListener('input', () => this.change());
                 this.input.removeEventListener('keydown', e => this.keyDown(e));
+            }
+
+            isPackageSelected() {
+                return this.itemList[this.selectedIndex].d === "Package"
+                    || this.itemList[this.selectedIndex].d === "SubPackage";
             }
         }
         customElements.define(HasteSearch.is, HasteSearch);

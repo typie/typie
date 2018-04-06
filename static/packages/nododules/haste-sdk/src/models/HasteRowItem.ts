@@ -12,13 +12,13 @@ export default class HasteRowItem
     public score?: number;
     public u?: number;
 
-    constructor() {
+    constructor(title?: string) {
         this.db = "";
         this.d = "";
         this.i = "";
         this.t = "";
         this.p = "";
-        this.title = "";
+        this.title = title ? title : "";
         this.c = 0;
     }
 

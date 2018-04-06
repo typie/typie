@@ -1,6 +1,6 @@
 const {shell} = require('electron');
 const skullIco = 'themes/default/images/skull.png';
-const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
+const {AbstractHastePackage, HasteRowItem, SearchObject} = require('haste-sdk');
 
 class MovieSearch extends AbstractHastePackage
 {
@@ -21,32 +21,38 @@ class MovieSearch extends AbstractHastePackage
         this.insertItem(item);
     }
 
-    search(value, callback) {
-        this.haste.fuzzySearch(value).orderBy('score').desc().go()
+    /**
+     * @param {SearchObject} obj
+     * @param callback
+     */
+    search(obj, callback) {
+        console.log('list of pkgs', obj.pkgList, obj.value);
+        this.haste.fuzzySearch(obj.value).orderBy('score').desc().go()
             .then(data => {
-                console.log('data result', data);
-                let firstItem = new HasteRowItem();
-                firstItem.setTitle(value);
-                firstItem.setDescription("create a new search");
-                firstItem.setIcon();
-                data.data.unshift(firstItem.toPayload());
+                if (data.data[0].score !== 1000) {
+                    let firstItem = new HasteRowItem(obj.value);
+                    firstItem.setDescription("create a new search");
+                    firstItem.setIcon(this.getIcon("go-arrow.png"));
+                    data.data.unshift(firstItem.toPayload());
+                }
                 callback(data);
             })
             .catch(err => console.log(err));
     }
 
     activate(item, cb) {
-        this.haste.updateCalled(item).go();
-        let eleet = 'http://1337x.to/sort-search/'+item.title+'/seeders/desc/1/';
-        let imdb = 'https://www.imdb.com/find?s=all&q='+item.title+'';
-        let youtube = 'https://www.youtube.com/results?search_query='+item.title+'';
-        let subscene = 'https://subscene.com/subtitles/title?q='+item.title+'&l=';
-        let opensubs = 'https://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-'+item.title+'';
-        shell.openItem(opensubs);
-        shell.openItem(subscene);
-        shell.openItem(youtube);
-        shell.openItem(imdb);
+        let eleet = 'http://1337x.to/sort-search/'+item.getTitle()+'/seeders/desc/1/';
+        let imdb = 'https://www.imdb.com/find?s=all&q='+item.getTitle()+'';
+        let youtube = 'https://www.youtube.com/results?search_query='+item.getTitle()+'';
+        let subscene = 'https://subscene.com/subtitles/title?q='+item.getTitle()+'&l=';
+        let opensubs = 'https://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-'+item.getTitle()+'';
+        //shell.openItem(opensubs);
+        //shell.openItem(subscene);
+        //shell.openItem(youtube);
+        //shell.openItem(imdb);
         shell.openItem(eleet);
+        item.countUp();
+        this.insert(item.getTitle());
         //this.win.send('action', 'hide');
     }
 }
