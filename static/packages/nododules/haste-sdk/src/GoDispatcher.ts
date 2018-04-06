@@ -28,6 +28,9 @@ export default class GoDispatcher
                 //console.log('got back', response);
                 if (result.ok) {
                     //console.log('golang time: ', Date.now() - sendTime);
+                    if (response.data) {
+                        response.data = JSON.parse(response.data);
+                    }
                     return resolve(response);
                 }
                 return reject(response);
