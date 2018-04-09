@@ -21,13 +21,14 @@ export default class PackageLoader
         });
     }
 
-    public getPackage(pkg: string): AbstractHastePackage | null {
-        if (this.packages[pkg]) {
-            return this.packages[pkg];
-        } else {
-            console.error('did not find and package with that name: ' + pkg);
-            return null;
-        }
+    public getPackage(pkg: string): Promise<AbstractHastePackage> {
+        return new Promise<AbstractHastePackage>((resolve, reject) => {
+            if (this.packages[pkg]) {
+                resolve(this.packages[pkg]);
+            } else {
+                reject('did not find any package with that name: ' + pkg);
+            }
+        });
     }
 
     public loadPackages() {

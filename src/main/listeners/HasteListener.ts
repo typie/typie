@@ -8,7 +8,8 @@ class HasteListener
         ipcMain.on('search', (event, obj: SearchObject) => {
             if (!isGlobal(obj)) {
                 packageLoader.getPackage(obj.pkgList[0])
-                    .search(obj, result => event.sender.send('resultList', result));
+                    .then(pkg => pkg.search(obj, result => event.sender.send('resultList', result)))
+                    .catch(err => console.error(err));
             } else {
                 new Haste('global').fuzzySearch(obj.value).go()
                     .then(res => event.sender.send('resultList', res))
@@ -23,19 +24,18 @@ class HasteListener
                 if (isPackage(item)) {
                     item.countUp();
                     new Haste('global').insert(item).go().then().catch();
-                    let plugin = packageLoader.getPackage(item.getTitle());
-                    if (plugin) {
-                        plugin.activateUponEntry();
-                    }
+                    packageLoader.getPackage(item.getTitle())
+                        .then(pkg => pkg.activateUponEntry())
+                        .catch(err => console.error(err));
                 } else {
-                    packageLoader.getPackage(item.getPackage()).activate(item, (result) => {
-                        event.sender.send('activatedResult', result);
-                    });
+                    packageLoader.getPackage(item.getPackage())
+                        .then(pkg => pkg.activate(item, result => event.sender.send('activatedResult', result)))
+                        .catch(err => console.error(err));
                 }
             } else {
-                packageLoader.getPackage(obj.pkgList[0]).activate(item, (result) => {
-                    event.sender.send('activatedResult', result);
-                });
+                packageLoader.getPackage(obj.pkgList[0])
+                    .then(pkg => pkg.activate(item, result => event.sender.send('activatedResult', result)))
+                    .catch(err => console.error(err));
             }
         });
     }
