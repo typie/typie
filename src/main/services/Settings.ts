@@ -7,46 +7,57 @@ import AppGlobal from "../helpers/AppGlobal";
 
 export default class Settings
 {
-    private static settingsPath: string = path.join(app.getPath('userData'), 'config.yml');
-    private static isLoading: boolean = false;
-    private static isWatching: boolean = false;
+    private settingsPath: string;
+    private isLoading: boolean;
+    private isWatching: boolean;
+    private settings: object;
 
-    public static init(): void {
-        try {
-            this.createIfNotExist();
-            this.watchFile();
-        } catch (e) {
-            console.error(e);
-            throw new Error('Error loading config.yml file, check if exist or is valid Yaml format.');
-        }
+    constructor() {
+        this.settings = {};
+        this.settingsPath = path.join(app.getPath('userData'), 'config.yml');
+        this.isLoading = true;
+        this.isWatching = false;
+        this.loadSettings();
     }
 
-    private static createIfNotExist(): void {
+    private createIfNotExist(): void {
+        let settings = {};
         if (fs.existsSync(this.settingsPath)) {
             console.log('Loading Settings File...');
-            let settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
-            console.log(settings);
-            AppGlobal.settings = settings;
+            settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
         } else {
-            let defaultSettings = {
-                test: "some test"
+            settings = {
+                version: "Haste 2.0"
             };
             console.log('Creating New Settings File...');
-            fs.writeFileSync(this.settingsPath, yaml.safeDump(defaultSettings));
+            fs.writeFileSync(this.settingsPath, yaml.safeDump(settings));
         }
+        this.settings = settings;
+        AppGlobal.settings = this.settings;
+        console.log('settings loaded:', this.settings);
+        this.isLoading = false;
     }
 
-    private static watchFile(): void {
+    private watchFile(): void {
         if (!this.isWatching) {
             this.isWatching = true;
             fs.watch(this.settingsPath, (event, path) => {
                 if (!this.isLoading) {
                     this.isLoading = true;
                     console.log('Settings file ' + event +' detected at ', path);
-                    setTimeout(() => this.isLoading = false, 25);
-                    this.init();
+                    this.loadSettings();
                 }
             });
+        }
+    }
+
+    private loadSettings(): void {
+        try {
+            this.createIfNotExist();
+            this.watchFile();
+        } catch (e) {
+            console.error(e);
+            throw new Error('Error loading config.yml file, check if exist or is valid Yaml format.');
         }
     }
 }

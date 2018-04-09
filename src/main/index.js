@@ -9,11 +9,10 @@ import ShortcutListener from './listeners/ShortcutListener';
 import MainWindowController from "./controllers/MainWindowController";
 
 AppGlobal.init();
-Settings.init();
 
-// global reference to mainWindow (necessary to prevent window from being garbage collected)
+let config = new Settings();
 let mainWindow = new MainWindowController();
-AppListener.listen(mainWindow);
+AppListener.listen(mainWindow, config);
 
 let bootstrap = setInterval(() => {
     if (mainWindow.isExist) {

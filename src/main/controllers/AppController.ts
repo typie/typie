@@ -1,18 +1,19 @@
 import {app} from 'electron';
-import MainWindowController from "./MainWindowController";
 import {GoDispatcher} from "haste-sdk";
+import Settings from "../services/Settings";
 import PackageLoader from "../services/PackageLoader";
 import HasteListener from "../listeners/HasteListener";
+import MainWindowController from "./MainWindowController";
 
 export default class AppController
 {
-    public static bootstrapApp(win: MainWindowController) {
+    public static bootstrapApp(win: MainWindowController, config: Settings) {
         win.createWindow();
         GoDispatcher.startListen();
         let bootstrap = setInterval(() => {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);
-                new HasteListener(new PackageLoader(win));
+                new HasteListener(new PackageLoader(win, config));
             }
         }, 1);
     }

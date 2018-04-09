@@ -2,6 +2,7 @@ import MainWindowController from "../controllers/MainWindowController";
 declare const __static: any;
 import * as fs from "fs";
 import * as path from "path";
+import Settings from "./Settings";
 import {AbstractHastePackage, HasteRowItem, Haste} from "haste-sdk";
 
 const packagesPath = path.join(__static, '/packages');
@@ -10,9 +11,11 @@ export default class PackageLoader
 {
     private packages: Object;
     private win: MainWindowController;
+    private config: Settings;
 
-    constructor(win: MainWindowController) {
+    constructor(win: MainWindowController, config: Settings) {
         this.win = win;
+        this.config = config;
         this.packages = {};
         this.loadPackages();
         fs.watch(packagesPath, (event, dirPath) => {
