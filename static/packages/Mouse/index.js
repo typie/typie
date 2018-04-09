@@ -36,6 +36,7 @@ class Mouse extends AbstractHastePackage
 
     activateUponEntry() {
         this.activate();
+        this.win.hide();
     }
 
     activate(item=null, cb=null) {

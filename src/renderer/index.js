@@ -26,6 +26,9 @@ hasteSearch.addEventListener('activate', (e) => {
     let payload = e.detail;
     ipcRenderer.send('activate', payload);
 });
+hasteSearch.addEventListener('escape', (e) => {
+    ipcRenderer.send('hide');
+});
 ipcRenderer.on('resultList', (event, data) => {
     hasteSearch.updateList(data);
 });
@@ -35,4 +38,7 @@ ipcRenderer.on('injectCss', (event, css) => {
 });
 ipcRenderer.on('changePackage', (event, data) => {
     hasteSearch.changePackage(data);
+});
+ipcRenderer.on('focus', (event, data) => {
+    hasteSearch.focus();
 });

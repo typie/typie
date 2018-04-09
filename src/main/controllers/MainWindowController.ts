@@ -12,7 +12,8 @@ export default class MainWindowController extends AbstractWindowController
         width: 475,
         height: 900,
         transparent: true,
-        frame: false
+        frame: false,
+        alwaysOnTop: true,
     };
 
     // create main BrowserWindow when electron is ready
@@ -29,9 +30,10 @@ export default class MainWindowController extends AbstractWindowController
     }
 
     public init() {
+        super.init();
         console.log('content window finished loading in ' + (AppGlobal.getTimeSinceInit() / 1000) + ' seconds');
         new StyleLoader(this);
-        this.show();
+        //this.show();
     }
 
     public registerKey(key: string, callback: Function) {

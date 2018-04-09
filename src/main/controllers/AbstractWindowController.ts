@@ -10,6 +10,7 @@ class AbstractWindowController
     protected win = <Electron.BrowserWindow>{};
     protected _isExist: boolean = false;
     private _isVisible: boolean = false;
+    private position: any;
 
     constructor() {
         this.isExist = false;
@@ -66,16 +67,30 @@ class AbstractWindowController
         this.win.webContents.on(event, callback);
     }
 
-    public init(): void {}
+    public init(): void {
+        this.position = this.win.getPosition();
+        this.isVisible = true;
+        this.hide();
+        this.win.show();
+    }
 
     public show(): void {
-        this.win.show();
-        this.isVisible = true;
+        //this.win.show();
+        if (!this.isVisible) {
+            this.win.focus();
+            this.win.setPosition(this.position[0], this.position[1], false);
+            this.isVisible = true;
+        }
     }
 
     public hide(): void {
-        this.win.hide();
-        this.isVisible = false;
+        if (this.isVisible) {
+            this.position = this.win.getPosition();
+            this.win.setPosition(5000, 5000, false);
+            this.isVisible = false;
+            this.win.minimize();
+            this.win.showInactive();
+        }
     }
 
     public toggle(): void {

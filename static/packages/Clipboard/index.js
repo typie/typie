@@ -22,8 +22,12 @@ class Clipboard extends AbstractHastePackage
     }
 
     activate(item, cb) {
+        this.win.hide();
+        clipboard.writeText(item.getPath());
         this.haste.updateCalled(item).go()
-            .then(()=>this.haste.pasteText().go())
+            .then(()=>{
+                this.haste.pasteText().go();
+            })
             .catch(()=>{});
     }
 
@@ -32,6 +36,7 @@ class Clipboard extends AbstractHastePackage
             .then(res => {
                 console.log('retured from unixTime fetch', res);
                 this.win.send('resultList', res);
+                this.win.show();
             })
             .catch(err => console.log(err));
     }

@@ -89,6 +89,7 @@
                     case "ArrowUp":     this.onArrowUp(e); break;
                     case "ArrowDown":   this.onArrowDown(e); break;
                     case "Backspace":   this.onBackspace(e); break;
+                    case "Escape":      this.onEscape(e); break;
                 }
             }
             onTab(e) {
@@ -138,6 +139,13 @@
                     }
                     this.clearList();
                 }
+            }
+            onEscape(e) {
+                e.preventDefault();
+                this.dispatchEvent(new CustomEvent('escape', {detail: null}));
+                this.set('pkgList', []);
+                this.input.value = "";
+                this.clearList();
             }
             inputChange() {
                 if (this.input.value.length > 0) {
@@ -191,6 +199,10 @@
                 this.set('itemList', []);
                 this.set('selectedIndex', -1);
                 this.set('searchTime', "");
+            }
+
+            focus() {
+                this.input.focus();
             }
 
             removeStyles() {
