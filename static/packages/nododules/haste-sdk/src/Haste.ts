@@ -75,6 +75,16 @@ export default class Haste
         return this;
     }
 
+    getRows(limit: number) {
+        this._search.limit = limit;
+        this._search.type = 'getRows';
+        this._search.db = this.db;
+        this._search.packageName = this.packageName;
+        this.command = 'search';
+        this.payload = this._search;
+        return this;
+    }
+
     orderBy(field: string) {
         this._search.direction = 'asc';
         this._search.orderBy = field;

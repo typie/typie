@@ -66,13 +66,12 @@ export default class PackageLoader
             .then((data) => {
                 console.log(data);
                 let pkgConfig = this.config.loadPkgConfig(packageName, absPath);
-                pkgConfig["pkgPath"] = absPath;
 
                 /**
                  * @type {AbstractHastePackage}
                  */
                 let Package = eval("require('"+packagePath+"')");
-                this.packages[packageName] = new Package(Haste, this.win, pkgConfig);
+                this.packages[packageName] = new Package(Haste, this.win, pkgConfig, absPath);
                 console.log("Loaded package '" + packageName + "'");
 
                 let item = new HasteRowItem();

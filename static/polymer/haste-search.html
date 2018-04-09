@@ -152,7 +152,7 @@
             changePackage(data) {
                 if (data && data.length > 0) {
                     let pkgList = JSON.stringify(this.pkgList);
-                    let newPkgList = JSON.stringify(data[0]);
+                    let newPkgList = JSON.stringify(data);
                     if (pkgList !== newPkgList) {
                         pkgList = JSON.parse(newPkgList);
                         this.set('pkgList', pkgList);
@@ -165,7 +165,7 @@
 
             updateList(data) {
                 console.log('updateList', data);
-                if (data && data.data.length > 0) {
+                if (data && data.data && data.data.length > 0) {
                     this.set('itemList', data.data);
                     this.set('jsonList', JSON.stringify(data.data));
                     this.set('selectedIndex', -1);

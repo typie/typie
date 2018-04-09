@@ -10,7 +10,7 @@ export default class AbstractHastePackage {
     protected icon: string;
     protected pkgConfig: any;
     protected win: any;
-    constructor(win: any, config: any);
+    constructor(win: any, config: any, pkgPath: any);
     getPackageName(): string;
     getDefaultItem(value: any, description?: string, path?: string, icon?: string): HasteRowItem;
     insert(value: any, description?: string, path?: string, icon?: string): void;
@@ -88,6 +88,7 @@ export default class Haste {
     getKey(value: string): this;
     getExecList(): this;
     fuzzySearch(value: string): this;
+    getRows(limit: number): this;
     orderBy(field: string): this;
     asc(): this;
     desc(): this;

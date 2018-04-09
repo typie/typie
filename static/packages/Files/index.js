@@ -30,8 +30,8 @@ if (is.windows()) {
 class Files extends AbstractHastePackage
 {
 
-    constructor(Haste, win, config){
-        super(win, config);
+    constructor(Haste, win, config, pkgPath){
+        super(win, config, pkgPath);
         this.win         = win;
         this.packageName = 'Files';
         this.db          = 'global';
@@ -63,9 +63,6 @@ class Files extends AbstractHastePackage
     }
 
     activate(item, cb) {
-        // this.haste.pasteText().go()
-        //     .then((res)=>console.log(res))
-        //     .catch(()=>{});
         this.haste.updateCalled(item).go()
            .then(()=>{})
            .catch(()=>{});

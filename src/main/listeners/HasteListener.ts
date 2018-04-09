@@ -8,7 +8,7 @@ class HasteListener
         ipcMain.on('search', (event, obj: SearchObject) => {
             if (!isGlobal(obj)) {
                 packageLoader.getPackage(obj.pkgList[0])
-                    .then(pkg => pkg.search(obj, result => event.sender.send('resultList', result)))
+                    .then(pkg => pkg.search(obj, res => event.sender.send('resultList', res)))
                     .catch(err => console.error(err));
             } else {
                 new Haste('global').fuzzySearch(obj.value).go()

@@ -44,7 +44,7 @@ export default class Settings extends EventEmitter
     loadPkgConfig(pkgName, pkgPath): any {
         let pkgConfig = {};
         if (this.getEntry(pkgName)) {
-            console.log("Loading '"+pkgName+"' config from user config", this.settings);
+            console.log("Loading '"+pkgName+"' config from user config");
             return this.getEntry(pkgName);
         } else {
             console.log("Loading '"+pkgName+"' config from defaults");

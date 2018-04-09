@@ -16,12 +16,12 @@ export default class AbstractHastePackage
     protected pkgConfig: any;
     protected win: any;
 
-    constructor(win, config) {
+    constructor(win, config, pkgPath) {
         this.win         = win;
         this.packageData = {name: this.constructor.name, path: __dirname};
         this.packageName = this.constructor.name;
         this.pkgConfig   = config;
-        this.packagePath = config.pkgPath;
+        this.packagePath = pkgPath;
         this.icon        = Path.join(this.packagePath, defaultIcon);
 
         /**

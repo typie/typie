@@ -54,7 +54,7 @@ class AbstractWindowController
 
     public send(channel: string, ...args: any[]): void {
         if (this.isExist) {
-            this.win.webContents.send(channel, args);
+            this.win.webContents.send(channel, ...args);
         }
     }
 
