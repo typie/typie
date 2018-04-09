@@ -1,0 +1,12 @@
+
+
+shortcut: "Ctrl+f+j"
+keys:
+  escape: ESC
+  up: i
+  left: j
+  down: k
+  right: l
+  click: f
+  speed: d
+  rightClick: s

@@ -22,6 +22,7 @@ export default class PackageLoader
             console.log("Detect package '"+event+"', reloading '"+dirPath+"'");
             this.loadPackage(dirPath);
         });
+        config.on('reloadPackage', pkgName => this.loadPackage(pkgName));
     }
 
     public getPackage(pkg: string): Promise<AbstractHastePackage> {

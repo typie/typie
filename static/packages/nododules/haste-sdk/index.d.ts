@@ -18,9 +18,9 @@ export default class AbstractHastePackage {
     search(searchObj: SearchObject, callback: Function): void;
     activate(rowItem: HasteRowItem, callback: Function): void;
     activateUponEntry(): void;
-    destroy(): void;
     getIcon(icon: any): string;
-    loadConfig(config: any): void;
+    loadConfig(): void;
+    destroy(): void;
 }
 
 export default class HasteRowItem {

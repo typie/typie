@@ -4,8 +4,9 @@ import Path from "path";
 import * as yaml from "js-yaml";
 import {app} from "electron";
 import AppGlobal from "../helpers/AppGlobal";
+import {EventEmitter} from 'events';
 
-export default class Settings
+export default class Settings extends EventEmitter
 {
     private settingsPath: string;
     private isLoading: boolean;
@@ -13,6 +14,7 @@ export default class Settings
     private settings: object;
 
     constructor() {
+        super();
         this.settings = {};
         this.settingsPath = Path.join(app.getPath('userData'), 'config.yml');
         this.isLoading = true;
@@ -62,6 +64,15 @@ export default class Settings
         if (fs.existsSync(this.settingsPath)) {
             console.log('Loading Settings File...');
             settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
+            if (this.isWatching) {
+                // test for withc package had changed and send event.
+                Object.keys(settings).forEach((key) => {
+                    console.log(key, settings[key]);
+                    if (JSON.stringify(this.settings[key]) !== JSON.stringify(settings[key])) {
+                        this.emit('reloadPackage', key);
+                    }
+                });
+            }
         } else {
             settings = {
                 version: "Haste 2.0"
@@ -76,7 +87,7 @@ export default class Settings
     }
 
     private watchFile(): void {
-        if (!this.isWatching) {
+        if (!this.isWatching && !this.isLoading) {
             this.isWatching = true;
             fs.watch(this.settingsPath, (event, path) => {
                 if (!this.isLoading) {
@@ -91,7 +102,7 @@ export default class Settings
     private loadSettings(): void {
         try {
             this.createIfNotExist();
-            //this.watchFile();
+            this.watchFile();
         } catch (e) {
             console.error(e);
             throw new Error('Error loading config.yml file, check if exist or is valid Yaml format.');

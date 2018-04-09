@@ -23,13 +23,12 @@ export default class AbstractHastePackage
         this.pkgConfig   = config;
         this.packagePath = config.pkgPath;
         this.icon        = Path.join(this.packagePath, defaultIcon);
-        this.pkgConfig   = {};
 
         /**
          * @type {Haste}
          */
         this.haste = null;
-        this.loadConfig(config);
+        this.loadConfig();
     }
     getPackageName(): string {
         return this.packageName;
@@ -67,15 +66,27 @@ export default class AbstractHastePackage
         console.log("No override 'activateUponEntry' method found in " + this.packageName)
     }
 
-    destroy() {
-        console.log('destroying the package!');
-    }
 
     getIcon(icon) {
         return Path.join(this.packagePath, icon);
     }
 
-    loadConfig(config) {
-        console.log("No override 'loadConfig' method found in " + this.packageName)
+    loadConfig() {
+        //console.log("No override 'loadConfig' method found in " + this.packageName);
+        if (this.pkgConfig.shortcut) {
+            console.log('registering shortcut ' + this.pkgConfig.shortcut + ' to ' + this.getPackageName());
+            this.win.registerKey(this.pkgConfig.shortcut, () => {
+                this.win.send('changePackage', [this.getPackageName()]);
+                this.activateUponEntry();
+            });
+        }
+    }
+
+    destroy() {
+        console.log('destroying the package!');
+        console.log('unregister', this.pkgConfig);
+        if (this.pkgConfig.shortcut) {
+            this.win.unregisterKey(this.pkgConfig.shortcut);
+        }
     }
 }

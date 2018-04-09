@@ -7,6 +7,7 @@ class MovieSearch extends AbstractHastePackage
 
     constructor(Haste, win, config){
         super(win, config);
+        this.win         = win;
         this.packageName = 'MovieSearch';
         this.haste       = new Haste(this.packageName);
 
@@ -54,15 +55,6 @@ class MovieSearch extends AbstractHastePackage
         item.countUp();
         this.insert(item.getTitle());
         //this.win.send('action', 'hide');
-    }
-
-    loadConfig(config) {
-        if (config.shortcut) {
-            console.log('registering shortcut ' + config.shortcut + ' to ' + this.getPackageName());
-            globalShortcut.register(config.shortcut, () => {
-                this.win.send('changePackage', [this.getPackageName()]);
-            });
-        }
     }
 }
 module.exports = MovieSearch;
