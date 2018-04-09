@@ -149,6 +149,20 @@
                 }
             }
 
+            changePackage(data) {
+                if (data && data.length > 0) {
+                    let pkgList = JSON.stringify(this.pkgList);
+                    let newPkgList = JSON.stringify(data[0]);
+                    if (pkgList !== newPkgList) {
+                        pkgList = JSON.parse(newPkgList);
+                        this.set('pkgList', pkgList);
+                        console.log('pkgList', pkgList);
+                        this.input.value = "";
+                        this.clearList();
+                    }
+                }
+            }
+
             updateList(data) {
                 console.log('updateList', data);
                 if (data && data.data.length > 0) {

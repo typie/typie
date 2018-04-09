@@ -33,4 +33,6 @@ ipcRenderer.on('injectCss', (event, css) => {
     hasteSearch.removeStyles();
     hasteSearch.loadStyles(css);
 });
-
+ipcRenderer.on('changePackage', (event, data) => {
+    hasteSearch.changePackage(data);
+});

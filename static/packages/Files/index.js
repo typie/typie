@@ -30,8 +30,8 @@ if (is.windows()) {
 class Files extends AbstractHastePackage
 {
 
-    constructor(Haste, win, pkgPath){
-        super(pkgPath);
+    constructor(Haste, win, config){
+        super(win, config);
         this.win         = win;
         this.packageName = 'Files';
         this.db          = 'global';

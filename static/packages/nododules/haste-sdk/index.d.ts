@@ -8,7 +8,9 @@ export default class AbstractHastePackage {
     protected packagePath: string;
     protected haste: any;
     protected icon: string;
-    constructor(pkgPath: any);
+    protected pkgConfig: any;
+    protected win: any;
+    constructor(win: any, config: any);
     getPackageName(): string;
     getDefaultItem(value: any, description?: string, path?: string, icon?: string): HasteRowItem;
     insert(value: any, description?: string, path?: string, icon?: string): void;
@@ -18,6 +20,7 @@ export default class AbstractHastePackage {
     activateUponEntry(): void;
     destroy(): void;
     getIcon(icon: any): string;
+    loadConfig(config: any): void;
 }
 
 export default class HasteRowItem {

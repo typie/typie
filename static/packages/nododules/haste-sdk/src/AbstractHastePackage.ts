@@ -1,4 +1,3 @@
-
 //const MainWindowController = require("../controllers/MainWindowController");
 //const {HastePackageInterface} = require("./models/HastePackageInterface");
 import HasteRowItem from "./models/HasteRowItem";
@@ -14,16 +13,23 @@ export default class AbstractHastePackage
     protected packagePath: string;
     protected haste: any;
     protected icon: string;
-    constructor(pkgPath) {
+    protected pkgConfig: any;
+    protected win: any;
+
+    constructor(win, config) {
+        this.win         = win;
         this.packageData = {name: this.constructor.name, path: __dirname};
         this.packageName = this.constructor.name;
-        this.packagePath = pkgPath;
-        this.icon        = Path.join(pkgPath, defaultIcon);
+        this.pkgConfig   = config;
+        this.packagePath = config.pkgPath;
+        this.icon        = Path.join(this.packagePath, defaultIcon);
+        this.pkgConfig   = {};
 
         /**
          * @type {Haste}
          */
         this.haste = null;
+        this.loadConfig(config);
     }
     getPackageName(): string {
         return this.packageName;
@@ -67,5 +73,9 @@ export default class AbstractHastePackage
 
     getIcon(icon) {
         return Path.join(this.packagePath, icon);
+    }
+
+    loadConfig(config) {
+        console.log("No override 'loadConfig' method found in " + this.packageName)
     }
 }

@@ -1,6 +1,6 @@
 
 import fs from "fs";
-import path from "path";
+import Path from "path";
 import * as yaml from "js-yaml";
 import {app} from "electron";
 import AppGlobal from "../helpers/AppGlobal";
@@ -14,10 +14,47 @@ export default class Settings
 
     constructor() {
         this.settings = {};
-        this.settingsPath = path.join(app.getPath('userData'), 'config.yml');
+        this.settingsPath = Path.join(app.getPath('userData'), 'config.yml');
         this.isLoading = true;
         this.isWatching = false;
         this.loadSettings();
+    }
+
+    public getEntry(name: string): object | null {
+        if (this.settings[name]) {
+            return this.settings[name];
+        }
+        return null;
+    }
+
+    public writeEntry(name: string, data: object): void {
+        this.settings[name] = data;
+        this.writeToFile();
+    }
+
+    /**
+     * this function will load the default pkg config that placed
+     * in the package directory. if there already an entry in the main config
+     * then it will use it and won't load the defaults.
+     * @param pkgName
+     * @param pkgPath
+     */
+    loadPkgConfig(pkgName, pkgPath): any {
+        let pkgConfig = {};
+        if (this.getEntry(pkgName)) {
+            console.log("Loading '"+pkgName+"' config from user config", this.settings);
+            return this.getEntry(pkgName);
+        } else {
+            console.log("Loading '"+pkgName+"' config from defaults");
+            try {
+                pkgConfig = yaml.safeLoad(fs.readFileSync(Path.join(Path.join("static", pkgPath), 'defaultConfig.yml'), 'utf8'));
+                this.writeEntry(pkgName, pkgConfig);
+            } catch (err) {
+                console.error("Missing 'defaultConfig.yml' file for "+ pkgName)
+                //console.error(err);
+            }
+        }
+        return pkgConfig;
     }
 
     private createIfNotExist(): void {
@@ -30,7 +67,7 @@ export default class Settings
                 version: "Haste 2.0"
             };
             console.log('Creating New Settings File...');
-            fs.writeFileSync(this.settingsPath, yaml.safeDump(settings));
+            this.writeToFile();
         }
         this.settings = settings;
         AppGlobal.settings = this.settings;
@@ -54,10 +91,14 @@ export default class Settings
     private loadSettings(): void {
         try {
             this.createIfNotExist();
-            this.watchFile();
+            //this.watchFile();
         } catch (e) {
             console.error(e);
             throw new Error('Error loading config.yml file, check if exist or is valid Yaml format.');
         }
+    }
+
+    private writeToFile() {
+        fs.writeFileSync(this.settingsPath, yaml.safeDump(this.settings));
     }
 }
