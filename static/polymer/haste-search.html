@@ -94,8 +94,8 @@
             }
             onTab(e) {
                 e.preventDefault();
+                let item = this.itemList[this.selectedIndex];
                 if (this.isPackageSelected()) {
-                    let item = this.itemList[this.selectedIndex];
                     let pkgList = JSON.parse(JSON.stringify(this.pkgList));
                     if (item.p.startsWith('SubPackage|')) {
                         pkgList = [];
@@ -110,6 +110,8 @@
                     console.log('pkgList', pkgList);
                     this.input.value = "";
                     this.clearList();
+                } else {
+                    this.input.value = item.title;
                 }
             }
             onEnter(e) {
