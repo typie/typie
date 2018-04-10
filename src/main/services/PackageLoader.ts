@@ -58,7 +58,12 @@ export default class PackageLoader
 
         absPath = path.relative(__static, absPath);
         absPath = absPath.replace(/\\/g, '/');
-        let packagePath = '../../static/' + absPath + '/index.js';
+        if (__dirname.endsWith('asar')) {
+            absPath = '../static/' + absPath;
+        } else {
+            absPath = '../../static/' + absPath;
+        }
+        let packagePath = absPath + '/index.js';
         console.log('Loading package from ' + packagePath);
 
         let tmp = new Haste(packageName);

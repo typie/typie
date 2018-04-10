@@ -13,11 +13,11 @@ export default class StyleLoader
 
     constructor(win) {
         this.win = win;
-        this.defaultThemePath = 'static/themes/default/style.css';
-        this.themesPath = path.join(__static, '/themes');
+        this.defaultThemePath = 'default/style.css';
+        this.themesPath = path.join(__static, '/themes/');
         this.themes = {};
 
-        this.loadStyle(this.defaultThemePath);
+        this.loadStyle(this.themesPath + this.defaultThemePath);
 
         fs.watch(this.themesPath, {recursive: true}, (event, filePath) => {
             let themeDir = path.join(this.themesPath, path.dirname(path.normalize(filePath)));

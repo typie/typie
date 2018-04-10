@@ -12,8 +12,8 @@ exports.run = function(pathList, extArray, haste) {
 
         haste.getExecList().go()
             .then((data) => {
-                let list = JSON.parse(data.data);
-                if (list === null) {
+                let list = data.data;
+                if (!list || list === null) {
                     reject("not files got back");
                 } else {
                     for (let fileFull of list) {

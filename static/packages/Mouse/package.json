@@ -8,6 +8,7 @@
     "rebuild": "npm rebuild --runtime=electron --target=1.8.2 --disturl=https://atom.io/download/atom-shell --abi=57"
   },
   "dependencies": {
+    "haste-sdk": "github:rotemgrim/haste-sdk",
     "iohook": "^0.1.13",
     "robotjs": "^0.5.1"
   },

@@ -42,9 +42,9 @@ class Files extends AbstractHastePackage
         // this.insert('some file');
         // this.insert('another file');
 
-        //Walker.run(pathList, fileExtensions, this.haste)
-        //    .then(res => this.insertAll(res))
-        //    .catch(err => console.log(err));
+        Walker.run(pathList, fileExtensions, this.haste)
+            .then(res => this.insertAll(res))
+            .catch(err => console.log(err));
 
     }
 

@@ -8,6 +8,16 @@ import WindowsListener from './listeners/WindowsListener';
 import ShortcutListener from './listeners/ShortcutListener';
 import MainWindowController from "./controllers/MainWindowController";
 
+const log = require('electron-log');
+log.transports.file.level = 'debug';
+log.transports.console.level = 'debug';
+console.log = function(...args) {
+    log.debug(...args);
+};
+console.error = function(...args) {
+    log.error(...args);
+};
+
 AppGlobal.init();
 
 let config = new Settings();

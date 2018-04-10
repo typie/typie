@@ -34,9 +34,9 @@ class AbstractWindowController
         console.log('Create Window');
         this.win = new Electron.BrowserWindow(options);
 
-        if (isDevelopment) {
+        //if (isDevelopment) {
             this.win.webContents.openDevTools()
-        }
+        //}
 
         if (isDevelopment) {
             this.win.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)

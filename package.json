@@ -1,6 +1,6 @@
 {
-  "name": "HasteElectronFramework",
-  "version": "0.0.0",
+  "name": "Haste",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
   "scripts": {
@@ -12,19 +12,17 @@
   "dependencies": {
     "@types/js-yaml": "^3.10.1",
     "electron-is": "^2.4.0",
-    "gonode": "rotemgrim/gonode",
-    "haste-sdk": "rotemgrim/haste-sdk",
+    "electron-log": "^2.2.14",
+    "gonode": "github:rotemgrim/gonode",
+    "haste-sdk": "github:rotemgrim/haste-sdk",
     "js-yaml": "^3.11.0",
-    "source-map-support": "^0.5.3",
-    "vue": "^2.5.14",
-    "vue-round-filter": "^1.1.2"
+    "source-map-support": "^0.5.3"
   },
   "devDependencies": {
     "electron": "1.8.2",
     "electron-builder": "^20.0.6",
     "electron-webpack": "^1.13.0",
     "electron-webpack-ts": "^1.4.0",
-    "electron-webpack-vue": "^1.4.0",
     "typescript": "^2.7.2",
     "webpack": "^3.11.0"
   },

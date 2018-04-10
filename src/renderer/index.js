@@ -1,13 +1,24 @@
 'use strict';
-const {remote, ipcRenderer} = require('electron');
-const MainRendererWindow = require('./MainRendererWindow');
+const {ipcRenderer} = require('electron');
+const Path = require('path');
+
+const getRelativeLink = function(dir) {
+    let relPath = dir; //Path.join(__static, dir);
+    if (__dirname.endsWith('asar')) {
+        relPath = '../static/' + relPath;
+    }
+    relPath = relPath.replace(/\\/g, '/');
+    console.log(relPath);
+    return relPath;
+};
+
 const polymer=document.createElement('script');
 polymer.setAttribute('type','text/javascript');
-polymer.setAttribute('src','polymer/bower_components/webcomponentsjs/webcomponents-loader.js');
+polymer.setAttribute('src', getRelativeLink('polymer/bower_components/webcomponentsjs/webcomponents-loader.js'));
 
 const importElement=document.createElement('link');
 importElement.setAttribute('rel','import');
-importElement.setAttribute('href','polymer/haste-search.html');
+importElement.setAttribute('href', getRelativeLink('polymer/haste-search.html'));
 
 const hasteSearch=document.createElement('haste-search');
 
@@ -16,7 +27,6 @@ document.head.appendChild(polymer);
 document.head.appendChild(importElement);
 document.getElementById("app").appendChild(hasteSearch);
 
-let win = new MainRendererWindow(remote.getCurrentWindow());
 
 hasteSearch.addEventListener('search', (e) => {
     let payload = e.detail;

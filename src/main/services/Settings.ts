@@ -2,6 +2,7 @@
 import fs from "fs";
 import Path from "path";
 import * as yaml from "js-yaml";
+declare const __static: any;
 import {app} from "electron";
 import AppGlobal from "../helpers/AppGlobal";
 import {EventEmitter} from 'events';
@@ -42,25 +43,29 @@ export default class Settings extends EventEmitter
      * @param pkgPath
      */
     loadPkgConfig(pkgName, pkgPath): any {
-        let pkgConfig = {};
+        let pkgConfig;
         if (this.getEntry(pkgName)) {
             console.log("Loading '"+pkgName+"' config from user config");
             return this.getEntry(pkgName);
         } else {
             console.log("Loading '"+pkgName+"' config from defaults");
+            let defaultConfigPath = Path.join(__static, 'packages/'+pkgName+'/defaultConfig.yml');
+            defaultConfigPath = defaultConfigPath.replace(/\\/g, '/');
             try {
-                pkgConfig = yaml.safeLoad(fs.readFileSync(Path.join(Path.join("static", pkgPath), 'defaultConfig.yml'), 'utf8'));
+                pkgConfig = yaml.safeLoad(fs.readFileSync(defaultConfigPath, 'utf8'));
                 this.writeEntry(pkgName, pkgConfig);
             } catch (err) {
-                console.error("Missing 'defaultConfig.yml' file for "+ pkgName)
-                //console.error(err);
+                console.error("Missing 'defaultConfig.yml' file for "+ pkgName+" in " + defaultConfigPath);
+                console.error("static" + __static);
+                console.error(err);
+                pkgConfig = {};
             }
         }
         return pkgConfig;
     }
 
     private createIfNotExist(): void {
-        let settings = {};
+        let settings;
         if (fs.existsSync(this.settingsPath)) {
             console.log('Loading Settings File...');
             settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
