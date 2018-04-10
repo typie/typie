@@ -27,7 +27,6 @@ class MovieSearch extends AbstractHastePackage
      * @param callback
      */
     search(obj, callback) {
-        console.log('list of pkgs', obj.pkgList, obj.value);
         this.haste.fuzzySearch(obj.value).orderBy('score').desc().go()
             .then(data => {
                 if (data.data[0].score !== 1000) {

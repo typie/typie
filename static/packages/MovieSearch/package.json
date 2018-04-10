@@ -1,5 +1,5 @@
 {
-  "name": "Files",
+  "name": "MovieSearch",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,9 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron-is": "^2.4.0",
-    "haste-sdk": "github:rotemgrim/haste-sdk",
-    "system-icon": "github:mtojo/node-system-icon",
-    "walk": "^2.3.13"
+    "haste-sdk": "github:rotemgrim/haste-sdk"
   }
 }

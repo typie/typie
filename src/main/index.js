@@ -1,4 +1,3 @@
-global.__static = "";
 
 import Settings from "./services/Settings";
 import AppGlobal from './helpers/AppGlobal';
@@ -11,12 +10,10 @@ import MainWindowController from "./controllers/MainWindowController";
 const log = require('electron-log');
 log.transports.file.level = 'debug';
 log.transports.console.level = 'debug';
-console.log = function(...args) {
-    log.debug(...args);
-};
-console.error = function(...args) {
-    log.error(...args);
-};
+console.log = (...args) => log.debug(...args);
+console.info = (...args) => log.info(...args);
+console.warn = (...args) => log.warn(...args);
+console.error = (...args) => log.error(...args);
 
 AppGlobal.init();
 

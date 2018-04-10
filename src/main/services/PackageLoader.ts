@@ -18,10 +18,7 @@ export default class PackageLoader
         this.config = config;
         this.packages = {};
         this.loadPackages();
-        fs.watch(packagesPath, (event, dirPath) => {
-            console.log("Detect package '"+event+"', reloading '"+dirPath+"'");
-            this.loadPackage(dirPath);
-        });
+        // this.watchForPackages();
         config.on('reloadPackage', pkgName => this.loadPackage(pkgName));
     }
 
@@ -30,7 +27,7 @@ export default class PackageLoader
             if (this.packages[pkg]) {
                 resolve(this.packages[pkg]);
             } else {
-                reject('did not find any package with that name: ' + pkg);
+                reject('did not find package with that name: ' + pkg);
             }
         });
     }
@@ -43,41 +40,26 @@ export default class PackageLoader
         });
     }
 
-    public loadPackage(packageName) {
-        let absPath = path.join(packagesPath, packageName);
-        if (!fs.existsSync(path.join(absPath, 'index.js'))) {
-            console.log('Did not found any index.js at ' + absPath);
+    public loadPackage(dirName) {
+        let absPath = path.join(packagesPath, dirName);
+        let staticPath = 'packages/' + dirName + '/';
+        if (!this.isViablePackage(absPath)) {
             return;
         }
 
-        if (this.packages[packageName]) {
-            console.log("package '" + packageName + "' already exist...");
-            this.packages[packageName].destroy();
-            this.packages[packageName] = null;
-        }
+        let relativePath = this.getRelativePath(absPath);
+        let pkJson = this.getPackageJsonFromPath(absPath);
+        let packageName = pkJson.name;
 
-        absPath = path.relative(__static, absPath);
-        absPath = absPath.replace(/\\/g, '/');
-        if (__dirname.endsWith('asar')) {
-            absPath = '../static/' + absPath;
-        } else {
-            absPath = '../../static/' + absPath;
-        }
-        let packagePath = absPath + '/index.js';
-        console.log('Loading package from ' + packagePath);
+        this.destroyIfExist(packageName);
+        console.log('Loading package from ' + relativePath);
 
-        let tmp = new Haste(packageName);
-        tmp.addCollection().go()
+        new Haste(packageName).addCollection().go()
             .then((data) => {
-                console.log(data);
                 let pkgConfig = this.config.loadPkgConfig(packageName, absPath);
-
-                /**
-                 * @type {AbstractHastePackage}
-                 */
-                let Package = eval("require('"+packagePath+"')");
-                this.packages[packageName] = new Package(Haste, this.win, pkgConfig, absPath);
-                console.log("Loaded package '" + packageName + "'");
+                let Package = eval("require('"+relativePath+"/index.js')");
+                this.packages[packageName] = new Package(Haste, this.win, pkgConfig, staticPath);
+                console.log("Loaded package '"+packageName+"'");
 
                 let item = new HasteRowItem();
                 item.setDB("global");
@@ -89,10 +71,45 @@ export default class PackageLoader
                         if (res.err === 0) {
                             console.log("Package '"+packageName+"' is now searchable.");
                         }
-                    })
-                    .catch(err => console.error(err))
+                    }).catch(err => console.error(err))
             })
-            .catch((err) => console.error('cannot load package from: '+packagePath, err));
+            .catch((err) => console.error('cannot load package from: '+relativePath, err));
+    }
+
+    isViablePackage(absPath): boolean {
+        if (!fs.existsSync(path.join(absPath, 'index.js'))) {
+            console.error('Did not found index.js at ' + absPath);
+            return false;
+        }
+        if (!fs.existsSync(path.join(absPath, 'package.json'))) {
+            console.error('Did not found package.json at ' + absPath);
+            return false;
+        }
+        return true;
+    }
+
+    getRelativePath(absPath) {
+        let relPath = path.relative(__static, absPath);
+        relPath = relPath.replace(/\\/g, '/');
+        if (__dirname.endsWith('asar')) {
+            relPath = '../static/' + relPath;
+        } else {
+            relPath = '../../static/' + relPath;
+        }
+        return relPath;
+    }
+
+    getPackageJsonFromPath(absPath): any {
+        let pkJson = JSON.parse(fs.readFileSync(absPath+'/package.json', 'utf8'));
+        return pkJson;
+    }
+
+    destroyIfExist(packageName): void {
+        if (this.packages[packageName]) {
+            console.log("package '" + packageName + "' already exist...");
+            this.packages[packageName].destroy();
+            this.packages[packageName] = null;
+        }
     }
 
     public static getDirectories(path) {
@@ -100,4 +117,16 @@ export default class PackageLoader
             return fs.statSync(path+'/'+file).isDirectory();
         });
     }
+
+    // watchForPackages() {
+    //     // if its a process that copying files wait for it to finish
+    //     let placeHolder;
+    //     fs.watch(packagesPath, (event, dirPath) => {
+    //         clearTimeout(placeHolder);
+    //         placeHolder = setTimeout(() => {
+    //             console.log("Detect package '"+event+"', reloading '"+dirPath+"'");
+    //             this.loadPackage(dirPath);
+    //         }, 2000);
+    //     });
+    // }
 }

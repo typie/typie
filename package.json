@@ -21,6 +21,7 @@
   "devDependencies": {
     "electron": "1.8.2",
     "electron-builder": "^20.0.6",
+    "electron-rebuild": "^1.7.3",
     "electron-webpack": "^1.13.0",
     "electron-webpack-ts": "^1.4.0",
     "typescript": "^2.7.2",

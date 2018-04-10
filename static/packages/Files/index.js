@@ -44,22 +44,21 @@ class Files extends AbstractHastePackage
 
         Walker.run(pathList, fileExtensions, this.haste)
             .then(res => this.insertAll(res))
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
     }
 
     insertAll(objectsArray) {
         this.haste.multipleInsert(objectsArray).go()
-            .then((data) => {
-                console.log('multi', data);
-            }).catch((err) => console.log('insertAll error', err));
+            .then(data => console.info('Files done adding', data))
+            .catch((err) => console.error('Files insert error', err));
 
     }
 
-    search(value, callback) {
-        this.haste.fuzzySearch(value).orderBy('score').desc().go()
+    search(obj, callback) {
+        this.haste.fuzzySearch(obj.value).orderBy('score').desc().go()
             .then(data => callback(data))
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
     }
 
     activate(item, cb) {

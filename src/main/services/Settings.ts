@@ -107,7 +107,7 @@ export default class Settings extends EventEmitter
     private loadSettings(): void {
         try {
             this.createIfNotExist();
-            this.watchFile();
+            //this.watchFile();
         } catch (e) {
             console.error(e);
             throw new Error('Error loading config.yml file, check if exist or is valid Yaml format.');

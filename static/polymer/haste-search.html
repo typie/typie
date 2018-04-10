@@ -95,8 +95,17 @@
             onTab(e) {
                 e.preventDefault();
                 if (this.isPackageSelected()) {
+                    let item = this.itemList[this.selectedIndex];
                     let pkgList = JSON.parse(JSON.stringify(this.pkgList));
-                    pkgList.push(this.itemList[this.selectedIndex].title);
+                    if (item.p.startsWith('SubPackage|')) {
+                        pkgList = [];
+                        let pksArr = item.p.slice(11).split('->');
+                        for (let pk of pksArr) {
+                            pkgList.push(pk);
+                        }
+                    } else {
+                        pkgList.push(item.title);
+                    }
                     this.set('pkgList', pkgList);
                     console.log('pkgList', pkgList);
                     this.input.value = "";
@@ -228,7 +237,9 @@
 
             isPackageSelected() {
                 return this.itemList[this.selectedIndex].d === "Package"
-                    || this.itemList[this.selectedIndex].d === "SubPackage";
+                    || this.itemList[this.selectedIndex].d === "SubPackage"
+                    || this.itemList[this.selectedIndex].p === "Package"
+                    || this.itemList[this.selectedIndex].p.startsWith("SubPackage|");
             }
         }
         customElements.define(HasteSearch.is, HasteSearch);
