@@ -3,6 +3,7 @@ import * as Electron from "electron";
 import { format as formatUrl } from 'url';
 import * as path from 'path'
 
+const is = require('electron-is');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 class AbstractWindowController
@@ -70,7 +71,7 @@ class AbstractWindowController
     public init(): void {
         this.position = this.win.getPosition();
         this.isVisible = true;
-        this.hide();
+        //this.hide();
         this.win.show();
     }
 
@@ -78,7 +79,11 @@ class AbstractWindowController
         //this.win.show();
         if (!this.isVisible) {
             this.win.focus();
-            this.win.setPosition(this.position[0], this.position[1], false);
+            if (is.windows()) {
+                this.win.setPosition(this.position[0], this.position[1], false);
+            } else {
+                this.win.show();
+            }
             this.isVisible = true;
         }
     }
@@ -86,10 +91,22 @@ class AbstractWindowController
     public hide(): void {
         if (this.isVisible) {
             this.position = this.win.getPosition();
-            this.win.setPosition(5000, 5000, false);
+
+            if (is.windows()) {
+                this.win.setPosition(5000, 5000, false);
+                this.win.minimize();
+                this.win.showInactive();
+            } else {
+                //this.win.hide();
+                this.win.blur();
+                this.win.showInactive();
+                this.win.blur();
+                this.win.hide();
+                //this.win.minimize();
+                //this.win.showInactive();
+            }
+
             this.isVisible = false;
-            this.win.minimize();
-            this.win.showInactive();
         }
     }
 

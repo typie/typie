@@ -17,7 +17,7 @@ exports.run = function(dir, extArray, haste) {
             .then((data) => {
                 console.log('walker-osx', data);
 
-                let list = JSON.parse(data.data);
+                let list = data.data;
                 let resolveInterval = setInterval(() => {
                     if (results.length >= list.length) {
                         clearInterval(resolveInterval);
