@@ -4,7 +4,7 @@ import AbstractWindowController from "../controllers/AbstractWindowController";
 class WindowsListener
 {
     public listen(win: AbstractWindowController):void {
-        win.on('resize', () => console.log('resize happen'));
+        win.on('resize', () => {});
         win.on('blur',   () => console.log('blur happen'));
         win.on('focus',  () => {console.log('focus event trigger'); win.send('focus');});
         win.on('closed', () => win.closed());

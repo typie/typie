@@ -36,9 +36,9 @@ class AbstractWindowController
         console.log('Create Window');
         this.win = new Electron.BrowserWindow(options);
 
-        //if (isDevelopment) {
-            //this.win.webContents.openDevTools();
-        //}
+        if (isDevelopment) {
+            this.win.webContents.openDevTools();
+        }
 
         if (isDevelopment) {
             this.win.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
@@ -107,6 +107,7 @@ class AbstractWindowController
                 this.win.hide();
             }
 
+            this.send('changePackage', null); // clear any set packages in search
             this.isVisible = false;
         }
     }

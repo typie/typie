@@ -176,10 +176,12 @@
                         pkgList = JSON.parse(newPkgList);
                         this.set('pkgList', pkgList);
                         console.log('pkgList', pkgList);
-                        this.input.value = "";
-                        this.clearList();
                     }
+                } else {
+                    this.set('pkgList', []);
                 }
+                this.input.value = "";
+                this.clearList();
             }
 
             updateList(data) {
@@ -213,6 +215,7 @@
             }
 
             focus() {
+                console.log('do focus');
                 this.input.focus();
             }
 
