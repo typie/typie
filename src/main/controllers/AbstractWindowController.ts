@@ -3,6 +3,7 @@ import * as Electron from "electron";
 import { format as formatUrl } from 'url';
 import * as path from 'path'
 
+const {Menu} = require("electron");
 const is = require('electron-is');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -36,7 +37,7 @@ class AbstractWindowController
         this.win = new Electron.BrowserWindow(options);
 
         //if (isDevelopment) {
-            this.win.webContents.openDevTools()
+            //this.win.webContents.openDevTools();
         //}
 
         if (isDevelopment) {
@@ -81,6 +82,8 @@ class AbstractWindowController
             this.win.focus();
             if (is.windows()) {
                 this.win.setPosition(this.position[0], this.position[1], false);
+            } else if (is.osx()){
+                this.win.show();
             } else {
                 this.win.show();
             }
@@ -96,14 +99,12 @@ class AbstractWindowController
                 this.win.setPosition(5000, 5000, false);
                 this.win.minimize();
                 this.win.showInactive();
-            } else {
-                //this.win.hide();
-                this.win.blur();
-                this.win.showInactive();
-                this.win.blur();
+            } else if (is.osx()) {
                 this.win.hide();
-                //this.win.minimize();
-                //this.win.showInactive();
+                this.win.blur();
+                Menu.sendActionToFirstResponder('hide');
+            } else {
+                this.win.hide();
             }
 
             this.isVisible = false;
