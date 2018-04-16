@@ -1,3 +1,4 @@
+import {app} from "electron";
 
 export default class AppGlobal
 {
@@ -6,6 +7,7 @@ export default class AppGlobal
 
     public static init() {
         AppGlobal.startTime = Date.now();
+        app.disableHardwareAcceleration();
     }
 
     public static getTimeSinceInit() {
