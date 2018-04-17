@@ -49,7 +49,7 @@ export default class PackageLoader
 
         let relativePath = this.getRelativePath(absPath);
         let pkJson = this.getPackageJsonFromPath(absPath);
-        let packageName = pkJson.name;
+        let packageName = pkJson.name
 
         this.destroyIfExist(packageName);
         console.log('Loading package from ' + relativePath);

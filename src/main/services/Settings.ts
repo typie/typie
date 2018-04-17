@@ -1,17 +1,18 @@
 
+declare const __static: any;
 import fs from "fs";
 import Path from "path";
-import * as yaml from "js-yaml";
-declare const __static: any;
 import {app} from "electron";
-import AppGlobal from "../helpers/AppGlobal";
+import * as yaml from "js-yaml";
 import {EventEmitter} from 'events';
+import AppGlobal from "../helpers/AppGlobal";
+const is = require('electron-is');
 
 export default class Settings extends EventEmitter
 {
     private settingsPath: string;
-    private isLoading: boolean;
     private isWatching: boolean;
+    public isLoading: boolean;
     private settings: object;
 
     constructor() {
@@ -55,9 +56,7 @@ export default class Settings extends EventEmitter
                 pkgConfig = yaml.safeLoad(fs.readFileSync(defaultConfigPath, 'utf8'));
                 this.writeEntry(pkgName, pkgConfig);
             } catch (err) {
-                console.error("Missing 'defaultConfig.yml' file for "+ pkgName+" in " + defaultConfigPath);
-                console.error("static" + __static);
-                console.error(err);
+                console.error("Missing 'defaultConfig.yml' file for "+ pkgName+" in " + defaultConfigPath, err);
                 pkgConfig = {};
             }
         }
@@ -80,9 +79,15 @@ export default class Settings extends EventEmitter
             }
         } else {
             settings = {
-                version: "Haste 2.0"
+                version: "Haste 2.0",
+                toggleKeys: is.windows() ? [
+                    "Alt+Space",
+                    "CommandOrControl+Space"
+                ] : [
+                    "Super+x",
+                    "Super+Space"
+                ]
             };
-            console.log('Creating New Settings File...');
             this.writeToFile();
         }
         this.settings = settings;
@@ -115,6 +120,7 @@ export default class Settings extends EventEmitter
     }
 
     private writeToFile() {
+        console.log('Creating New Settings File...');
         fs.writeFileSync(this.settingsPath, yaml.safeDump(this.settings));
     }
 }

@@ -1,11 +1,11 @@
 import {globalShortcut} from 'electron';
-
+import Settings from "../services/Settings";
 import MainWindowController from "../controllers/MainWindowController";
 const is = require('electron-is');
 
 class ShortcutListener
 {
-    public listen(win: MainWindowController):void {
+    public listen(win: MainWindowController, config: Settings):void {
         globalShortcut.register('CommandOrControl+Space', () => win.toggle());
         if (is.windows()) {
             globalShortcut.register('Alt+x', () => win.toggle());

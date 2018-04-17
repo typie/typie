@@ -22,11 +22,11 @@ let mainWindow = new MainWindowController();
 AppListener.listen(mainWindow, config);
 
 let bootstrap = setInterval(() => {
-    if (mainWindow.isExist) {
+    if (mainWindow.isExist && !config.isLoading) {
         clearInterval(bootstrap);
         MakeSingular.init(mainWindow);
         WindowsListener.listen(mainWindow);
-        ShortcutListener.listen(mainWindow);
+        ShortcutListener.listen(mainWindow, config);
     }
 }, 5);
 
