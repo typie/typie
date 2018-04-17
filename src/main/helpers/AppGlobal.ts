@@ -3,7 +3,7 @@ import {app} from "electron";
 export default class AppGlobal
 {
     private static startTime: number;
-    public static settings: object;
+    public static settings: any;
 
     public static init() {
         AppGlobal.startTime = Date.now();

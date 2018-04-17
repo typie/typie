@@ -3,7 +3,7 @@ import * as Electron from "electron";
 import { format as formatUrl } from 'url';
 import * as path from 'path'
 
-const {Menu} = require("electron");
+const {app} = require("electron");
 const is = require('electron-is');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -83,10 +83,11 @@ class AbstractWindowController
             if (is.windows()) {
                 this.win.setPosition(this.position[0], this.position[1], false);
             } else if (is.osx()){
-                this.win.show();
+                app.show();
             } else {
                 this.win.show();
             }
+            app.focus();
             this.isVisible = true;
         }
     }
@@ -100,9 +101,7 @@ class AbstractWindowController
                 this.win.minimize();
                 this.win.showInactive();
             } else if (is.osx()) {
-                this.win.hide();
-                this.win.blur();
-                Menu.sendActionToFirstResponder('hide');
+                app.hide();
             } else {
                 this.win.hide();
             }
