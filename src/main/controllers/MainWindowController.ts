@@ -1,19 +1,16 @@
-import * as fs from 'fs';
-import * as path from "path";
-import {BrowserWindowConstructorOptions, globalShortcut} from 'electron';
-import AbstractWindowController from "./AbstractWindowController";
+import {BrowserWindowConstructorOptions, globalShortcut} from "electron";
 import AppGlobal from "../helpers/AppGlobal";
 import StyleLoader from "../services/StyleLoader";
+import AbstractWindowController from "./AbstractWindowController";
 
-export default class MainWindowController extends AbstractWindowController
-{
+export default class MainWindowController extends AbstractWindowController {
     private options: BrowserWindowConstructorOptions = {
-        show: false,
-        width: 475,
-        height: 900,
-        transparent: true,
-        frame: false,
         alwaysOnTop: true,
+        frame: false,
+        height: 900,
+        show: false,
+        transparent: true,
+        width: 475,
     };
 
     // create main BrowserWindow when electron is ready
@@ -25,25 +22,22 @@ export default class MainWindowController extends AbstractWindowController
     // on macOS it is common to re-create a window even after all windows have been closed
     public activate() {
         if (!this.isExist) {
-            this.createWindow()
+            this.createWindow();
         }
     }
 
     public init() {
         super.init();
-        console.log('content window finished loading in ' + (AppGlobal.getTimeSinceInit() / 1000) + ' seconds');
-        new StyleLoader(this);
-        //this.show();
+        console.log("content window finished loading in " + (AppGlobal.getTimeSinceInit() / 1000) + " seconds");
+        new StyleLoader(this)();
+        // this.show();
     }
 
-    public registerKey(key: string, callback: Function) {
+    public registerKey(key: string, callback: (res) => void) {
         globalShortcut.register(key, callback);
     }
 
     public unregisterKey(key: string) {
-        globalShortcut.unregister(key)
+        globalShortcut.unregister(key);
     }
 }
-
-
-

@@ -1,8 +1,7 @@
 import {app} from "electron";
 
-export default class AppGlobal
-{
-    private static startTime: number;
+export default class AppGlobal {
+
     public static settings: any;
 
     public static init() {
@@ -17,4 +16,6 @@ export default class AppGlobal
     public static getSettings() {
         return AppGlobal.settings;
     }
+
+    private static startTime: number;
 }

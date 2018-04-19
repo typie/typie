@@ -1,39 +1,25 @@
 
 import * as Electron from "electron";
-import { format as formatUrl } from 'url';
-import * as path from 'path'
+import * as path from "path";
+import { format as formatUrl } from "url";
 
-const {app} = require("electron");
-const is = require('electron-is');
-const isDevelopment = process.env.NODE_ENV !== 'production';
+import {app} from "electron";
+import * as is from "electron-is";
+const isDevelopment = process.env.NODE_ENV !== "production";
 
-class AbstractWindowController
-{
-    protected win = <Electron.BrowserWindow>{};
-    protected _isExist: boolean = false;
-    private _isVisible: boolean = false;
+class AbstractWindowController {
+    public isExist: boolean = false;
+    public isVisible: boolean = false;
+    protected win = {} as Electron.BrowserWindow;
     private position: any;
 
     constructor() {
         this.isExist = false;
-        this.win = <Electron.BrowserWindow>{};
+        this.win = {} as Electron.BrowserWindow;
     }
 
-    get isExist(): boolean {
-        return this._isExist;
-    }
-    set isExist(isExist:boolean) {
-        this._isExist = isExist;
-    }
-    get isVisible(): boolean {
-        return this._isVisible;
-    }
-    set isVisible(value: boolean) {
-        this._isVisible = value;
-    }
-
-    public absCreateWindow(options: Electron.BrowserWindowConstructorOptions): void{
-        console.log('Create Window');
+    public absCreateWindow(options: Electron.BrowserWindowConstructorOptions): void {
+        console.log("Create Window");
         this.win = new Electron.BrowserWindow(options);
 
         if (isDevelopment) {
@@ -41,14 +27,13 @@ class AbstractWindowController
         }
 
         if (isDevelopment) {
-            this.win.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
-        }
-        else {
+            this.win.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
+        } else {
             this.win.loadURL(formatUrl({
-                pathname: path.join(__dirname, 'index.html'),
-                protocol: 'file',
-                slashes: true
-            }))
+                pathname: path.join(__dirname, "index.html"),
+                protocol: "file",
+                slashes: true,
+            }));
         }
 
         this.isExist = true;
@@ -61,28 +46,28 @@ class AbstractWindowController
         }
     }
 
-    public on(event: any, callback: Function): void {
+    public on(event: any, callback: (res) => void): void {
         this.win.on(event, callback);
     }
 
-    public onWebContent(event: any, callback: Function): void {
+    public onWebContent(event: any, callback: (res) => void): void {
         this.win.webContents.on(event, callback);
     }
 
     public init(): void {
         this.position = this.win.getPosition();
         this.isVisible = true;
-        //this.hide();
+        // this.hide();
         this.win.show();
     }
 
     public show(): void {
-        //this.win.show();
+        // this.win.show();
         if (!this.isVisible) {
             this.win.focus();
             if (is.windows()) {
                 this.win.setPosition(this.position[0], this.position[1], false);
-            } else if (is.osx()){
+            } else if (is.osx()) {
                 app.show();
             } else {
                 this.win.show();
@@ -106,7 +91,7 @@ class AbstractWindowController
                 this.win.hide();
             }
 
-            this.send('changePackage', null); // clear any set packages in search
+            this.send("changePackage", null); // clear any set packages in search
             this.isVisible = false;
         }
     }
@@ -123,8 +108,8 @@ class AbstractWindowController
         this.win.focus();
     }
 
-    public closed(): void{
-        this.win = <Electron.BrowserWindow>{};
+    public closed(): void {
+        this.win = {} as Electron.BrowserWindow;
         this.isExist = false;
     }
 
@@ -134,4 +119,4 @@ class AbstractWindowController
     }
 }
 
-export default AbstractWindowController
+export default AbstractWindowController;

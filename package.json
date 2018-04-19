@@ -7,7 +7,9 @@
     "dev": "electron-webpack dev --inspect --disable-gpu --enable-transparent-visuals",
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "check": "./node_modules/.bin/tslint --project tsconfig.json --config tslint.json",
+    "fix": "./node_modules/.bin/tslint --fix --project tsconfig.json --config tslint.json"
   },
   "dependencies": {
     "@types/js-yaml": "^3.10.1",
@@ -24,10 +26,18 @@
     "electron-rebuild": "^1.7.3",
     "electron-webpack": "^1.13.0",
     "electron-webpack-ts": "^1.4.0",
+    "tslint": "^5.9.1",
+    "tslint-loader": "^3.6.0",
     "typescript": "^2.7.2",
     "webpack": "^3.11.0"
   },
   "resolutions": {
     "webpack-sources": "1.0.1"
+  },
+  "electronWebpack": {
+    "renderer": {},
+    "main": {
+      "webpackConfig": "webpack.config.js"
+    }
   }
 }

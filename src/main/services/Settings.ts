@@ -1,24 +1,23 @@
 
 declare const __static: any;
-import fs from "fs";
-import Path from "path";
 import {app} from "electron";
-import * as yaml from "js-yaml";
-import {EventEmitter} from 'events';
+import is from "electron-is";
+import {EventEmitter} from "events";
+import fs from "fs";
+import yaml from "js-yaml";
+import Path from "path";
 import AppGlobal from "../helpers/AppGlobal";
-const is = require('electron-is');
 
-export default class Settings extends EventEmitter
-{
+export default class Settings extends EventEmitter {
+    public isLoading: boolean;
     private settingsPath: string;
     private isWatching: boolean;
-    public isLoading: boolean;
     private settings: object;
 
     constructor() {
         super();
         this.settings = {};
-        this.settingsPath = Path.join(app.getPath('userData'), 'config.yml');
+        this.settingsPath = Path.join(app.getPath("userData"), "config.yml");
         this.isLoading = true;
         this.isWatching = false;
         this.loadSettings();
@@ -43,20 +42,20 @@ export default class Settings extends EventEmitter
      * @param pkgName
      * @param pkgPath
      */
-    loadPkgConfig(pkgName, pkgPath): any {
+    public loadPkgConfig(pkgName, pkgPath): any {
         let pkgConfig;
         if (this.getEntry(pkgName)) {
-            console.log("Loading '"+pkgName+"' config from user config");
+            console.log("Loading '" + pkgName + "' config from user config");
             return this.getEntry(pkgName);
         } else {
-            console.log("Loading '"+pkgName+"' config from defaults");
-            let defaultConfigPath = Path.join(__static, 'packages/'+pkgName+'/defaultConfig.yml');
-            defaultConfigPath = defaultConfigPath.replace(/\\/g, '/');
+            console.log("Loading '" + pkgName + "' config from defaults");
+            let defaultConfigPath = Path.join(__static, "packages/" + pkgName + "/defaultConfig.yml");
+            defaultConfigPath = defaultConfigPath.replace(/\\/g, "/");
             try {
-                pkgConfig = yaml.safeLoad(fs.readFileSync(defaultConfigPath, 'utf8'));
+                pkgConfig = yaml.safeLoad(fs.readFileSync(defaultConfigPath, "utf8"));
                 this.writeEntry(pkgName, pkgConfig);
             } catch (err) {
-                console.error("Missing 'defaultConfig.yml' file for "+ pkgName+" in " + defaultConfigPath, err);
+                console.error("Missing 'defaultConfig.yml' file for " + pkgName + " in " + defaultConfigPath, err);
                 pkgConfig = {};
             }
         }
@@ -65,34 +64,36 @@ export default class Settings extends EventEmitter
 
     private loadOrCreate(): void {
         if (fs.existsSync(this.settingsPath)) {
-            console.log('Loading Settings File...');
-            let settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
+            console.log("Loading Settings File...");
+            const settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, "utf8"));
             if (settings && this.isWatching) {
                 // test for withc package had changed and send event.
                 Object.keys(settings).forEach((key) => {
                     if (settings && settings[key]) {
                         console.log(key, settings[key]);
                         if (JSON.stringify(this.settings[key]) !== JSON.stringify(settings[key])) {
-                            this.emit('reloadPackage', key);
+                            this.emit("reloadPackage", key);
                         }
                     }
                 });
             }
         } else {
             this.settings = {
-                version: "Haste 2.0",
+                meta: {
+                    version: "Haste 2.0",
+                },
                 toggleKeys: is.windows() ? [
                     "Alt+Space",
-                    "CommandOrControl+Space"
+                    "CommandOrControl+Space",
                 ] : [
                     "Super+x",
-                    "Super+Space"
-                ]
+                    "Super+Space",
+                ],
             };
             this.writeToFile();
         }
         AppGlobal.settings = this.settings;
-        console.log('settings loaded:', this.settings);
+        console.log("settings loaded:", this.settings);
         this.isLoading = false;
     }
 
@@ -102,7 +103,7 @@ export default class Settings extends EventEmitter
             fs.watch(this.settingsPath, (event, path) => {
                 if (!this.isLoading) {
                     this.isLoading = true;
-                    console.log('Settings file ' + event +' detected at ', path);
+                    console.log("Settings file " + event + " detected at ", path);
                     this.loadSettings();
                 }
             });
@@ -112,15 +113,15 @@ export default class Settings extends EventEmitter
     private loadSettings(): void {
         try {
             this.loadOrCreate();
-            //this.watchFile();
+            // this.watchFile();
         } catch (e) {
             console.error(e);
-            throw new Error('Error loading config.yml file, check if exist or is valid Yaml format.');
+            throw new Error("Error loading config.yml file, check if exist or is valid Yaml format.");
         }
     }
 
     private writeToFile() {
-        console.log('Creating New Settings File...');
+        console.log("Creating New Settings File...");
         fs.writeFileSync(this.settingsPath, yaml.safeDump(this.settings));
     }
 }

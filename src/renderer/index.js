@@ -27,7 +27,6 @@ document.head.appendChild(polymer);
 document.head.appendChild(importElement);
 document.getElementById("app").appendChild(hasteSearch);
 
-
 hasteSearch.addEventListener('search', (e) => {
     let payload = e.detail;
     ipcRenderer.send('search', {value: payload.val, pkgList: payload.pkgList});

@@ -1,10 +1,10 @@
 
 import Settings from "./services/Settings";
-import AppGlobal from './helpers/AppGlobal';
-import AppListener from './listeners/AppListener';
+import AppGlobal from "./helpers/AppGlobal";
+import AppListener from "./listeners/AppListener";
 import MakeSingular from "./helpers/MakeSingleInstance";
-import WindowsListener from './listeners/WindowsListener';
-import ShortcutListener from './listeners/ShortcutListener';
+import WindowsListener from "./listeners/WindowsListener";
+import ShortcutListener from "./listeners/ShortcutListener";
 import MainWindowController from "./controllers/MainWindowController";
 
 // const log = require('electron-log');
@@ -30,6 +30,5 @@ let bootstrap = setInterval(() => {
     }
 }, 5);
 
-
-console.log('Application started...');
-
+console.log("Application started...");
+
