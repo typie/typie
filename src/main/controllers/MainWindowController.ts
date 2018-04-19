@@ -4,6 +4,9 @@ import StyleLoader from "../services/StyleLoader";
 import AbstractWindowController from "./AbstractWindowController";
 
 export default class MainWindowController extends AbstractWindowController {
+
+    private styleLoader: StyleLoader;
+
     private options: BrowserWindowConstructorOptions = {
         alwaysOnTop: true,
         frame: false,
@@ -12,6 +15,11 @@ export default class MainWindowController extends AbstractWindowController {
         transparent: true,
         width: 475,
     };
+
+    constructor() {
+        super();
+        this.styleLoader = new StyleLoader(this);
+    }
 
     // create main BrowserWindow when electron is ready
     public createWindow(options?: BrowserWindowConstructorOptions) {
@@ -29,7 +37,7 @@ export default class MainWindowController extends AbstractWindowController {
     public init() {
         super.init();
         console.log("content window finished loading in " + (AppGlobal.getTimeSinceInit() / 1000) + " seconds");
-        new StyleLoader(this)();
+        this.styleLoader.init();
         // this.show();
     }
 

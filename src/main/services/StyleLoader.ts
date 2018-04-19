@@ -15,9 +15,10 @@ export default class StyleLoader {
         this.defaultThemePath = "default/style.css";
         this.themesPath = Path.join(__static, "/themes/");
         this.themes = {};
+    }
 
+    public init(): void {
         this.loadStyle(this.themesPath + this.defaultThemePath);
-
         fs.watch(this.themesPath, {recursive: true}, (event, filePath) => {
             const themeDir = Path.join(this.themesPath, Path.dirname(Path.normalize(filePath)));
             const newThemeStyle = Path.join(themeDir, "style.css");
@@ -27,7 +28,7 @@ export default class StyleLoader {
         });
     }
 
-    public loadStyle(newThemeStyle) {
+    public loadStyle(newThemeStyle): void {
         fs.readFile(newThemeStyle, "utf8", (err, data) => {
             if (err) {
                 console.error("did not found any default styles", err);

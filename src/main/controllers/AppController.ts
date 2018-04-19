@@ -13,7 +13,7 @@ export default class AppController {
         const bootstrap = setInterval(() => {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);
-                new HasteListener(new PackageLoader(win, config))();
+                AppController.hasteListener = new HasteListener(new PackageLoader(win, config));
             }
         }, 1);
     }
@@ -37,4 +37,6 @@ export default class AppController {
         GoDispatcher.close();
         app.quit();
     }
+
+    private static hasteListener: HasteListener;
 }

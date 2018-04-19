@@ -1,5 +1,6 @@
 import fs from "fs";
 import Path from "path";
+declare const __static: any;
 
 export function randomStr(): string {
     let text = "";

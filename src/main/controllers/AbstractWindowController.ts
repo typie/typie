@@ -97,7 +97,7 @@ class AbstractWindowController {
     }
 
     public toggle(): void {
-        if (this._isVisible) {
+        if (this.isVisible) {
             this.hide();
         } else {
             this.show();
