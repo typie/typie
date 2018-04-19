@@ -67,12 +67,14 @@ export default class Settings extends EventEmitter
         if (fs.existsSync(this.settingsPath)) {
             console.log('Loading Settings File...');
             let settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
-            if (this.isWatching) {
+            if (settings && this.isWatching) {
                 // test for withc package had changed and send event.
                 Object.keys(settings).forEach((key) => {
-                    console.log(key, settings[key]);
-                    if (JSON.stringify(this.settings[key]) !== JSON.stringify(settings[key])) {
-                        this.emit('reloadPackage', key);
+                    if (settings && settings[key]) {
+                        console.log(key, settings[key]);
+                        if (JSON.stringify(this.settings[key]) !== JSON.stringify(settings[key])) {
+                            this.emit('reloadPackage', key);
+                        }
                     }
                 });
             }

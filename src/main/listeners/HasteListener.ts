@@ -4,33 +4,35 @@ import {Haste, HasteRowItem, SearchObject} from "haste-sdk";
 
 class HasteListener
 {
+    private packageLoader: PackageLoader;
+
     constructor(packageLoader: PackageLoader) {
 
         this.packageLoader = packageLoader;
 
-        ipcMain.on('search', (event, obj: SearchObject) => {
+        ipcMain.on('search', (e: Electron.Event, obj: SearchObject) => {
             if (!isGlobal(obj)) {
                 packageLoader.getPackage(obj.pkgList[0])
-                    .then(pkg => pkg.search(obj, res => event.sender.send('resultList', res)))
+                    .then(pkg => pkg.search(obj, res => e.sender.send('resultList', res)))
                     .catch(err => console.error(err));
             } else {
                 new Haste('global').fuzzySearch(obj.value).go()
-                    .then(res => event.sender.send('resultList', res))
+                    .then(res => e.sender.send('resultList', res))
                     .catch(err => console.error(err))
             }
         });
 
-        ipcMain.on('activate', (event, obj) => {
+        ipcMain.on('activate', (e: Electron.Event, obj) => {
             console.log('activate', obj);
             let item = HasteRowItem.create(obj.item);
             if (isGlobal(obj)) {
                 if (isPackage(item)) {
                     this.activatePackage(item.getTitle(), item, obj.isTab);
                 } else {
-                    this.activateItem(item.getPackage(), item);
+                    this.activateItem(e, item.getPackage(), item);
                 }
             } else {
-                this.activateItem(obj.pkgList[0], item);
+                this.activateItem(e, obj.pkgList[0], item);
             }
         });
     }
@@ -49,9 +51,9 @@ class HasteListener
             .catch(err => console.error(err));
     }
 
-    private activateItem(packageName: string, item: HasteRowItem) {
+    private activateItem(e: Electron.Event, packageName: string, item: HasteRowItem) {
         this.packageLoader.getPackage(packageName)
-            .then(pkg => pkg.activate(item, result => event.sender.send('activatedResult', result)))
+            .then(pkg => pkg.activate(item, result => e.sender.send('activatedResult', result)))
             .catch(err => console.error(err));
     }
 }
