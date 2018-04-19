@@ -5,6 +5,9 @@ import {Haste, HasteRowItem, SearchObject} from "haste-sdk";
 class HasteListener
 {
     constructor(packageLoader: PackageLoader) {
+
+        this.packageLoader = packageLoader;
+
         ipcMain.on('search', (event, obj: SearchObject) => {
             if (!isGlobal(obj)) {
                 packageLoader.getPackage(obj.pkgList[0])
@@ -22,31 +25,43 @@ class HasteListener
             let item = HasteRowItem.create(obj.item);
             if (isGlobal(obj)) {
                 if (isPackage(item)) {
-                    item.countUp();
-                    new Haste('global').insert(item).go().then().catch();
-                    packageLoader.getPackage(item.getTitle())
-                        .then(pkg => pkg.activateUponEntry())
-                        .catch(err => console.error(err));
+                    this.activatePackage(item.getTitle(), item, obj.isTab);
                 } else {
-                    packageLoader.getPackage(item.getPackage())
-                        .then(pkg => pkg.activate(item, result => event.sender.send('activatedResult', result)))
-                        .catch(err => console.error(err));
+                    this.activateItem(item.getPackage(), item);
                 }
             } else {
-                packageLoader.getPackage(obj.pkgList[0])
-                    .then(pkg => pkg.activate(item, result => event.sender.send('activatedResult', result)))
-                    .catch(err => console.error(err));
+                this.activateItem(obj.pkgList[0], item);
             }
         });
+    }
+
+    private activatePackage(packageName: string, item: HasteRowItem, isTab: boolean) {
+        this.packageLoader.getPackage(packageName)
+            .then(pkg => {
+                if (isTab === true) {
+                    pkg.activateUponTabEntry();
+                } else {
+                    item.countUp();
+                    new Haste('global').insert(item).go().then().catch();
+                    pkg.activateUponEntry();
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    private activateItem(packageName: string, item: HasteRowItem) {
+        this.packageLoader.getPackage(packageName)
+            .then(pkg => pkg.activate(item, result => event.sender.send('activatedResult', result)))
+            .catch(err => console.error(err));
     }
 }
 export default HasteListener;
 
 
-function isGlobal(obj) {
+let isGlobal = (obj) => {
     return !(obj.pkgList && obj.pkgList.length > 0);
-}
+};
 
-function isPackage(item: HasteRowItem) {
+let isPackage = (item: HasteRowItem) => {
     return item.getDescription() === "Package";
-}
+};

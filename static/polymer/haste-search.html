@@ -94,6 +94,30 @@
             }
             onTab(e) {
                 e.preventDefault();
+                this.sendActivate(true);
+                if (this.isPackageSelected()) {
+                    this.setPackageList();
+                } else {
+                    this.input.value = this.itemList[this.selectedIndex].title;
+                }
+            }
+            onEnter(e) {
+                e.preventDefault();
+                this.sendActivate(false);
+                if (this.isPackageSelected()) {
+                    this.setPackageList();
+                }
+            }
+            sendActivate(isTab = false) {
+                let payload = {
+                    isTab: isTab,
+                    item: this.itemList[this.selectedIndex],
+                    pkgList: this.pkgList ? this.pkgList:[],
+                };
+                this.dispatchEvent(new CustomEvent('activate', {detail: payload}));
+                console.log('payload on activate', payload);
+            }
+            setPackageList() {
                 let item = this.itemList[this.selectedIndex];
                 if (this.isPackageSelected()) {
                     let pkgList = JSON.parse(JSON.stringify(this.pkgList));
@@ -110,23 +134,9 @@
                     console.log('pkgList', pkgList);
                     this.input.value = "";
                     this.clearList();
-                } else {
-                    this.input.value = item.title;
                 }
             }
-            onEnter(e) {
-                e.preventDefault();
-                console.log('enter');
-                let payload = {
-                    item: this.itemList[this.selectedIndex],
-                    pkgList: this.pkgList ? this.pkgList:[],
-                };
-                console.log(payload);
-                this.dispatchEvent(new CustomEvent('activate', {detail: payload}));
-                if (this.isPackageSelected()) {
-                    this.onTab(e);
-                }
-            }
+
             onArrowUp(e) {
                 e.preventDefault();
                 if (this.selectedIndex > 0) {

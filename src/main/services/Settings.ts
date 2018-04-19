@@ -63,11 +63,10 @@ export default class Settings extends EventEmitter
         return pkgConfig;
     }
 
-    private createIfNotExist(): void {
-        let settings;
+    private loadOrCreate(): void {
         if (fs.existsSync(this.settingsPath)) {
             console.log('Loading Settings File...');
-            settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
+            let settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, 'utf8'));
             if (this.isWatching) {
                 // test for withc package had changed and send event.
                 Object.keys(settings).forEach((key) => {
@@ -78,7 +77,7 @@ export default class Settings extends EventEmitter
                 });
             }
         } else {
-            settings = {
+            this.settings = {
                 version: "Haste 2.0",
                 toggleKeys: is.windows() ? [
                     "Alt+Space",
@@ -90,7 +89,6 @@ export default class Settings extends EventEmitter
             };
             this.writeToFile();
         }
-        this.settings = settings;
         AppGlobal.settings = this.settings;
         console.log('settings loaded:', this.settings);
         this.isLoading = false;
@@ -111,7 +109,7 @@ export default class Settings extends EventEmitter
 
     private loadSettings(): void {
         try {
-            this.createIfNotExist();
+            this.loadOrCreate();
             //this.watchFile();
         } catch (e) {
             console.error(e);
