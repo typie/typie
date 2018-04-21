@@ -17,5 +17,13 @@ export default class AppGlobal {
         return AppGlobal.settings;
     }
 
+    public static setGlobal(name: string, obj: any): void {
+        global[name] = obj;
+    }
+
+    public static getGlobal(name: string): any {
+        return global[name];
+    }
+
     private static startTime: number;
 }

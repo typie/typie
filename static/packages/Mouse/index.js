@@ -6,10 +6,8 @@ const robot = require("robotjs");
 class Mouse extends AbstractHastePackage
 {
 
-    constructor(Haste, win, config, pkgPath){
+    constructor(win, config, pkgPath){
         super(win, config, pkgPath);
-
-        this.haste       = new Haste(this.packageName);
         this.packageName = 'Mouse';
 
         this.intervalLoop = null;

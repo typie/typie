@@ -6,12 +6,8 @@ const ini = require('node-ini');
 class WebSearch extends AbstractHastePackage
 {
 
-    constructor(Haste, win, config, pkgPath){
+    constructor(win, config, pkgPath){
         super(win, config, pkgPath);
-        this.win         = win;
-        this.packageName = 'WebSearch';
-        this.haste       = new Haste(this.packageName);
-
         this.cfg = ini.parseSync(Path.join(__dirname, 'WebSearch.ini'));
         this.iconPath = getPath(this.packagePath + 'icons/');
         this.populate();

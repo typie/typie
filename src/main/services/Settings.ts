@@ -5,77 +5,78 @@ import is from "electron-is";
 import {EventEmitter} from "events";
 import fs from "fs";
 import yaml from "js-yaml";
+import mkdirp from "mkdirp";
 import Path from "path";
 import AppGlobal from "../helpers/AppGlobal";
 
 export default class Settings extends EventEmitter {
+
+    public static getData(path: string): object {
+        let data;
+        try {
+            data = yaml.safeLoad(fs.readFileSync(path, "utf8"));
+        } catch (e) {
+            console.warn("Missing configuration file at '" + path + "' using empty one", e);
+        }
+        return data ? data : {};
+    }
+
+    public static copy(from: string, to: string): void {
+        try {
+            fs.createReadStream(from).pipe(fs.createWriteStream(to));
+        } catch (e) {
+            console.error("copy file failed", e);
+        }
+    }
+
     public isLoading: boolean;
-    private settingsPath: string;
+    public configDir: string;
+    private configPath: string;
     private isWatching: boolean;
     private settings: object;
 
     constructor() {
         super();
         this.settings = {};
-        this.settingsPath = Path.join(app.getPath("userData"), "config.yml");
+        this.configDir = Path.join(app.getPath("userData"), "config");
+        this.configPath = Path.join(this.configDir, "config.yml");
         this.isLoading = true;
         this.isWatching = false;
         this.loadSettings();
+        AppGlobal.setGlobal("Settings", this);
     }
 
-    public getEntry(name: string): object | null {
-        if (this.settings[name]) {
-            return this.settings[name];
-        }
-        return null;
-    }
-
-    public writeEntry(name: string, data: object): void {
-        this.settings[name] = data;
-        this.writeToFile();
-    }
-
-    /**
-     * this function will load the default pkg config that placed
-     * in the package directory. if there already an entry in the main config
-     * then it will use it and won't load the defaults.
-     * @param pkgName
-     * @param pkgPath
-     */
     public loadPkgConfig(pkgName, pkgPath): any {
-        let pkgConfig;
-        if (this.getEntry(pkgName)) {
-            console.log("Loading '" + pkgName + "' config from user config");
-            return this.getEntry(pkgName);
+        const defaultPkgConfigPath = Path.join(__static, "packages/" + pkgName + "/defaultConfig.yml");
+        const userPkgConfigPath = Path.join(this.configDir, pkgName + ".yml");
+        let pkgConfig = {};
+        if (fs.existsSync(userPkgConfigPath)) {
+            console.log("Loading user config for '" + pkgName);
+            pkgConfig = Settings.getData(userPkgConfigPath);
+        } else if (fs.existsSync(defaultPkgConfigPath)) {
+            console.log("Loading default config for '" + pkgName);
+            pkgConfig = Settings.getData(defaultPkgConfigPath);
+            Settings.copy(defaultPkgConfigPath, userPkgConfigPath);
         } else {
-            console.log("Loading '" + pkgName + "' config from defaults");
-            let defaultConfigPath = Path.join(__static, "packages/" + pkgName + "/defaultConfig.yml");
-            defaultConfigPath = defaultConfigPath.replace(/\\/g, "/");
-            try {
-                pkgConfig = yaml.safeLoad(fs.readFileSync(defaultConfigPath, "utf8"));
-                this.writeEntry(pkgName, pkgConfig);
-            } catch (err) {
-                console.error("Missing 'defaultConfig.yml' file for " + pkgName + " in " + defaultConfigPath, err);
-                pkgConfig = {};
-            }
+            console.warn("Missing 'defaultConfig.yml' file for " + pkgName + " in " + defaultPkgConfigPath);
         }
         return pkgConfig;
     }
 
     private loadOrCreate(): void {
-        if (fs.existsSync(this.settingsPath)) {
-            console.log("Loading Settings File...");
-            const settings = yaml.safeLoad(fs.readFileSync(this.settingsPath, "utf8"));
+        if (fs.existsSync(this.configPath)) {
+            console.log("loading main config file...");
+            const settings = yaml.safeLoad(fs.readFileSync(this.configPath, "utf8"));
             if (settings && this.isWatching) {
                 // test for withc package had changed and send event.
-                Object.keys(settings).forEach((key) => {
-                    if (settings && settings[key]) {
-                        console.log(key, settings[key]);
-                        if (JSON.stringify(this.settings[key]) !== JSON.stringify(settings[key])) {
-                            this.emit("reloadPackage", key);
-                        }
-                    }
-                });
+                // Object.keys(settings).forEach((key) => {
+                //     if (settings && settings[key]) {
+                //         console.log(key, settings[key]);
+                //         if (JSON.stringify(this.settings[key]) !== JSON.stringify(settings[key])) {
+                //             this.emit("reloadPackage", key);
+                //         }
+                //     }
+                // });
             }
         } else {
             this.settings = {
@@ -90,7 +91,7 @@ export default class Settings extends EventEmitter {
                     "Super+Space",
                 ],
             };
-            this.writeToFile();
+            this.writeToFile(this.configPath, this.settings);
         }
         AppGlobal.settings = this.settings;
         console.log("settings loaded:", this.settings);
@@ -100,7 +101,7 @@ export default class Settings extends EventEmitter {
     private watchFile(): void {
         if (!this.isWatching && !this.isLoading) {
             this.isWatching = true;
-            fs.watch(this.settingsPath, (event, path) => {
+            fs.watch(this.configPath, (event, path) => {
                 if (!this.isLoading) {
                     this.isLoading = true;
                     console.log("Settings file " + event + " detected at ", path);
@@ -120,8 +121,50 @@ export default class Settings extends EventEmitter {
         }
     }
 
-    private writeToFile() {
-        console.log("Creating New Settings File...");
-        fs.writeFileSync(this.settingsPath, yaml.safeDump(this.settings));
+    private writeToFile(path, data) {
+        console.log("creating user config file...");
+        mkdirp(Path.dirname(path), err => {
+            if (err) {
+                console.error("could not create path for user config file: " + path, err);
+            } else {
+                try {
+                    fs.writeFileSync(path, yaml.safeDump(data));
+                } catch (e) {
+                    console.error("could not create user config file in: " + path, e);
+                }
+            }
+        });
     }
+
+    // public writeEntry(name: string, data: object): void {
+    //     this.settings[name] = data;
+    //     this.writeToFile();
+    // }
+    //
+    // /**
+    //  * this function will load the default pkg config that placed
+    //  * in the package directory. if there already an entry in the main config
+    //  * then it will use it and won't load the defaults.
+    //  * @param pkgName
+    //  * @param pkgPath
+    //  */
+    // public loadPkgConfig_deprecated(pkgName, pkgPath): any {
+    //     let pkgConfig;
+    //     if (this.getEntry(pkgName)) {
+    //         console.log("Loading '" + pkgName + "' config from user config");
+    //         return this.getEntry(pkgName);
+    //     } else {
+    //         console.log("Loading '" + pkgName + "' config from defaults");
+    //         let defaultConfigPath = Path.join(__static, "packages/" + pkgName + "/defaultConfig.yml");
+    //         defaultConfigPath = defaultConfigPath.replace(/\\/g, "/");
+    //         try {
+    //             pkgConfig = yaml.safeLoad(fs.readFileSync(defaultConfigPath, "utf8"));
+    //             this.writeEntry(pkgName, pkgConfig);
+    //         } catch (err) {
+    //             console.error("Missing 'defaultConfig.yml' file for " + pkgName + " in " + defaultConfigPath, err);
+    //             pkgConfig = {};
+    //         }
+    //     }
+    //     return pkgConfig;
+    // }
 }

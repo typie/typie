@@ -39,6 +39,7 @@
 
     <script>
         //import { default as minifyCssString } from 'minify-css-string';
+        const { HasteRowItem } = require("haste-sdk");
         class HasteSearch extends Polymer.Element {
             static get is() { return "haste-search"; }
 
@@ -159,6 +160,7 @@
                         this.set('pkgList', []);
                     }
                     this.clearList();
+                    this.sendActivate(true);
                 }
             }
             onEscape(e) {
@@ -251,10 +253,7 @@
             }
 
             isPackageSelected() {
-                return this.itemList[this.selectedIndex].d === "Package"
-                    || this.itemList[this.selectedIndex].d === "SubPackage"
-                    || this.itemList[this.selectedIndex].p === "Package"
-                    || this.itemList[this.selectedIndex].p.startsWith("SubPackage|");
+                return HasteRowItem.isPackage(this.itemList[this.selectedIndex]);
             }
         }
         customElements.define(HasteSearch.is, HasteSearch);

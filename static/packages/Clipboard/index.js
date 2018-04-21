@@ -4,12 +4,10 @@ const {AbstractHastePackage, HasteRowItem, SearchObject} = require('haste-sdk');
 class Clipboard extends AbstractHastePackage
 {
 
-    constructor(Haste, win, config, pkgPath){
+    constructor(win, config, pkgPath){
         super(win, config, pkgPath);
         this.win         = win;
         this.packageName = 'Clipboard';
-        this.haste       = new Haste(this.packageName);
-
         this.intervalTime  = 250; // milliseconds
         this.watchInterval = null;
         this.startWatch();

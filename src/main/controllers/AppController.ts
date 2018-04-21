@@ -1,5 +1,6 @@
 import {app} from "electron";
 import {GoDispatcher} from "haste-sdk";
+import AppGlobal from "../helpers/AppGlobal";
 import HasteListener from "../listeners/HasteListener";
 import PackageLoader from "../services/PackageLoader";
 import Settings from "../services/Settings";
@@ -9,10 +10,12 @@ export default class AppController {
 
     public static bootstrapApp(win: MainWindowController, config: Settings) {
         win.createWindow();
-        GoDispatcher.startListen();
+        const dispatcher = new GoDispatcher();
         const bootstrap = setInterval(() => {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);
+                AppGlobal.setGlobal("GoDispatcher", dispatcher);
+                AppController.goDispatcher = dispatcher;
                 AppController.hasteListener = new HasteListener(new PackageLoader(win, config));
             }
         }, 1);
@@ -34,9 +37,10 @@ export default class AppController {
         //         app.quit();
         //     });
 
-        GoDispatcher.close();
+        AppController.goDispatcher.close();
         app.quit();
     }
 
+    private static goDispatcher: GoDispatcher;
     private static hasteListener: HasteListener;
 }

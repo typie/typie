@@ -4,6 +4,7 @@ import path from "path";
 import MainWindowController from "../controllers/MainWindowController";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import Settings from "./Settings";
+import AppGlobal from "../helpers/AppGlobal";
 
 declare const __static: any;
 const packagesPath = path.join(__static, "/packages");
@@ -21,6 +22,7 @@ export default class PackageLoader {
         this.loadPackages();
         // this.watchForPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));
+        AppGlobal.setGlobal("PackageLoader", this);
     }
 
     public getPackage(pkg: string): Promise<AbstractHastePackage> {
@@ -59,20 +61,15 @@ export default class PackageLoader {
             .then((data) => {
                 const pkgConfig = this.config.loadPkgConfig(packageName, absPath);
                 const Package = eval("require('" + relativePath + "/index.js')");
-                this.packages[packageName] = new Package(Haste, this.win, pkgConfig, staticPath);
+                this.packages[packageName] = new Package(this.win, pkgConfig, staticPath);
                 console.log("Loaded package '" + packageName + "'");
 
-                const item = new HasteRowItem();
-                item.setDB("global");
-                item.setDescription("Package");
-                item.setIcon(this.packages[packageName].icon);
-                item.setTitle(packageName);
-                new Haste("global").insert(item, false).go()
-                    .then(res => {
-                        if (res.err === 0) {
-                            console.log("Package '" + packageName + "' is now searchable.");
-                        }
-                    }).catch(err => console.error(err));
+                this.globalInsertPackage(
+                    new HasteRowItem()
+                        .setDB("global")
+                        .setDescription("Package")
+                        .setIcon(this.packages[packageName].icon)
+                        .setTitle(packageName));
             })
             .catch((err) => console.error("cannot load package from: " + relativePath, err));
     }
@@ -113,4 +110,14 @@ export default class PackageLoader {
     //         }, 2000);
     //     });
     // }
+
+    private globalInsertPackage(item: HasteRowItem) {
+        new Haste("global").insert(item, false).go()
+            .then(res => {
+                if (res.err === 0) {
+                    console.log("Package '" + item.getTitle() + "' is now searchable.");
+                }
+            })
+            .catch(err => console.error(err));
+    }
 }

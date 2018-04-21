@@ -5,11 +5,10 @@ const {AbstractHastePackage, HasteRowItem, SearchObject} = require('haste-sdk');
 class MovieSearch extends AbstractHastePackage
 {
 
-    constructor(Haste, win, config, pkgPath){
+    constructor(win, config, pkgPath){
         super(win, config, pkgPath);
         this.win         = win;
         this.packageName = 'MovieSearch';
-        this.haste       = new Haste(this.packageName);
 
         // Example
         this.insert('supernatural');

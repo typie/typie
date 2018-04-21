@@ -1,6 +1,6 @@
 const {app, shell} = require('electron');
 const path = require('path');
-const {AbstractHastePackage, HasteRowItem} = require('haste-sdk');
+const {AbstractHastePackage, HasteRowItem, Haste} = require('haste-sdk');
 const skullIco = 'packages/Files/skull.png';
 
 const is = require('electron-is');
@@ -30,7 +30,7 @@ if (is.windows()) {
 class Files extends AbstractHastePackage
 {
 
-    constructor(Haste, win, config, pkgPath){
+    constructor(win, config, pkgPath){
         super(win, config, pkgPath);
         this.win         = win;
         this.packageName = 'Files';
@@ -66,7 +66,7 @@ class Files extends AbstractHastePackage
            .then(()=>{})
            .catch(()=>{});
         console.log("open in files", item);
-        shell.openItem(item.path);
+        shell.openItem(item.getPath());
         this.win.hide();
     }
 }

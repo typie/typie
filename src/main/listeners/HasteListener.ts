@@ -22,38 +22,54 @@ class HasteListener {
         });
 
         ipcMain.on("activate", (e: Electron.Event, obj) => {
-            console.log("activate", obj);
+            console.log("activate event", obj);
+            if (!obj.item) {
+                if (obj.pkgList.length > 0) {
+                    this.activatePackage(obj.pkgList[0], obj.isTab);
+                }
+                return;
+            }
             const item = HasteRowItem.create(obj.item);
+            let pkg = obj.pkgList[0];
             if (isGlobal(obj)) {
                 if (isPackage(item)) {
-                    this.activatePackage(item.getTitle(), item, obj.isTab);
+                    pkg = item.getTitle();
                 } else {
-                    this.activateItem(e, item.getPackage(), item);
+                    pkg = item.getPackage();
                 }
+            }
+            if (isPackage(item)) {
+                this.activatePackage(pkg, obj.isTab, item);
             } else {
-                this.activateItem(e, obj.pkgList[0], item);
+                this.activateItem(e, pkg, obj.isTab, item);
             }
         });
     }
 
-    private activatePackage(packageName: string, item: HasteRowItem, isTab: boolean) {
+    private activatePackage(packageName: string, isTab: boolean, item?: HasteRowItem) {
         this.packageLoader.getPackage(packageName)
             .then(pkg => {
                 if (isTab === true) {
-                    pkg.activateUponTabEntry();
+                    pkg.activateUponTabEntry(item);
                 } else {
-                    item.countUp();
-                    new Haste("global").insert(item).go().then().catch();
-                    pkg.activateUponEntry();
+                    if (item) {
+                        item.countUp();
+                        new Haste("global").insert(item).go().then().catch();
+                    }
+                    pkg.activateUponEntry(item);
                 }
             })
             .catch(err => console.error(err));
     }
 
-    private activateItem(e: Electron.Event, packageName: string, item: HasteRowItem) {
-        this.packageLoader.getPackage(packageName)
-            .then(pkg => pkg.activate(item, result => e.sender.send("activatedResult", result)))
-            .catch(err => console.error(err));
+    private activateItem(e: Electron.Event, packageName: string, isTab: boolean, item: HasteRowItem) {
+        if (isTab === true) {
+            console.log("don't activate -> its a tab operation", item);
+        } else {
+            this.packageLoader.getPackage(packageName)
+                .then(pkg => pkg.activate(item, result => e.sender.send("activatedResult", result)))
+                .catch(err => console.error(err));
+        }
     }
 }
 export default HasteListener;
@@ -63,5 +79,5 @@ const isGlobal = (obj) => {
 };
 
 const isPackage = (item: HasteRowItem) => {
-    return item.getDescription() === "Package";
+    return HasteRowItem.isPackage(item);
 };
