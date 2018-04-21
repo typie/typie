@@ -95,19 +95,19 @@
             }
             onTab(e) {
                 e.preventDefault();
-                this.sendActivate(true);
                 if (this.isPackageSelected()) {
                     this.setPackageList();
+                    this.sendActivate(false);
                 } else {
                     this.input.value = this.itemList[this.selectedIndex].title;
                 }
             }
             onEnter(e) {
                 e.preventDefault();
-                this.sendActivate(false);
                 if (this.isPackageSelected()) {
                     this.setPackageList();
                 }
+                this.sendActivate(false);
             }
             sendActivate(isTab = false) {
                 let payload = {
@@ -151,7 +151,9 @@
                 }
             }
             onBackspace(e) {
-                if (this.input.value.length === 0) {
+                if (this.input.value.length === 1) {
+                    this.sendActivate(true);
+                } else if (this.input.value.length === 0) {
                     if (this.pkgList.length > 1) {
                         console.log('pkglist', this.pkgList);
                         let pkgList = this.pkgList.slice(0, -1);

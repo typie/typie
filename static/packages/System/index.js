@@ -2,33 +2,44 @@ const {AbstractHastePackage, HasteRowItem, Haste} = require('haste-sdk');
 const {app, shell} = require('electron');
 const Path = require('path');
 
+const SubSystemConfigure = require('./SubSystemConfigure');
+
 class System extends AbstractHastePackage {
 
     constructor(win, config, pkgPath){
         super(win, config, pkgPath);
         this.packageName = 'System';
+        this.subPackages = {
+            SubSystemConfigure: new SubSystemConfigure(win, config, pkgPath)
+        };
         this.populate();
     }
 
     activate(item, cb) {
         item.countUp();
         this.insertItem(item);
-
-
         shell.openItem(item.getPath());
         this.win.hide();
-
     }
 
-    activateUponEntry(item) {
-        console.log("activate upon entry", item);
-        if (item && item.getTitle() === "Configure") {
-            this.sendConfigureRows();
-        } else {
-            this.haste.getRows(15).orderBy('unixTime').asc().go()
-                .then(res => this.win.send('resultList', res))
-                .catch(e => console.error(e));
+    activateUponEntry(pkgList, item) {
+        console.log("activate upon entry in system", pkgList, item);
+        if (pkgList && pkgList.length > 1) {
+            let subPkgName = "Sub" + pkgList.join("");
+            try {
+                this.subPackages[subPkgName].activateUponTabEntry(pkgList, item);
+            } catch (e) {
+                console.error("no sub package found for '" + subPkgName + "'");
+            }
+            return;
+        } else if (pkgList && pkgList.length === 0) {
+            this.haste.setDB(this.packageName).setPkg(this.packageName);
+        } else if (pkgList && pkgList.length === 1) {
+            this.haste.setDB(this.packageName).setPkg(pkgList[0]);
         }
+        this.haste.getRows(15).orderBy('unixTime').asc().go()
+            .then(res => this.win.send('resultList', res))
+            .catch(e => console.error(e));
     }
 
     search(searchObj, callback) {
@@ -44,6 +55,14 @@ class System extends AbstractHastePackage {
                 .setDescription("Open and edit packages configuration")
                 .setIcon(this.icon)
                 .setPath('SubPackage|System->Configure'));
+
+        itemsArray.push(
+            new HasteRowItem("Install")
+                .setDB(this.packageName)
+                .setPackage(this.packageName)
+                .setDescription("Download and install haste packages")
+                .setIcon(this.icon)
+                .setPath('SubPackage|System->Install'));
 
         itemsArray.push(
             new HasteRowItem("Open config file")
@@ -64,22 +83,6 @@ class System extends AbstractHastePackage {
         this.haste.multipleInsert(itemsArray).go()
             .then(data => console.info('System plugin done adding', data))
             .catch(err => console.error('System plugin insert error', err));
-    }
-
-    sendConfigureRows() {
-        let pkgs = Object.keys(global.PackageLoader.packages);
-        console.log(pkgs);
-        let resultList = [];
-        for (let pkg of pkgs) {
-            resultList.push(
-                new HasteRowItem(pkg)
-                    .setDB(this.packageName)
-                    .setPackage(this.packageName)
-                    .setDescription("Open " + pkg + " configuration")
-                    .setIcon(this.icon)
-                    .setPath(Path.join(global.Settings.configDir, pkg + ".yml")));
-        }
-        this.win.send('resultList', {data: resultList, length: resultList.length, err: 0});
     }
 }
 module.exports = System;

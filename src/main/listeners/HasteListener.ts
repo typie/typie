@@ -24,9 +24,7 @@ class HasteListener {
         ipcMain.on("activate", (e: Electron.Event, obj) => {
             console.log("activate event", obj);
             if (!obj.item) {
-                if (obj.pkgList.length > 0) {
-                    this.activatePackage(obj.pkgList[0], obj.isTab);
-                }
+                this.activatePackage(obj.pkgList[0], obj.isTab, obj.pkgList);
                 return;
             }
             const item = HasteRowItem.create(obj.item);
@@ -39,30 +37,31 @@ class HasteListener {
                 }
             }
             if (isPackage(item)) {
-                this.activatePackage(pkg, obj.isTab, item);
+                this.activatePackage(pkg, obj.isTab, obj.pkgList, item);
             } else {
-                this.activateItem(e, pkg, obj.isTab, item);
+                this.activateItem(e, pkg, obj.isTab, obj.pkgList, item);
             }
         });
     }
 
-    private activatePackage(packageName: string, isTab: boolean, item?: HasteRowItem) {
+    private activatePackage(packageName: string, isTab: boolean, pkgList: string[], item?: HasteRowItem) {
         this.packageLoader.getPackage(packageName)
             .then(pkg => {
                 if (isTab === true) {
-                    pkg.activateUponTabEntry(item);
+                    pkg.activateUponTabEntry(pkgList, item);
                 } else {
                     if (item) {
                         item.countUp();
                         new Haste("global").insert(item).go().then().catch();
                     }
-                    pkg.activateUponEntry(item);
+                    pkg.activateUponEntry(pkgList, item);
                 }
             })
             .catch(err => console.error(err));
     }
 
-    private activateItem(e: Electron.Event, packageName: string, isTab: boolean, item: HasteRowItem) {
+    private activateItem(e: Electron.Event, packageName: string, isTab: boolean,
+                         pkgList: string[], item: HasteRowItem) {
         if (isTab === true) {
             console.log("don't activate -> its a tab operation", item);
         } else {
