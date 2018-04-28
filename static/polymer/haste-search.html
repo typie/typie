@@ -3,13 +3,23 @@
 
 <dom-module id="haste-search">
     <template>
-        <div id="app">
+        <div id="app" class$="[[isLoading]]">
             <div class="icon"></div>
             <div class="search">
                 <template id="pkgList" is="dom-repeat" items="[[pkgList]]" as="pkg">
                     <span class="prefix">[[pkg]]</span>
                     <span class="arrow">&#9658;</span>
                 </template>
+                <div class="loading">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                    [[loadingTitle]]
+                </div>
                 <input autofocus id="inputField" type="text" placeholder=""/>
                 <div class="close" onclick="close()">x</div>
             </div>
@@ -62,6 +72,9 @@
                     jsonList: String,
                     searchTime: String,
                     totalItems: Number,
+
+                    isLoading: String,
+                    loadingTitle: String,
                 }
             }
 
@@ -195,6 +208,7 @@
 
             updateList(data) {
                 console.log('updateList', data);
+                this.clearLoading();
                 if (data && data.data && data.data.length > 0) {
                     this.set('itemList', data.data);
                     this.set('jsonList', JSON.stringify(data.data));
@@ -207,6 +221,12 @@
                 this.set('searchTime', (Date.now() - this.searchTimer) + " ms");
             }
 
+            listLoading(string) {
+                this.clearList();
+                this.set('isLoading', "isLoading");
+                this.set('loadingTitle', string);
+            }
+
             _indexChange() {
                 console.log('active change');
                 if (this.jsonList && this.selectedIndex >= 0) {
@@ -217,10 +237,17 @@
             }
 
             clearList() {
+                this.clearLoading();
                 this.set('jsonList', "");
                 this.set('itemList', []);
                 this.set('selectedIndex', -1);
                 this.set('searchTime', "");
+            }
+
+            clearLoading() {
+                this.set('isLoading', "");
+                this.set('loadingTitle', "");
+                this.focus();
             }
 
             focus() {
@@ -238,6 +265,7 @@
             }
 
             loadStyles(cssString) {
+                this.removeStyles();
                 console.log('Loading styles...');
                 let style = document.createElement('style');
                 style.appendChild(document.createTextNode(cssString));

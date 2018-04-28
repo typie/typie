@@ -3,6 +3,7 @@ const {app, shell} = require('electron');
 const Path = require('path');
 
 const SubSystemConfigure = require('./SubSystemConfigure');
+const SubSystemInstall = require('./SubSystemInstall');
 
 class System extends AbstractHastePackage {
 
