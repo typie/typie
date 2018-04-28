@@ -1,4 +1,5 @@
 import {app} from "electron";
+import is from "electron-is";
 import {GoDispatcher} from "haste-sdk";
 import AppGlobal from "../helpers/AppGlobal";
 import HasteListener from "../listeners/HasteListener";
@@ -6,11 +7,18 @@ import PackageLoader from "../services/PackageLoader";
 import Settings from "../services/Settings";
 import MainWindowController from "./MainWindowController";
 
+let goDispatchPath;
+if (is.windows()) {
+    goDispatchPath = "static/bin/haste/haste_go.exe";
+} else if (is.osx()) {
+    goDispatchPath = "static/bin/haste/haste-go";
+}
+
 export default class AppController {
 
     public static bootstrapApp(win: MainWindowController, config: Settings) {
         win.createWindow();
-        const dispatcher = new GoDispatcher();
+        const dispatcher = new GoDispatcher(goDispatchPath);
         const bootstrap = setInterval(() => {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);

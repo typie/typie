@@ -7,15 +7,13 @@ export default class GoDispatcher {
     public static go: any;
     public static listening: boolean;
 
-    constructor() {
+    constructor(hasteExecutable: string) {
         console.log("Starting Haste Service");
         GoDispatcher.listening = false;
         GoDispatcher.go = new Go({
             defaultCommandTimeoutSec: 60,
             maxCommandsRunning: 10,
-            // path: "static/bin/haste-go",
-            // path: "/Users/rotemgrimberg/go/src/haste-go/haste-go",
-            path: "C:\\projects\\Go\\src\\haste\\haste.exe",
+            path: hasteExecutable,
         });
         GoDispatcher.go.init(this.register);
     }
