@@ -19,7 +19,7 @@ class Clipboard extends AbstractHastePackage
         this.insertItem(item);
     }
 
-    activate(item, cb) {
+    activate(pkgList, item, cb) {
         this.win.hide();
         clipboard.writeText(item.getPath());
         this.haste.updateCalled(item).go()
@@ -29,7 +29,7 @@ class Clipboard extends AbstractHastePackage
             .catch(()=>{});
     }
 
-    activateUponEntry() {
+    activateUponEntry(pkgList, item) {
         this.haste.getRows(10).orderBy('unixTime').desc().go()
             .then(res => {
                 console.log('retured from unixTime fetch', res);

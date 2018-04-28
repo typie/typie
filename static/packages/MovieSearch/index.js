@@ -39,7 +39,7 @@ class MovieSearch extends AbstractHastePackage
             .catch(err => console.log(err));
     }
 
-    activate(item, cb) {
+    activate(pkgList, item, cb) {
         let eleet = 'http://1337x.to/sort-search/'+item.getTitle()+'/seeders/desc/1/';
         let imdb = 'https://www.imdb.com/find?s=all&q='+item.getTitle()+'';
         let youtube = 'https://www.youtube.com/results?search_query='+item.getTitle()+'';

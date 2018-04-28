@@ -36,7 +36,7 @@ class WebSearch extends AbstractHastePackage
         }
     }
 
-    activate(item, cb) {
+    activate(pkgList, item, cb) {
         item.countUp();
         this.insertItem(item);
         if (item.getPackage() !== 'WebSearch') {

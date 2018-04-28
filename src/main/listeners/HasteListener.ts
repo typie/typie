@@ -66,7 +66,7 @@ class HasteListener {
             console.log("don't activate -> its a tab operation", item);
         } else {
             this.packageLoader.getPackage(packageName)
-                .then(pkg => pkg.activate(item, result => e.sender.send("activatedResult", result)))
+                .then(pkg => pkg.activate(pkgList, item, result => e.sender.send("activatedResult", result)))
                 .catch(err => console.error(err));
         }
     }

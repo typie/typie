@@ -65,8 +65,22 @@ export default class AbstractHastePackage {
         }
     }
 
-    public activate(rowItem: HasteRowItem, callback: (data) => void) {
-        console.error("No override 'action' method found in " + this.packageName, callback);
+    public activate(pkgList: string[], rowItem: HasteRowItem, callback: (data) => void) {
+        this.runActivate(pkgList, rowItem, callback);
+    }
+
+    public activateWithSubPkgs(pkgList: string[], rowItem: HasteRowItem, callback: (data) => void) {
+        if (pkgList && pkgList.length > 1) {
+            const subPkgName = "Sub" + pkgList.join("");
+            try {
+                this.subPackages[subPkgName].activate(pkgList, rowItem, callback);
+            } catch (e) {
+                console.error("no sub package found for '" + subPkgName + "'");
+            }
+            return;
+        } else {
+            this.runActivate(pkgList, rowItem, callback);
+        }
     }
     // remove(rowItem: HasteRowItem, callback: Function) {
     // console.error('No override "remove" method found in ' + this.packageName)
@@ -130,7 +144,7 @@ export default class AbstractHastePackage {
         }
     }
 
-    private runSearch(obj: SearchObject, callback: (data) => void) {
+    protected runSearch(obj: SearchObject, callback: (data) => void) {
         if (obj.value.length === 0) {
             this.activateUponTabEntry(obj.pkgList);
         } else {
@@ -140,11 +154,15 @@ export default class AbstractHastePackage {
         }
     }
 
-    private runActivateUponEntry(pkgList?: string[], item?: HasteRowItem) {
+    protected runActivate(pkgList: string[], rowItem: HasteRowItem, callback: (data) => void) {
+        console.error("No override 'action' method found in " + this.packageName, callback);
+    }
+
+    protected runActivateUponEntry(pkgList?: string[], item?: HasteRowItem) {
         console.log("No override 'activateUponEntry' method found in " + this.packageName);
     }
 
-    private runActivateUponTabEntry(pkgList?: string[], item?: HasteRowItem) {
+    protected runActivateUponTabEntry(pkgList?: string[], item?: HasteRowItem) {
         console.log("No override 'activateUponTabEntry' method found in " + this.packageName);
         this.activateUponEntry(pkgList, item);
     }

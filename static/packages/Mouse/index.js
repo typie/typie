@@ -37,7 +37,7 @@ class Mouse extends AbstractHastePackage
         this.win.hide();
     }
 
-    activate(item=null, cb=null) {
+    activate(pkgList, item=null, cb=null) {
         globalShortcut.register(this.pkgConfig.keys.escape, () => this.deactivate());
         globalShortcut.register(this.pkgConfig.keys.up, () => {});
         globalShortcut.register(this.pkgConfig.keys.left, () => {});

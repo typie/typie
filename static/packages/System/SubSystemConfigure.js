@@ -11,6 +11,12 @@ class SubSystemConfigure extends AbstractHastePackage {
         this.haste = new Haste(this.packageName, "System");
     }
 
+    activate(pkgList, item, cb) {
+        console.log('activate from configure');
+        shell.openItem(item.getPath());
+        this.win.hide();
+    }
+
     activateUponEntry(pkgList, item) {
         let pkgs = Object.keys(global.PackageLoader.packages);
         let resultList = [];

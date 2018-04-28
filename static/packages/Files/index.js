@@ -61,7 +61,7 @@ class Files extends AbstractHastePackage
             .catch(err => console.error(err));
     }
 
-    activate(item, cb) {
+    activate(pkgList, item, cb) {
         this.haste.updateCalled(item).go()
            .then(()=>{})
            .catch(()=>{});

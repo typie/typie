@@ -17,9 +17,13 @@ class System extends AbstractHastePackage {
         this.populate();
     }
 
-    activate(item, cb) {
-        item.countUp();
-        this.insertItem(item);
+    activate(pkgList, item, cb) {
+        console.log("activate in system", pkgList, item);
+        this.activateWithSubPkgs(pkgList, item, cb);
+    }
+
+    runActivate(pkgList, item, cb) {
+        console.log("run activate in system", pkgList, item);
         shell.openItem(item.getPath());
         this.win.hide();
     }
