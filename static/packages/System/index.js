@@ -10,7 +10,8 @@ class System extends AbstractHastePackage {
         super(win, config, pkgPath);
         this.packageName = 'System';
         this.subPackages = {
-            SubSystemConfigure: new SubSystemConfigure(win, config, pkgPath)
+            SubSystemConfigure: new SubSystemConfigure(win, config, pkgPath),
+            SubSystemInstall: new SubSystemInstall(win, config, pkgPath),
         };
         this.populate();
     }
@@ -24,22 +25,7 @@ class System extends AbstractHastePackage {
 
     activateUponEntry(pkgList, item) {
         console.log("activate upon entry in system", pkgList, item);
-        if (pkgList && pkgList.length > 1) {
-            let subPkgName = "Sub" + pkgList.join("");
-            try {
-                this.subPackages[subPkgName].activateUponTabEntry(pkgList, item);
-            } catch (e) {
-                console.error("no sub package found for '" + subPkgName + "'");
-            }
-            return;
-        } else if (pkgList && pkgList.length === 0) {
-            this.haste.setDB(this.packageName).setPkg(this.packageName);
-        } else if (pkgList && pkgList.length === 1) {
-            this.haste.setDB(this.packageName).setPkg(pkgList[0]);
-        }
-        this.haste.getRows(15).orderBy('unixTime').asc().go()
-            .then(res => this.win.send('resultList', res))
-            .catch(e => console.error(e));
+        this.activateUponEntryWithSubPkgs(pkgList, item);
     }
 
     search(searchObj, callback) {

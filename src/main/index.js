@@ -7,13 +7,13 @@ import WindowsListener from "./listeners/WindowsListener";
 import ShortcutListener from "./listeners/ShortcutListener";
 import MainWindowController from "./controllers/MainWindowController";
 
-// const log = require('electron-log');
-// log.transports.file.level = 'debug';
-// log.transports.console.level = 'debug';
-// console.log = (...args) => log.debug(...args);
-// console.info = (...args) => log.info(...args);
-// console.warn = (...args) => log.warn(...args);
-// console.error = (...args) => log.error(...args);
+const log = require('electron-log');
+log.transports.file.level = 'debug';
+log.transports.console.level = 'debug';
+console.log = (...args) => log.debug(...args);
+console.info = (...args) => log.info(...args);
+console.warn = (...args) => log.warn(...args);
+console.error = (...args) => log.error(...args, new Error().stack);
 
 AppGlobal.init();
 
@@ -31,4 +31,4 @@ let bootstrap = setInterval(() => {
 }, 5);
 
 console.log("Application started...");
-
+

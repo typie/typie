@@ -110,6 +110,7 @@
                 this.sendActivate(false);
             }
             sendActivate(isTab = false) {
+                this.resetTimer();
                 let payload = {
                     isTab: isTab,
                     item: this.itemList[this.selectedIndex],
@@ -151,18 +152,16 @@
                 }
             }
             onBackspace(e) {
-                if (this.input.value.length === 1) {
-                    this.sendActivate(true);
-                } else if (this.input.value.length === 0) {
+                if (this.input.value.length === 0) {
                     if (this.pkgList.length > 1) {
                         console.log('pkglist', this.pkgList);
                         let pkgList = this.pkgList.slice(0, -1);
                         this.set('pkgList', pkgList);
+                        this.inputChange();
                     } else {
                         this.set('pkgList', []);
                     }
                     this.clearList();
-                    this.sendActivate(true);
                 }
             }
             onEscape(e) {
@@ -173,13 +172,9 @@
                 this.clearList();
             }
             inputChange() {
-                if (this.input.value.length > 0) {
-                    this.searchTimer = Date.now();
-                    let payload = {val: this.input.value, pkgList: this.pkgList};
-                    this.dispatchEvent(new CustomEvent('search', {detail: payload}));
-                } else {
-                    this.clearList();
-                }
+                this.resetTimer();
+                let payload = {val: this.input.value, pkgList: this.pkgList};
+                this.dispatchEvent(new CustomEvent('search', {detail: payload}));
             }
 
             changePackage(data) {
@@ -256,6 +251,10 @@
 
             isPackageSelected() {
                 return HasteRowItem.isPackage(this.itemList[this.selectedIndex]);
+            }
+
+            resetTimer() {
+                this.searchTimer = Date.now();
             }
         }
         customElements.define(HasteSearch.is, HasteSearch);

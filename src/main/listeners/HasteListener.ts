@@ -17,7 +17,7 @@ class HasteListener {
             } else {
                 new Haste("global").fuzzySearch(obj.value).go()
                     .then(res => e.sender.send("resultList", res))
-                    .catch(err => console.error(err));
+                    .catch(err => console.error("searching global DB failed", err));
             }
         });
 

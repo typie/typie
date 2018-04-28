@@ -45,8 +45,8 @@ class MovieSearch extends AbstractHastePackage
         let youtube = 'https://www.youtube.com/results?search_query='+item.getTitle()+'';
         let subscene = 'https://subscene.com/subtitles/title?q='+item.getTitle()+'&l=';
         let opensubs = 'https://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-'+item.getTitle()+'';
-        //shell.openItem(opensubs);
-        //shell.openItem(subscene);
+        shell.openItem(opensubs);
+        shell.openItem(subscene);
         //shell.openItem(youtube);
         //shell.openItem(imdb);
         shell.openItem(eleet);
