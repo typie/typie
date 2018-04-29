@@ -47,9 +47,26 @@ class System extends AbstractHastePackage {
                 .setIcon(this.icon)
                 .setPath('SubPackage|System->Configure'));
 
+        // copy for global search
+        itemsArray.push(
+            new HasteRowItem("Configure")
+                .setDB("global")
+                .setPackage(this.packageName)
+                .setDescription("Open and edit packages configuration")
+                .setIcon(this.icon)
+                .setPath('SubPackage|System->Configure'));
+
         itemsArray.push(
             new HasteRowItem("Install")
                 .setDB(this.packageName)
+                .setPackage(this.packageName)
+                .setDescription("Download and install haste packages")
+                .setIcon(this.icon)
+                .setPath('SubPackage|System->Install'));
+
+        itemsArray.push(
+            new HasteRowItem("Install")
+                .setDB("global")
                 .setPackage(this.packageName)
                 .setDescription("Download and install haste packages")
                 .setIcon(this.icon)

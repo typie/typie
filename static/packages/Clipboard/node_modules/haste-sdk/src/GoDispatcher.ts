@@ -8,7 +8,7 @@ export default class GoDispatcher {
     public static listening: boolean;
 
     constructor(hasteExecutable: string) {
-        console.log("Starting Haste Service");
+        console.log("Starting Haste Service", hasteExecutable);
         GoDispatcher.listening = false;
         GoDispatcher.go = new Go({
             defaultCommandTimeoutSec: 60,

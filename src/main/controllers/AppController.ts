@@ -3,12 +3,12 @@ declare const __static: any;
 import {app} from "electron";
 import is from "electron-is";
 import {GoDispatcher} from "haste-sdk";
+import Path from "path";
 import AppGlobal from "../helpers/AppGlobal";
 import HasteListener from "../listeners/HasteListener";
 import PackageLoader from "../services/PackageLoader";
 import Settings from "../services/Settings";
 import MainWindowController from "./MainWindowController";
-import Path from "path";
 
 let goDispatchPath;
 if (is.windows()) {

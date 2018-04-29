@@ -2,9 +2,9 @@ import fs from "fs";
 import {AbstractHastePackage, Haste, HasteRowItem} from "haste-sdk";
 import path from "path";
 import MainWindowController from "../controllers/MainWindowController";
+import AppGlobal from "../helpers/AppGlobal";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import Settings from "./Settings";
-import AppGlobal from "../helpers/AppGlobal";
 
 declare const __static: any;
 const packagesPath = path.join(__static, "/packages");
