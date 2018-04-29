@@ -12,9 +12,9 @@ import Path from "path";
 
 let goDispatchPath;
 if (is.windows()) {
-    goDispatchPath = Path.join(__static, "bin/haste/haste_go.exe");
+    goDispatchPath = Path.join(__static, "bin/haste_go.exe");
 } else if (is.osx()) {
-    goDispatchPath = Path.join(__static, "bin/haste/haste_go");
+    goDispatchPath = Path.join(__static, "bin/haste_go");
 }
 
 export default class AppController {
