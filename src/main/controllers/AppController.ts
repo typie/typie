@@ -1,3 +1,5 @@
+import {hasOwnProperty} from "tslint/lib/utils";
+declare const __static: any;
 import {app} from "electron";
 import is from "electron-is";
 import {GoDispatcher} from "haste-sdk";
@@ -6,24 +8,24 @@ import HasteListener from "../listeners/HasteListener";
 import PackageLoader from "../services/PackageLoader";
 import Settings from "../services/Settings";
 import MainWindowController from "./MainWindowController";
+import Path from "path";
 
 let goDispatchPath;
 if (is.windows()) {
-    goDispatchPath = "static/bin/haste/haste_go.exe";
+    goDispatchPath = Path.join(__static, "bin/haste/haste_go.exe");
 } else if (is.osx()) {
-    goDispatchPath = "static/bin/haste/haste-go";
+    goDispatchPath = Path.join(__static, "bin/haste/haste_go");
 }
 
 export default class AppController {
 
     public static bootstrapApp(win: MainWindowController, config: Settings) {
         win.createWindow();
-        const dispatcher = new GoDispatcher(goDispatchPath);
+        AppController.goDispatcher = new GoDispatcher(goDispatchPath);
         const bootstrap = setInterval(() => {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);
-                AppGlobal.setGlobal("GoDispatcher", dispatcher);
-                AppController.goDispatcher = dispatcher;
+                AppGlobal.setGlobal("GoDispatcher", AppController.goDispatcher);
                 AppController.hasteListener = new HasteListener(new PackageLoader(win, config));
             }
         }, 1);
@@ -45,7 +47,9 @@ export default class AppController {
         //         app.quit();
         //     });
 
-        AppController.goDispatcher.close();
+        if (AppController.goDispatcher && AppController.goDispatcher.hasOwnProperty("close")) {
+            AppController.goDispatcher.close();
+        }
         app.quit();
     }
 

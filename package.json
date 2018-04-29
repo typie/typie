@@ -19,17 +19,17 @@
     "haste-sdk": "github:rotemgrim/haste-sdk",
     "js-yaml": "^3.11.0",
     "mkdirp": "^0.5.1",
-    "source-map-support": "^0.5.3"
+    "source-map-support": "^0.5.5"
   },
   "devDependencies": {
     "electron": "1.8.2",
-    "electron-builder": "^20.0.6",
+    "electron-builder": "^20.11.1",
     "electron-rebuild": "^1.7.3",
     "electron-webpack": "^1.13.0",
     "electron-webpack-ts": "^1.4.0",
     "tslint": "^5.9.1",
     "tslint-loader": "^3.6.0",
-    "typescript": "^2.7.2",
+    "typescript": "^2.8.3",
     "webpack": "^3.11.0"
   },
   "resolutions": {
