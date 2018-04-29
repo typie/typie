@@ -1,5 +1,4 @@
 const {shell, globalShortcut} = require('electron');
-const skullIco = 'themes/default/images/skull.png';
 const {AbstractHastePackage, HasteRowItem, SearchObject} = require('haste-sdk');
 
 class MovieSearch extends AbstractHastePackage

@@ -1,7 +1,6 @@
 const {app, shell} = require('electron');
 const path = require('path');
 const {AbstractHastePackage, HasteRowItem, Haste} = require('haste-sdk');
-const skullIco = 'packages/Files/skull.png';
 
 const is = require('electron-is');
 
@@ -36,7 +35,6 @@ class Files extends AbstractHastePackage
         this.packageName = 'Files';
         this.db          = 'global';
         this.haste       = new Haste(this.packageName, this.db);
-        this.icon        = 'skull.png';
 
         // Example
         // this.insert('some file');
