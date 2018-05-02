@@ -117,10 +117,10 @@
             }
             onEnter(e) {
                 e.preventDefault();
+                this.sendActivate(false);
                 if (this.isPackageSelected()) {
                     this.setPackageList();
                 }
-                this.sendActivate(false);
             }
             sendActivate(isTab = false) {
                 this.resetTimer();

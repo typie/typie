@@ -1,8 +1,7 @@
 const {shell, clipboard} = require('electron');
 const {AbstractHastePackage, HasteRowItem, SearchObject} = require('haste-sdk');
 
-class Clipboard extends AbstractHastePackage
-{
+class Clipboard extends AbstractHastePackage {
 
     constructor(win, config, pkgPath){
         super(win, config, pkgPath);
@@ -10,6 +9,7 @@ class Clipboard extends AbstractHastePackage
         this.packageName = 'Clipboard';
         this.intervalTime  = 250; // milliseconds
         this.watchInterval = null;
+        this.lastPaste = clipboard.readText();
         this.startWatch();
     }
 
@@ -21,6 +21,7 @@ class Clipboard extends AbstractHastePackage
 
     activate(pkgList, item, cb) {
         this.win.hide();
+        this.lastPaste = item.getPath();
         clipboard.writeText(item.getPath());
         this.haste.updateCalled(item).go()
             .then(()=>{
@@ -40,11 +41,10 @@ class Clipboard extends AbstractHastePackage
     }
 
     startWatch() {
-        let lastContent = "";
         this.watchInterval = setInterval(() => {
             let content = clipboard.readText();
-            if (lastContent !== content) {
-                lastContent = content;
+            if (this.lastPaste !== content) {
+                this.lastPaste = content;
                 this.insert(content);
             }
         }, this.intervalTime);
