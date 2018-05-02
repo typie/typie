@@ -1,4 +1,3 @@
-import {hasOwnProperty} from "tslint/lib/utils";
 declare const __static: any;
 import {app} from "electron";
 import is from "electron-is";

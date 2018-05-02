@@ -1,13 +1,13 @@
 import fs from "fs";
 import {AbstractHastePackage, Haste, HasteRowItem} from "haste-sdk";
-import path from "path";
+import * as Path from "path";
 import MainWindowController from "../controllers/MainWindowController";
 import AppGlobal from "../helpers/AppGlobal";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import Settings from "./Settings";
 
 declare const __static: any;
-const packagesPath = path.join(__static, "/packages");
+const packagesPath = Path.join(__static, "/packages");
 
 export default class PackageLoader {
 
@@ -44,7 +44,7 @@ export default class PackageLoader {
     }
 
     public loadPackage(dirName) {
-        const absPath = path.join(packagesPath, dirName);
+        const absPath = Path.join(packagesPath, dirName);
         const staticPath = "packages/" + dirName + "/";
         if (!this.isViablePackage(absPath)) {
             return;
@@ -75,11 +75,11 @@ export default class PackageLoader {
     }
 
     public isViablePackage(absPath): boolean {
-        if (!fs.existsSync(path.join(absPath, "index.js"))) {
+        if (!fs.existsSync(Path.join(absPath, "index.js"))) {
             console.error("Did not found index.js at " + absPath);
             return false;
         }
-        if (!fs.existsSync(path.join(absPath, "package.json"))) {
+        if (!fs.existsSync(Path.join(absPath, "package.json"))) {
             console.error("Did not found package.json at " + absPath);
             return false;
         }
