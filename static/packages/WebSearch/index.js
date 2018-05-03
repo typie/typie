@@ -40,7 +40,7 @@ class WebSearch extends AbstractHastePackage
         item.countUp();
         this.insertItem(item);
         if (item.getPackage() !== 'WebSearch') {
-            shell.openItem(item.getPath());
+            shell.openExternal(item.getPath());
             this.win.hide();
         }
     }

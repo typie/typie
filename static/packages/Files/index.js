@@ -64,7 +64,7 @@ class Files extends AbstractHastePackage
            .then(()=>{})
            .catch(()=>{});
         console.log("open in files", item);
-        shell.openItem(item.getPath());
+        shell.openExternal(item.getPath());
         this.win.hide();
     }
 }

@@ -10,8 +10,8 @@ class ShortcutListener {
             globalShortcut.register("Alt+x", () => win.toggle());
             globalShortcut.register("Alt+Space", () => win.toggle());
         } else {
-            globalShortcut.register("Super+x", () => win.toggle());
-            globalShortcut.register("Super+Space", () => win.toggle());
+            globalShortcut.register("Ctrl+x", () => win.toggle());
+            globalShortcut.register("Ctrl+Space", () => win.toggle());
         }
     }
 }
