@@ -83,13 +83,7 @@ export default class Settings extends EventEmitter {
                 meta: {
                     version: "Haste 2.0",
                 },
-                toggleKeys: is.windows() ? [
-                    "Alt+Space",
-                    "CommandOrControl+Space",
-                ] : [
-                    "Super+x",
-                    "Super+Space",
-                ],
+                toggleKeys: this.getToggleKeys(),
             };
             this.writeToFile(this.configPath, this.settings);
         }
@@ -108,6 +102,22 @@ export default class Settings extends EventEmitter {
                     this.loadSettings();
                 }
             });
+        }
+    }
+
+    private getToggleKeys(): string[] {
+        if (is.windows()) {
+            return [
+                "Alt+Space",
+                "CommandOrControl+Space",
+            ];
+        } else if (is.osx()) {
+            return [
+                "Ctrl+x",
+                "Ctrl+Space",
+            ];
+        } else {
+            return ["CommandOrControl+Space"];
         }
     }
 

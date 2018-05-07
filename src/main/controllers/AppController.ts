@@ -1,5 +1,5 @@
 declare const __static: any;
-import {app} from "electron";
+import {app, globalShortcut} from "electron";
 import is from "electron-is";
 import {GoDispatcher} from "haste-sdk";
 import Path from "path";
@@ -45,7 +45,7 @@ export default class AppController {
         //         GoDispatcher.close();
         //         app.quit();
         //     });
-
+        globalShortcut.unregisterAll();
         if (AppController.goDispatcher && AppController.goDispatcher.hasOwnProperty("close")) {
             AppController.goDispatcher.close();
         }
