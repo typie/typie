@@ -8,6 +8,7 @@ import ShortcutListener from "./listeners/ShortcutListener";
 import MainWindowController from "./controllers/MainWindowController";
 
 const log = require('electron-log');
+log.transports.file.file = __static + '/typie.log';
 log.transports.file.level = 'debug';
 log.transports.console.level = 'debug';
 console.log = (...args) => log.debug(...args);

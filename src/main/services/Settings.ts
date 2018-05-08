@@ -1,6 +1,6 @@
 
 declare const __static: any;
-import {app} from "electron";
+import { app } from "electron";
 import is from "electron-is";
 import {EventEmitter} from "events";
 import fs from "fs";
@@ -11,7 +11,7 @@ import AppGlobal from "../helpers/AppGlobal";
 
 export default class Settings extends EventEmitter {
 
-    public static getData(path: string): object {
+    public static getData(path: string): any {
         let data;
         try {
             data = yaml.safeLoad(fs.readFileSync(path, "utf8"));
@@ -63,11 +63,15 @@ export default class Settings extends EventEmitter {
         return pkgConfig;
     }
 
+    public getConfig(): any {
+        return this.settings;
+    }
+
     private loadOrCreate(): void {
         if (fs.existsSync(this.configPath)) {
-            console.log("loading main config file...");
-            const settings = yaml.safeLoad(fs.readFileSync(this.configPath, "utf8"));
-            if (settings && this.isWatching) {
+            console.log("loading main config file from: " + this.configPath);
+            this.settings = yaml.safeLoad(fs.readFileSync(this.configPath, "utf8"));
+            // if (settings && this.isWatching) {
                 // test for withc package had changed and send event.
                 // Object.keys(settings).forEach((key) => {
                 //     if (settings && settings[key]) {
@@ -77,8 +81,9 @@ export default class Settings extends EventEmitter {
                 //         }
                 //     }
                 // });
-            }
+            // }
         } else {
+            console.log("building new config file from scratch");
             this.settings = {
                 meta: {
                     version: "Haste 2.0",
