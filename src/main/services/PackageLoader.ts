@@ -4,7 +4,7 @@ import * as Path from "path";
 import MainWindowController from "../controllers/MainWindowController";
 import AppGlobal from "../helpers/AppGlobal";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
-import Settings from "./Settings";
+import ConfigLoader from "./ConfigLoader";
 
 declare const __static: any;
 const packagesPath = Path.join(__static, "/packages");
@@ -13,9 +13,9 @@ export default class PackageLoader {
 
     private packages: object;
     private win: MainWindowController;
-    private config: Settings;
+    private config: ConfigLoader;
 
-    constructor(win: MainWindowController, config: Settings) {
+    constructor(win: MainWindowController, config: ConfigLoader) {
         this.win = win;
         this.config = config;
         this.packages = {};

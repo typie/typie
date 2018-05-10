@@ -75,7 +75,7 @@ class HasteListener {
                     item.countUp();
                     new Haste(item.getDB()).setPkg(item.getPackage()).insert(item).go()
                         .then(res => console.log("updated item countUp: " + item.getTitle() ))
-                        .catch(e => console.error("could not update item countUp: " + item.getTitle(), e));
+                        .catch(err => console.error("could not update item countUp: " + item.getTitle(), err));
                 })
                 .catch(err => console.error(err));
         }

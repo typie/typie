@@ -1,4 +1,3 @@
-
 declare const __static: any;
 import { app } from "electron";
 import is from "electron-is";
@@ -9,7 +8,7 @@ import mkdirp from "mkdirp";
 import Path from "path";
 import AppGlobal from "../helpers/AppGlobal";
 
-export default class Settings extends EventEmitter {
+export default class ConfigLoader extends EventEmitter {
 
     public static getData(path: string): any {
         let data;
@@ -33,7 +32,7 @@ export default class Settings extends EventEmitter {
     public configDir: string;
     private configPath: string;
     private isWatching: boolean;
-    private settings: object;
+    private settings: any;
 
     constructor() {
         super();
@@ -52,18 +51,18 @@ export default class Settings extends EventEmitter {
         let pkgConfig = {};
         if (fs.existsSync(userPkgConfigPath)) {
             console.log("Loading user config for '" + pkgName);
-            pkgConfig = Settings.getData(userPkgConfigPath);
+            pkgConfig = ConfigLoader.getData(userPkgConfigPath);
         } else if (fs.existsSync(defaultPkgConfigPath)) {
             console.log("Loading default config for '" + pkgName);
-            pkgConfig = Settings.getData(defaultPkgConfigPath);
-            Settings.copy(defaultPkgConfigPath, userPkgConfigPath);
+            pkgConfig = ConfigLoader.getData(defaultPkgConfigPath);
+            ConfigLoader.copy(defaultPkgConfigPath, userPkgConfigPath);
         } else {
             console.warn("Missing 'defaultConfig.yml' file for " + pkgName + " in " + defaultPkgConfigPath);
         }
         return pkgConfig;
     }
 
-    public getConfig(): any {
+    public getSettings(): any {
         return this.settings;
     }
 
@@ -71,17 +70,6 @@ export default class Settings extends EventEmitter {
         if (fs.existsSync(this.configPath)) {
             console.log("loading main config file from: " + this.configPath);
             this.settings = yaml.safeLoad(fs.readFileSync(this.configPath, "utf8"));
-            // if (settings && this.isWatching) {
-                // test for withc package had changed and send event.
-                // Object.keys(settings).forEach((key) => {
-                //     if (settings && settings[key]) {
-                //         console.log(key, settings[key]);
-                //         if (JSON.stringify(this.settings[key]) !== JSON.stringify(settings[key])) {
-                //             this.emit("reloadPackage", key);
-                //         }
-                //     }
-                // });
-            // }
         } else {
             console.log("building new config file from scratch");
             this.settings = {
@@ -93,8 +81,9 @@ export default class Settings extends EventEmitter {
             this.writeToFile(this.configPath, this.settings);
         }
         AppGlobal.settings = this.settings;
-        console.log("settings loaded:", this.settings);
         this.isLoading = false;
+        console.log("Config loaded:", this.settings);
+        this.emit("config-loaded");
     }
 
     private watchFile(): void {
@@ -103,7 +92,8 @@ export default class Settings extends EventEmitter {
             fs.watch(this.configPath, (event, path) => {
                 if (!this.isLoading) {
                     this.isLoading = true;
-                    console.log("Settings file " + event + " detected at ", path);
+                    console.log("Config file " + event + " detected at ", path);
+                    this.emit("config-reload");
                     this.loadSettings();
                 }
             });
@@ -129,7 +119,7 @@ export default class Settings extends EventEmitter {
     private loadSettings(): void {
         try {
             this.loadOrCreate();
-            // this.watchFile();
+            this.watchFile();
         } catch (e) {
             console.error(e);
             throw new Error("Error loading config.yml file, check if exist or is valid Yaml format.");

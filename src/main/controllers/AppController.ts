@@ -6,7 +6,7 @@ import Path from "path";
 import AppGlobal from "../helpers/AppGlobal";
 import HasteListener from "../listeners/HasteListener";
 import PackageLoader from "../services/PackageLoader";
-import Settings from "../services/Settings";
+import ConfigLoader from "../services/ConfigLoader";
 import MainWindowController from "./MainWindowController";
 
 let goDispatchPath;
@@ -18,7 +18,7 @@ if (is.windows()) {
 
 export default class AppController {
 
-    public static bootstrapApp(win: MainWindowController, config: Settings) {
+    public static bootstrapApp(win: MainWindowController, config: ConfigLoader) {
         win.createWindow();
         AppController.goDispatcher = new GoDispatcher(goDispatchPath);
         const bootstrap = setInterval(() => {
