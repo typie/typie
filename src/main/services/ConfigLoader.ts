@@ -4,7 +4,7 @@ import is from "electron-is";
 import {EventEmitter} from "events";
 import fs from "fs";
 import yaml from "js-yaml";
-import mkdirp from "mkdirp";
+import mkdirP from "mkdirp";
 import Path from "path";
 import AppGlobal from "../helpers/AppGlobal";
 
@@ -87,16 +87,24 @@ export default class ConfigLoader extends EventEmitter {
     }
 
     private watchFile(): void {
-        if (!this.isWatching && !this.isLoading) {
+        if (!this.isWatching) {
             this.isWatching = true;
+            let timeout: any = setTimeout(() => { return; });
             fs.watch(this.configPath, (event, path) => {
-                if (!this.isLoading) {
-                    this.isLoading = true;
-                    console.log("Config file " + event + " detected at ", path);
-                    this.emit("config-reload");
-                    this.loadSettings();
-                }
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    this.configReload(event, path);
+                }, 1000);
             });
+        }
+    }
+
+    private configReload(event, path): void {
+        if (!this.isLoading) {
+            this.isLoading = true;
+            console.log("Config file " + event + " detected at: " + path);
+            this.emit("config-reload");
+            this.loadOrCreate();
         }
     }
 
@@ -119,7 +127,6 @@ export default class ConfigLoader extends EventEmitter {
     private loadSettings(): void {
         try {
             this.loadOrCreate();
-            this.watchFile();
         } catch (e) {
             console.error(e);
             throw new Error("Error loading config.yml file, check if exist or is valid Yaml format.");
@@ -128,12 +135,14 @@ export default class ConfigLoader extends EventEmitter {
 
     private writeToFile(path, data) {
         console.log("creating user config file...");
-        mkdirp(Path.dirname(path), err => {
+        mkdirP(Path.dirname(path), err => {
             if (err) {
                 console.error("could not create path for user config file: " + path, err);
             } else {
                 try {
                     fs.writeFileSync(path, yaml.safeDump(data));
+                    this.isLoading = false;
+                    this.watchFile();
                 } catch (e) {
                     console.error("could not create user config file in: " + path, e);
                 }

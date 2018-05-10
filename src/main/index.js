@@ -1,7 +1,6 @@
 
 import AppGlobal from "./helpers/AppGlobal";
 import AppListener from "./listeners/AppListener";
-import ConfigLoader from "./services/ConfigLoader";
 import MakeSingular from "./helpers/MakeSingleInstance";
 import MainWindowController from "./controllers/MainWindowController";
 
@@ -16,9 +15,8 @@ console.error = (...args) => log.error(...args, new Error().stack);
 
 AppGlobal.init();
 
-let config = new ConfigLoader();
-let mainWindow = new MainWindowController();
+const mainWindow = new MainWindowController();
 MakeSingular.init(mainWindow);
-AppListener.listen(mainWindow, config);
+AppListener.listen(mainWindow);
 
 console.log("Application started...");

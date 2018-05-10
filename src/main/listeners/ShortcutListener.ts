@@ -1,6 +1,6 @@
 import {globalShortcut} from "electron";
-import MainWindowController from "../controllers/MainWindowController";
 import ConfigLoader from "../services/ConfigLoader";
+import MainWindowController from "../controllers/MainWindowController";
 
 export default class ShortcutListener {
 
@@ -19,6 +19,7 @@ export default class ShortcutListener {
     public static removeListeners(config: ConfigLoader): void {
         const toggleKeys = config.getSettings().toggleKeys;
         if (toggleKeys) {
+            console.log("removing toggle keys", toggleKeys);
             for (const toggleShortcut of toggleKeys) {
                 globalShortcut.unregister(toggleShortcut);
             }
