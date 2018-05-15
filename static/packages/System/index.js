@@ -3,6 +3,7 @@ const {app, shell} = require('electron');
 const Path = require('path');
 
 const SubSystemConfigure = require('./SubSystemConfigure');
+const SubSystemShowLogs = require('./SubSystemShowLogs');
 const SubSystemInstall = require('./SubSystemInstall');
 
 class System extends AbstractHastePackage {
@@ -12,6 +13,7 @@ class System extends AbstractHastePackage {
         this.packageName = 'System';
         this.subPackages = {
             SubSystemConfigure: new SubSystemConfigure(win, config, pkgPath),
+            SubSystemShowLogs: new SubSystemShowLogs(win, config, pkgPath),
             SubSystemInstall: new SubSystemInstall(win, config, pkgPath),
         };
         this.populate();
@@ -71,6 +73,14 @@ class System extends AbstractHastePackage {
                 .setDescription("Download and install haste packages")
                 .setIcon(this.icon)
                 .setPath('SubPackage|System->Install'));
+
+        itemsArray.push(
+            new HasteRowItem("Show Logs")
+                .setDB(this.packageName)
+                .setPackage(this.packageName)
+                .setDescription("Open global log files")
+                .setIcon(this.icon)
+                .setPath('SubPackage|System->ShowLogs'));
 
         itemsArray.push(
             new HasteRowItem("Open config file")

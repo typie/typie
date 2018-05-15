@@ -92,10 +92,11 @@ export default class PackageLoader {
     }
 
     public destroyIfExist(packageName): void {
-        if (this.packages[packageName]) {
+        const pkg: AbstractHastePackage = this.packages[packageName];
+        if (pkg) {
             console.log("package '" + packageName + "' already exist...");
-            this.packages[packageName].destroy();
-            this.packages[packageName] = null;
+            pkg.destroy();
+            delete this.packages[packageName];
         }
     }
 

@@ -75,7 +75,7 @@ export default class AbstractHastePackage {
             try {
                 this.subPackages[subPkgName].activate(pkgList, rowItem, callback);
             } catch (e) {
-                console.error("no sub package found for '" + subPkgName + "'");
+                console.error("no sub package found for '" + subPkgName + "'", Object.keys(this.subPackages), e);
             }
             return;
         } else {
@@ -100,7 +100,7 @@ export default class AbstractHastePackage {
             try {
                 this.subPackages[subPkgName].activateUponTabEntry(pkgList, item);
             } catch (e) {
-                console.error("no sub package found for '" + subPkgName + "'");
+                console.error("no sub package found upon entry '" + subPkgName + "'", Object.keys(this.subPackages), e);
             }
             return;
         } else if (pkgList && pkgList.length === 0) {
