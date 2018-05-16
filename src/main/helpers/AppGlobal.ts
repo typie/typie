@@ -18,7 +18,7 @@ export default class AppGlobal {
 
         AppGlobal.startTime = Date.now();
         AppGlobal.setGlobal("staticPath", __static);
-        AppGlobal.setGlobal("typeLogPath", Path.join(__static, "typie.log"));
+        AppGlobal.setGlobal("logPath", Path.join(__static, "typie.log"));
         app.disableHardwareAcceleration();
     }
 

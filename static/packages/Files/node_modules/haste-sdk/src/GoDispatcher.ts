@@ -1,6 +1,7 @@
 import {Go} from "gonode";
 import Packet from "./models/Packet";
 // import * as path from "path";
+const appGlobal: any = global;
 
 export default class GoDispatcher {
 
@@ -62,7 +63,7 @@ export default class GoDispatcher {
                 if (result.ok) {  // Check if response is ok
                     // In our case we just echo the command, so we can get our text back
                     console.log("Haste responded: ", response);
-                    console.log("Haste err === 0: ", response.err === 0);
+                    appGlobal.coreLogPath = response.log;
                     if (response.err === 0) {
                         GoDispatcher.listening = true;
                     }

@@ -12,17 +12,16 @@ class SubSystemShowLogs extends AbstractHastePackage {
     }
 
     activate(pkgList, item, cb) {
-        const logPath = global["typeLogPath"];
+        const LogPath = global["logPath"];
+        const coreLogPath = global["coreLogPath"];
         console.log('activate from show logs', logPath);
-        shell.openItem(logPath);
-        //shell.openItem(item.getPath());
+        shell.openItem(LogPath);
+        shell.openItem(coreLogPath);
         this.win.hide();
     }
 
     activateUponEntry(pkgList, item) {
-        const logPath = global["typeLogPath"];
-        console.log('activate from show logs', logPath);
-        // this.activate(pkgList, item, () => { return; });
+        this.activate(pkgList, item, () => { return; });
     }
 }
 module.exports = SubSystemShowLogs;
