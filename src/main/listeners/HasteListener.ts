@@ -44,9 +44,9 @@ class HasteListener {
         });
     }
 
-    private activatePackage(packageName: string, isTab: boolean, pkgList: string[], item?: HasteRowItem) {
-        console.log("activating package: " + packageName);
-        this.packageLoader.getPackage(packageName)
+    private activatePackage(pkgName: string, isTab: boolean, pkgList: string[], item?: HasteRowItem) {
+        console.log("activating package: " + pkgName);
+        this.packageLoader.getPackage(pkgName)
             .then(pkg => {
                 if (isTab === true) {
                     pkg.activateUponTabEntry(pkgList, item);
@@ -63,13 +63,12 @@ class HasteListener {
             .catch(err => console.error(err));
     }
 
-    private activateItem(e: Electron.Event, packageName: string, isTab: boolean,
-                         pkgList: string[], item: HasteRowItem) {
-        console.log("activating item in: " + packageName);
+    private activateItem(e: Electron.Event, pkgName: string, isTab: boolean, pkgList: string[], item: HasteRowItem) {
+        console.log("activating item in: " + pkgName);
         if (isTab === true) {
             console.log("don't activate -> its a tab operation", item);
         } else {
-            this.packageLoader.getPackage(packageName)
+            this.packageLoader.getPackage(pkgName)
                 .then(pkg => {
                     pkg.activate(pkgList, item, result => e.sender.send("activatedResult", result));
                     item.countUp();

@@ -12,9 +12,9 @@ class System extends AbstractHastePackage {
         super(win, config, pkgPath);
         this.packageName = 'System';
         this.subPackages = {
-            SubSystemConfigure: new SubSystemConfigure(win, config, pkgPath),
-            SubSystemShowLogs: new SubSystemShowLogs(win, config, pkgPath),
-            SubSystemInstall: new SubSystemInstall(win, config, pkgPath),
+            SubSystemConfigure: new SubSystemConfigure(this, win, config, pkgPath),
+            SubSystemShowLogs: new SubSystemShowLogs(this, win, config, pkgPath),
+            SubSystemInstall: new SubSystemInstall(this, win, config, pkgPath),
         };
         this.populate();
     }

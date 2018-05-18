@@ -11,6 +11,7 @@ export default class MainWindowController extends AbstractWindowController {
         alwaysOnTop: true,
         frame: false,
         height: 900,
+        maximizable: false,
         show: false,
         transparent: true,
         width: 475,
@@ -36,7 +37,7 @@ export default class MainWindowController extends AbstractWindowController {
 
     public init() {
         super.init();
-        this.win.setIgnoreMouseEvents(true);
+        // this.win.setIgnoreMouseEvents(true);
         console.log("content window finished loading in " + (AppGlobal.getTimeSinceInit() / 1000) + " seconds");
         this.styleLoader.init();
         // this.show();

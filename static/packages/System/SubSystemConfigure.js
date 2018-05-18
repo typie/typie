@@ -4,11 +4,12 @@ const Path = require('path');
 
 class SubSystemConfigure extends AbstractHastePackage {
 
-    constructor(win, config, pkgPath){
+    constructor(parent, win, config, pkgPath){
         super(win, config, pkgPath);
         this.packageName = 'System->Configure';
         this.db = "System";
         this.haste = new Haste(this.packageName, "System");
+        Object.assign(this, parent);
     }
 
     activate(pkgList, item, cb) {

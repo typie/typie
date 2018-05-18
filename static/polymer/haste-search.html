@@ -110,7 +110,7 @@
                 e.preventDefault();
                 if (this.isPackageSelected()) {
                     this.setPackageList();
-                    this.sendActivate(false);
+                    this.sendActivate(true);
                 } else {
                     this.input.value = this.itemList[this.selectedIndex].title;
                 }
