@@ -35,6 +35,28 @@ export default class PackageLoader {
         });
     }
 
+    public getPackageFromList(pkgList: string[]): Promise<AbstractHastePackage> {
+        if (pkgList.length === 1) {
+            return this.getPackage(pkgList[0]);
+        } else if (pkgList.length > 1) {
+            let pkg: any = this;
+            return new Promise<AbstractHastePackage>((resolve, reject) => {
+                while (pkgList.length >= 1) {
+                    const pk: any = pkgList.shift();
+                    try {
+                        pkg = pkg.packages[pk];
+                    } catch (err) {
+                        reject("package loader did not find: '" + pkg + "' pkg");
+                    }
+                }
+                resolve(pkg);
+            });
+        } else {
+            return new Promise<AbstractHastePackage>((resolve, reject) =>
+                reject("cannot get package with empty pkgList"));
+        }
+    }
+
     public loadPackages() {
         const packagesDirs = getDirectories(packagesPath);
         console.log(packagesDirs);

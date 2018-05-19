@@ -110,8 +110,7 @@
             onTab(e) {
                 e.preventDefault();
                 if (this.isPackageSelected()) {
-                    this.sendEnterPkg(false);
-                    this.setPackageList();
+                    this.setPackageList(false);
                 } else {
                     this.input.value = this.itemList[this.selectedIndex].title;
                 }
@@ -119,16 +118,15 @@
             onEnter(e) {
                 e.preventDefault();
                 if (this.isPackageSelected()) {
-                    this.sendEnterPkg(true);
-                    this.setPackageList();
+                    this.setPackageList(true);
                 } else {
                     this.sendActivate();
                 }
             }
 
-            setPackageList() {
-                let item = this.itemList[this.selectedIndex];
+            setPackageList(countUp) {
                 if (this.isPackageSelected()) {
+                    let item = this.itemList[this.selectedIndex];
                     let pkgList = JSON.parse(JSON.stringify(this.pkgList));
                     if (item.p.startsWith('SubPackage|')) {
                         pkgList = [];
@@ -141,8 +139,8 @@
                     }
                     this.set('pkgList', pkgList);
                     console.log('pkgList', pkgList);
-                    this.input.value = "";
-                    this.clearList();
+                    this.sendEnterPkg(countUp);
+                    this.clearAll();
                 }
             }
 
@@ -186,12 +184,15 @@
                 e.preventDefault();
                 this.sendEscape();
                 this.set('pkgList', []);
-                this.input.value = "";
-                this.clearList();
+                this.clearAll();
             }
             inputChange() {
                 this.resetTimer();
-                this.sendSearch();
+                if (this.input.value.length > 0) {
+                    this.sendSearch();
+                } else if (this.pkgList.length > 0) {
+                    this.sendClear();
+                }
             }
 
             changePackage(data) {
@@ -202,14 +203,12 @@
                         pkgList = JSON.parse(newPkgList);
                         this.set('pkgList', pkgList);
                         console.log('pkgList', pkgList);
-                        this.input.value = "";
-                        this.clearList();
+                        this.clearAll();
                         this.sendEnterPkg();
                     }
                 } else {
                     this.set('pkgList', []);
-                    this.input.value = "";
-                    this.clearList();
+                    this.clearAll();
                 }
             }
 
@@ -246,7 +245,7 @@
             sendActivate() {
                 this.dispatchEvent(new CustomEvent('activate', {detail: {
                     item: this.itemList[this.selectedIndex],
-                    pkgList: this.pkgList ? this.pkgList:[],
+                    pkgList: this.pkgList,
                 }}));
             }
 
@@ -254,13 +253,13 @@
                 this.dispatchEvent(new CustomEvent('enterPkg', {detail: {
                     countUp: countUp,
                     item: this.itemList[this.selectedIndex],
-                    pkgList: this.pkgList ? this.pkgList:[],
+                    pkgList: this.pkgList,
                 }}));
             }
 
             sendClear() {
                 this.dispatchEvent(new CustomEvent('clear', {detail: {
-                    pkgList: this.pkgList ? this.pkgList:[],
+                    pkgList: this.pkgList,
                 }}));
             }
 
@@ -274,12 +273,22 @@
             sendDelete() {
                 this.dispatchEvent(new CustomEvent('delete', {detail: {
                     item: this.itemList[this.selectedIndex],
-                    pkgList: this.pkgList ? this.pkgList:[],
+                    pkgList: this.pkgList,
                 }}));
             }
 
             sendEscape() {
                 this.dispatchEvent(new CustomEvent('escape', {detail: null}));
+            }
+
+
+            clearAll() {
+                this.clearValue();
+                this.clearList();
+            }
+
+            clearValue() {
+                this.input.value = "";
             }
 
             clearList() {

@@ -14,6 +14,7 @@ class SubSystemInstall extends AbstractHastePackage {
         this.packageName = 'System->Install';
         this.db = "System";
         this.haste = new Haste(this.packageName, "System");
+        // Object.assign(this, parent);
     }
 
     activate(pkgList, item, cb) {
@@ -30,7 +31,7 @@ class SubSystemInstall extends AbstractHastePackage {
         })
     }
 
-    activateUponEntry(pkgList, item) {
+    enterPkg(pkgList, item, cb) {
         this.win.send('listLoading', {data: "Loading...", length: 0, err: 0});
         axios.get('https://api.github.com/users/rotemgrim/repos')
             .then(res => {

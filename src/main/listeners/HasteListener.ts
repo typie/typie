@@ -3,7 +3,10 @@ import {Haste, HasteRowItem, SearchObject} from "haste-sdk";
 import PackageLoader from "../services/PackageLoader";
 import AbstractHastePackage from "haste-sdk/dist/AbstractHastePackage";
 
-class HasteListener {
+export default class HasteListener {
+
+    private static sendList(e, res) { e.sender.send("resultList", res); }
+    private static isGlobal(obj) { return !(obj.pkgList && obj.pkgList.length > 0); }
     private packageLoader: PackageLoader;
 
     constructor(packageLoader: PackageLoader) {
@@ -16,13 +19,13 @@ class HasteListener {
     }
 
     private search(e: Electron.Event, obj: SearchObject) {
-        if (!isGlobal(obj)) {
-            this.packageLoader.getPackage(obj.pkgList[0])
-                .then(pkg => pkg.search(obj, res => e.sender.send("resultList", res)))
+        if (!HasteListener.isGlobal(obj)) {
+            this.packageLoader.getPackageFromList(obj.pkgList)
+                .then(pkg => pkg.search(obj, res => HasteListener.sendList(e, res)))
                 .catch(err => console.error(err));
         } else {
             new Haste("global").fuzzySearch(obj.value).go()
-                .then(res => e.sender.send("resultList", res))
+                .then(res => HasteListener.sendList(e, res))
                 .catch(err => console.error("searching global DB failed", err));
         }
     }
@@ -34,7 +37,7 @@ class HasteListener {
             this.update(item);
             try {
                 console.log("activate item:" + item.getTitle());
-                pkg.activate(obj.pkgList, item, res => e.sender.send("activatedResult", res));
+                pkg.activate(obj.pkgList, item, res => HasteListener.sendList(e, res));
             } catch (err) {
                 console.error("error while activating item:", item, err);
             }
@@ -51,7 +54,7 @@ class HasteListener {
                 }
                 try {
                     console.log("entering package: " + item.getTitle());
-                    pkg.enterPkg(obj.pkgList, item, res => e.sender.send("activatedResult", res));
+                    pkg.enterPkg(obj.pkgList, item, res => HasteListener.sendList(e, res));
                 } catch (err) {
                     console.error("error while entering package:" + pkg.getPackageName(), err);
                 }
@@ -60,14 +63,13 @@ class HasteListener {
     }
 
     private clear(e: Electron.Event, obj) {
-        const pkgName = obj.pkgList[0];
-        this.packageLoader.getPackage(pkgName)
+        this.packageLoader.getPackageFromList(obj.pkgList)
             .then(pkg => {
                 try {
-                    console.log("clear package: " + pkgName);
-                    pkg.clear(obj.pkgList, res => e.sender.send("activatedResult", res));
+                    console.log("clear package: " + pkg.getPackageName());
+                    pkg.clear(obj.pkgList, res => HasteListener.sendList(e, res));
                 } catch (err) {
-                    console.error("error while clearing package:" + pkgName, err);
+                    console.error("error while clearing package:" + pkg.getPackageName(), err);
                 }
             })
             .catch(err => console.error(err));
@@ -75,12 +77,11 @@ class HasteListener {
 
     private remove(e: Electron.Event, obj) {
         const item = HasteRowItem.create(obj.item);
-        const pkgName = obj.pkgList[0];
-        this.packageLoader.getPackage(pkgName)
+        this.getPackage(obj, item)
             .then(pkg => {
                 try {
                     console.log("remove item: " + item.getTitle());
-                    pkg.remove(obj.pkgList, item, res => e.sender.send("activatedResult", res));
+                    pkg.remove(obj.pkgList, item, res => HasteListener.sendList(e, res));
                 } catch (err) {
                     console.error("error while removing item:" + item.getTitle(), err);
                 }
@@ -89,12 +90,12 @@ class HasteListener {
     }
 
     private getPackage(obj, item): Promise<AbstractHastePackage> {
-        let pkgName = obj.pkgList[0];
-        if (isGlobal(obj)) {
-            pkgName = item.getPackage();
+        let pkgList = obj.pkgList;
+        if (HasteListener.isGlobal(obj)) {
+            pkgList = [item.getPackage()];
         }
         return new Promise((resolve, reject) => {
-            this.packageLoader.getPackage(pkgName)
+            this.packageLoader.getPackageFromList(pkgList)
                 .then(pkg => resolve(pkg))
                 .catch(err => reject(err));
         });
@@ -105,12 +106,3 @@ class HasteListener {
             .catch(err => console.warn("did not update item: " + item.getTitle(), err));
     }
 }
-export default HasteListener;
-
-const isGlobal = (obj) => {
-    return !(obj.pkgList && obj.pkgList.length > 0);
-};
-
-const isPackage = (item: HasteRowItem) => {
-    return HasteRowItem.isPackage(item);
-};

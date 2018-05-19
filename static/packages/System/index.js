@@ -11,32 +11,18 @@ class System extends AbstractHastePackage {
     constructor(win, config, pkgPath){
         super(win, config, pkgPath);
         this.packageName = 'System';
-        this.subPackages = {
-            SubSystemConfigure: new SubSystemConfigure(this, win, config, pkgPath),
-            SubSystemShowLogs: new SubSystemShowLogs(this, win, config, pkgPath),
-            SubSystemInstall: new SubSystemInstall(this, win, config, pkgPath),
+        this.packages = {
+            Configure: new SubSystemConfigure(win, config, pkgPath, this),
+            ShowLogs: new SubSystemShowLogs(win, config, pkgPath, this),
+            Install: new SubSystemInstall(win, config, pkgPath, this),
         };
         this.populate();
     }
 
     activate(pkgList, item, cb) {
-        console.log("activate in system", pkgList, item);
-        this.activateWithSubPkgs(pkgList, item, cb);
-    }
-
-    runActivate(pkgList, item, cb) {
         console.log("run activate in system", pkgList, item);
         shell.openItem(item.getPath());
         this.win.hide();
-    }
-
-    activateUponEntry(pkgList, item) {
-        console.log("activate upon entry in system", pkgList, item);
-        this.activateUponEntryWithSubPkgs(pkgList, item);
-    }
-
-    search(searchObj, callback) {
-        this.searchWithSubPkgs(searchObj, this.packageName, callback);
     }
 
     populate(){

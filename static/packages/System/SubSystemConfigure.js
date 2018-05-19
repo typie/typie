@@ -4,12 +4,12 @@ const Path = require('path');
 
 class SubSystemConfigure extends AbstractHastePackage {
 
-    constructor(parent, win, config, pkgPath){
+    constructor(win, config, pkgPath, parent){
         super(win, config, pkgPath);
         this.packageName = 'System->Configure';
         this.db = "System";
         this.haste = new Haste(this.packageName, "System");
-        Object.assign(this, parent);
+        // Object.assign(this, parent);
     }
 
     activate(pkgList, item, cb) {
@@ -18,7 +18,7 @@ class SubSystemConfigure extends AbstractHastePackage {
         this.win.hide();
     }
 
-    activateUponEntry(pkgList, item) {
+    enterPkg(pkgList, item, cb) {
         let pkgs = Object.keys(global.PackageLoader.packages);
         let resultList = [];
         for (let pkg of pkgs) {
