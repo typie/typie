@@ -56,7 +56,7 @@ export default class HasteListener {
                     console.log("entering package: " + item.getTitle());
                     pkg.enterPkg(obj.pkgList, item, res => HasteListener.sendList(e, res));
                 } catch (err) {
-                    console.error("error while entering package: " + pkg.getPackageName(), err);
+                    console.error("error while entering package: ", pkg, err);
                 }
             })
             .catch(err => console.error(err));

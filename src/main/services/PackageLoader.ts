@@ -42,10 +42,10 @@ export default class PackageLoader {
             return new Promise<AbstractHastePackage>((resolve, reject) => {
                 while (pkgList.length >= 1) {
                     const pk: any = pkgList.shift();
-                    try {
+                    if (pkg.packages[pk]) {
                         pkg = pkg.packages[pk];
-                    } catch (err) {
-                        reject("package loader did not find: '" + pkg + "' pkg");
+                    } else {
+                        reject("package loader did not find: '" + pk + "' pkg in " + pkg.getPackageName());
                     }
                 }
                 resolve(pkg);

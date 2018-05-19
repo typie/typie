@@ -243,6 +243,7 @@
             }
 
             sendActivate() {
+                this.resetTimer();
                 this.dispatchEvent(new CustomEvent('activate', {detail: {
                     item: this.itemList[this.selectedIndex],
                     pkgList: this.pkgList,
@@ -250,6 +251,7 @@
             }
 
             sendEnterPkg(countUp=false) {
+                this.resetTimer();
                 this.dispatchEvent(new CustomEvent('enterPkg', {detail: {
                     countUp: countUp,
                     item: this.itemList[this.selectedIndex],
@@ -258,12 +260,14 @@
             }
 
             sendClear() {
+                this.resetTimer();
                 this.dispatchEvent(new CustomEvent('clear', {detail: {
                     pkgList: this.pkgList,
                 }}));
             }
 
             sendSearch() {
+                this.resetTimer();
                 this.dispatchEvent(new CustomEvent('search', {detail: {
                     value: this.input.value,
                     pkgList: this.pkgList,
@@ -271,6 +275,7 @@
             }
 
             sendDelete() {
+                this.resetTimer();
                 this.dispatchEvent(new CustomEvent('delete', {detail: {
                     item: this.itemList[this.selectedIndex],
                     pkgList: this.pkgList,

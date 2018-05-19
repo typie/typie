@@ -2,59 +2,45 @@ const {AbstractHastePackage, HasteRowItem, SearchObject, getPath} = require('has
 const {shell} = require('electron');
 const Path = require('path');
 const ini = require('node-ini');
+const WebSearchPkgFactory = require('./WebSearchPkgFactory');
 
 class WebSearch extends AbstractHastePackage
 {
 
     constructor(win, config, pkgPath){
         super(win, config, pkgPath);
-        this.cfg = ini.parseSync(Path.join(__dirname, 'WebSearch.ini'));
+        //this.cfg = ini.parseSync(Path.join(__dirname, 'WebSearch.ini'));
         this.iconPath = getPath(this.packagePath + 'icons/');
         this.populate();
     }
 
     search(obj, callback) {
-        console.log('got to search', obj);
-        if (obj.pkgList.length > 1) {
-            let pkg = obj.pkgList.join('->');
-            this.haste.setPkg(pkg).setDB('WebSearch');
-            this.haste.fuzzySearch(obj.value).orderBy('score').desc().go()
-                .then(data => {
-                    if (data.data.length === 0 || data.data[0].score !== 1000) {
-                        let firstItem = new HasteRowItem(obj.value);
-                        let url = this.cfg[obj.pkgList[1]].url.replace(/%s/g, obj.value);
-                        firstItem.setIcon(this.getIcon(obj.pkgList[1]));
-                        firstItem.setPath(url);
-                        data.data.unshift(firstItem.toPayload());
-                    }
-                    callback(data);
-                })
-                .catch(err => console.error(err));
-        } else {
-            this.haste.setPkg('WebSearch').setDB('global');
-            super.search(obj, callback);
-        }
+        this.haste.setPkg('WebSearch').setDB('global');
+        super.search(obj, callback);
     }
 
-    activate(pkgList, item, cb) {
-        item.countUp();
-        this.insertItem(item);
-        if (item.getPackage() !== 'WebSearch') {
-            shell.openExternal(item.getPath());
-            this.win.hide();
-        }
+    enterPkg(pkgList, item, cb) {
+        this.haste.setPkg('WebSearch').setDB('global');
+        this.haste.getRows(10).orderBy("count").desc().go()
+            .then(res => this.win.send("resultList", res))
+            .catch(e => console.error("error getting first records", e));
     }
 
     populate(){
         let itemsArray = [];
-        Object.keys(this.cfg).map((siteName, i) => {
+        Object.keys(this.pkgConfig.sites).map((siteName, i) => {
             let item = new HasteRowItem(siteName + ': WebSearch');
             item.setIcon(this.getIcon(siteName));
-            item.setDescription(this.cfg[siteName].url);
+            item.setDescription(this.pkgConfig.sites[siteName].url);
             item.setPackage('WebSearch');
             item.setPath('SubPackage|WebSearch->'+siteName);
             item.setDB('global');
             itemsArray.push(item);
+            this.packages[siteName] = new WebSearchPkgFactory(
+                this.win, this.pkgConfig.sites[siteName], this.packagePath, {
+                pkgName: siteName,
+                db: 'WebSearch',
+            });
         });
         this.haste.multipleInsert(itemsArray).go()
             .then(data => console.info('WebSearch done adding', data))
@@ -62,7 +48,7 @@ class WebSearch extends AbstractHastePackage
     }
 
     getIcon(siteName) {
-        return this.cfg[siteName].icon ?  this.iconPath + this.cfg[siteName].icon : defaultUrlIco
+        return this.pkgConfig.sites[siteName].icon ?  this.iconPath + this.pkgConfig.sites[siteName].icon : defaultUrlIco
     }
 }
 module.exports = WebSearch;
