@@ -30,7 +30,7 @@ export default class PackageLoader {
             if (this.packages[pkg]) {
                 resolve(this.packages[pkg]);
             } else {
-                reject("did not find package with that name: " + pkg);
+                reject("package loader did not find: '" + pkg + "' pkg");
             }
         });
     }
@@ -65,11 +65,11 @@ export default class PackageLoader {
                 console.log("Loaded package '" + packageName + "'");
 
                 this.globalInsertPackage(
-                    new HasteRowItem()
+                    new HasteRowItem(packageName)
                         .setDB("global")
+                        .setPackage(packageName)
                         .setDescription("Package")
-                        .setIcon(this.packages[packageName].icon)
-                        .setTitle(packageName));
+                        .setIcon(this.packages[packageName].icon));
             })
             .catch((err) => console.error("cannot load package from: " + relativePath, err));
     }
@@ -113,7 +113,7 @@ export default class PackageLoader {
     // }
 
     private globalInsertPackage(item: HasteRowItem) {
-        new Haste("global").insert(item, false).go()
+        new Haste(item.getPackage(), "global").insert(item, false).go()
             .then(res => {
                 if (res.err === 0) {
                     console.log("Package '" + item.getTitle() + "' is now searchable.");

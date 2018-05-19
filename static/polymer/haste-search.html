@@ -32,8 +32,8 @@
                             <p hidden$="[[hideDesc(item.d)]]">[[item.d]]</p>
                             <p hidden$="[[!hideDesc(item.d)]]">[[item.p]]</p>
                         </div>
-                        <div class="score" hidden$="[[hideScore(item.score)]]">
-                            [[item.score]]
+                        <div class="score">
+                            <span hidden$="[[hideScore(item.score)]]">[[item.score]]</span>
                             <span hidden$="[[hideScore(item.c)]]"> + [[item.c]]</span>
                         </div>
                     </li>
@@ -103,35 +103,29 @@
                     case "ArrowUp":     this.onArrowUp(e); break;
                     case "ArrowDown":   this.onArrowDown(e); break;
                     case "Backspace":   this.onBackspace(e); break;
+                    case "Delete":      this.onDelete(e); break;
                     case "Escape":      this.onEscape(e); break;
                 }
             }
             onTab(e) {
                 e.preventDefault();
                 if (this.isPackageSelected()) {
+                    this.sendEnterPkg(false);
                     this.setPackageList();
-                    this.sendActivate(true);
                 } else {
                     this.input.value = this.itemList[this.selectedIndex].title;
                 }
             }
             onEnter(e) {
                 e.preventDefault();
-                this.sendActivate(false);
                 if (this.isPackageSelected()) {
+                    this.sendEnterPkg(true);
                     this.setPackageList();
+                } else {
+                    this.sendActivate();
                 }
             }
-            sendActivate(isTab = false) {
-                this.resetTimer();
-                let payload = {
-                    isTab: isTab,
-                    item: this.itemList[this.selectedIndex],
-                    pkgList: this.pkgList ? this.pkgList:[],
-                };
-                this.dispatchEvent(new CustomEvent('activate', {detail: payload}));
-                console.log('payload on activate', payload);
-            }
+
             setPackageList() {
                 let item = this.itemList[this.selectedIndex];
                 if (this.isPackageSelected()) {
@@ -156,38 +150,48 @@
                 e.preventDefault();
                 if (this.selectedIndex > 0) {
                     this.set('selectedIndex', this.selectedIndex-1);
+                } else if (this.selectedIndex === 0) {
+                    this.set('selectedIndex', this.itemList.length-1);
                 }
             }
             onArrowDown(e) {
                 e.preventDefault();
                 if (this.selectedIndex < this.itemList.length-1) {
                     this.set('selectedIndex', this.selectedIndex+1);
+                } else if (this.selectedIndex === this.itemList.length-1) {
+                    this.set('selectedIndex', 0);
                 }
             }
             onBackspace(e) {
                 if (this.input.value.length === 0) {
                     if (this.pkgList.length > 1) {
                         console.log('pkglist', this.pkgList);
-                        let pkgList = this.pkgList.slice(0, -1);
+                        const pkgList = this.pkgList.slice(0, -1);
                         this.set('pkgList', pkgList);
-                        this.inputChange();
+                        this.sendClear();
                     } else {
                         this.set('pkgList', []);
                     }
                     this.clearList();
                 }
             }
+            onDelete(e) {
+                // if cursor is at the end of the search value
+                    // send delete event with item
+                    this.sendDelete();
+                // else
+                    // do nothing and delete the character
+            }
             onEscape(e) {
                 e.preventDefault();
-                this.dispatchEvent(new CustomEvent('escape', {detail: null}));
+                this.sendEscape();
                 this.set('pkgList', []);
                 this.input.value = "";
                 this.clearList();
             }
             inputChange() {
                 this.resetTimer();
-                let payload = {val: this.input.value, pkgList: this.pkgList};
-                this.dispatchEvent(new CustomEvent('search', {detail: payload}));
+                this.sendSearch();
             }
 
             changePackage(data) {
@@ -198,12 +202,15 @@
                         pkgList = JSON.parse(newPkgList);
                         this.set('pkgList', pkgList);
                         console.log('pkgList', pkgList);
+                        this.input.value = "";
+                        this.clearList();
+                        this.sendEnterPkg();
                     }
                 } else {
                     this.set('pkgList', []);
+                    this.input.value = "";
+                    this.clearList();
                 }
-                this.input.value = "";
-                this.clearList();
             }
 
             updateList(data) {
@@ -234,6 +241,45 @@
                     tmp[this.selectedIndex].selected = "selected";
                     this.set('itemList', tmp);
                 }
+            }
+
+            sendActivate() {
+                this.dispatchEvent(new CustomEvent('activate', {detail: {
+                    item: this.itemList[this.selectedIndex],
+                    pkgList: this.pkgList ? this.pkgList:[],
+                }}));
+            }
+
+            sendEnterPkg(countUp=false) {
+                this.dispatchEvent(new CustomEvent('enterPkg', {detail: {
+                    countUp: countUp,
+                    item: this.itemList[this.selectedIndex],
+                    pkgList: this.pkgList ? this.pkgList:[],
+                }}));
+            }
+
+            sendClear() {
+                this.dispatchEvent(new CustomEvent('clear', {detail: {
+                    pkgList: this.pkgList ? this.pkgList:[],
+                }}));
+            }
+
+            sendSearch() {
+                this.dispatchEvent(new CustomEvent('search', {detail: {
+                    value: this.input.value,
+                    pkgList: this.pkgList,
+                }}));
+            }
+
+            sendDelete() {
+                this.dispatchEvent(new CustomEvent('delete', {detail: {
+                    item: this.itemList[this.selectedIndex],
+                    pkgList: this.pkgList ? this.pkgList:[],
+                }}));
+            }
+
+            sendEscape() {
+                this.dispatchEvent(new CustomEvent('escape', {detail: null}));
             }
 
             clearList() {

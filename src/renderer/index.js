@@ -27,15 +27,15 @@ document.head.appendChild(polymer);
 document.head.appendChild(importElement);
 document.getElementById("app").appendChild(hasteSearch);
 
-hasteSearch.addEventListener('search', (e) => {
-    let payload = e.detail;
-    ipcRenderer.send('search', {value: payload.val, pkgList: payload.pkgList});
-});
-hasteSearch.addEventListener('activate', (e) => {
-    let payload = e.detail;
-    ipcRenderer.send('activate', payload);
-});
-hasteSearch.addEventListener('escape', (e) => ipcRenderer.send('hide'));
+// listen for ui events and pass them to the main process
+hasteSearch.addEventListener('search', e => ipcRenderer.send('search', e.detail));
+hasteSearch.addEventListener('activate', e => ipcRenderer.send('activate', e.detail));
+hasteSearch.addEventListener('enterPkg', e => ipcRenderer.send('enterPkg', e.detail));
+hasteSearch.addEventListener('clear', e => ipcRenderer.send('clear', e.detail));
+hasteSearch.addEventListener('delete', e => ipcRenderer.send('delete', e.detail));
+hasteSearch.addEventListener('escape', e => ipcRenderer.send('hide'));
+
+// listen for main process events and pass them to the ui
 ipcRenderer.on('resultList', (event, data) => hasteSearch.updateList(data));
 ipcRenderer.on('listLoading', (event, res) => hasteSearch.listLoading(res.data));
 ipcRenderer.on('injectCss', (event, css) => hasteSearch.loadStyles(css));
