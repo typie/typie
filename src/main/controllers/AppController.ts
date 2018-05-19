@@ -1,9 +1,8 @@
 declare const __static: any;
 import {app, globalShortcut} from "electron";
 import is from "electron-is";
-import {GoDispatcher} from "haste-sdk";
+import {AppGlobal, GoDispatcher} from "haste-sdk";
 import Path from "path";
-import AppGlobal from "../helpers/AppGlobal";
 import HasteListener from "../listeners/HasteListener";
 import PackageLoader from "../services/PackageLoader";
 import ConfigLoader from "../services/ConfigLoader";
@@ -24,7 +23,7 @@ export default class AppController {
         const bootstrap = setInterval(() => {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);
-                AppGlobal.setGlobal("GoDispatcher", AppController.goDispatcher);
+                AppGlobal.set("GoDispatcher", AppController.goDispatcher);
                 AppController.hasteListener = new HasteListener(new PackageLoader(win, config));
             }
         }, 1);

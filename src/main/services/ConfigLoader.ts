@@ -6,7 +6,7 @@ import fs from "fs";
 import yaml from "js-yaml";
 import mkdirP from "mkdirp";
 import Path from "path";
-import AppGlobal from "../helpers/AppGlobal";
+import {AppGlobal} from "haste-sdk";
 
 export default class ConfigLoader extends EventEmitter {
 
@@ -42,7 +42,7 @@ export default class ConfigLoader extends EventEmitter {
         this.isLoading = true;
         this.isWatching = false;
         this.loadSettings();
-        AppGlobal.setGlobal("Settings", this);
+        AppGlobal.set("Settings", this);
     }
 
     public loadPkgConfig(pkgName, pkgPath): any {

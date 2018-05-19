@@ -1,8 +1,7 @@
 import fs from "fs";
-import {AbstractHastePackage, Haste, HasteRowItem} from "haste-sdk";
+import {AbstractHastePackage, AppGlobal, Haste, HasteRowItem} from "haste-sdk";
 import * as Path from "path";
 import MainWindowController from "../controllers/MainWindowController";
-import AppGlobal from "../helpers/AppGlobal";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import ConfigLoader from "./ConfigLoader";
 
@@ -22,7 +21,7 @@ export default class PackageLoader {
         this.loadPackages();
         // this.watchForPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));
-        AppGlobal.setGlobal("PackageLoader", this);
+        AppGlobal.set("PackageLoader", this);
     }
 
     public getPackage(pkg: string): Promise<AbstractHastePackage> {

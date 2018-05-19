@@ -1,11 +1,34 @@
 import {app, ipcMain} from "electron";
 import AppController from "../controllers/AppController";
+import {AppGlobal} from "haste-sdk";
 import ConfigLoader from "../services/ConfigLoader";
 import MainWindowController from "../controllers/MainWindowController";
 import ShortcutListener from "../listeners/ShortcutListener";
+import log from "electron-log";
+import Path from "path";
+declare const __static: any;
 
-class AppListener {
-    public listen(win: MainWindowController): void {
+export default class AppListener {
+
+    public static init(win: MainWindowController): void {
+        const logPath = Path.join(Path.join(__static, "db"), "typie.log");
+        log.transports.file.file = logPath;
+        log.transports.file.level = "debug";
+        log.transports.console.level = "debug";
+        console.log = (...args) => log.debug(...args);
+        console.info = (...args) => log.info(...args);
+        console.warn = (...args) => log.warn(...args);
+        console.error = (...args) => log.error(...args, new Error().stack);
+
+        AppGlobal.startTime = Date.now();
+        AppGlobal.set("staticPath", __static);
+        AppGlobal.set("logPath", logPath);
+        app.disableHardwareAcceleration();
+
+        AppListener.listen(win);
+    }
+
+    public static listen(win: MainWindowController): void {
 
         const config = new ConfigLoader();
         config.on("config-loaded", () => ShortcutListener.listen(win, config));
@@ -28,4 +51,3 @@ class AppListener {
         });
     }
 }
-export default new AppListener();

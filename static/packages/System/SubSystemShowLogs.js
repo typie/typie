@@ -1,6 +1,5 @@
-const {AbstractHastePackage, HasteRowItem, Haste} = require('haste-sdk');
-const {app, shell} = require('electron');
-const Path = require('path');
+const {AbstractHastePackage, AppGlobal, Haste} = require('haste-sdk');
+const {shell} = require('electron');
 
 class SubSystemShowLogs extends AbstractHastePackage {
 
@@ -12,11 +11,15 @@ class SubSystemShowLogs extends AbstractHastePackage {
     }
 
     activate(pkgList, item, cb) {
-        const LogPath = global["logPath"];
-        const coreLogPath = global["coreLogPath"];
+        const LogPath = AppGlobal.get("logPath");
+        const coreLogPath = AppGlobal.get("coreLogPath");
         shell.openItem(LogPath);
         shell.openItem(coreLogPath);
         this.win.hide();
+    }
+
+    enterPkg(pkgList, item, cb) {
+        this.activate(pkgList, item, cb);
     }
 }
 module.exports = SubSystemShowLogs;
