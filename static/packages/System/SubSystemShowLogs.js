@@ -14,14 +14,9 @@ class SubSystemShowLogs extends AbstractHastePackage {
     activate(pkgList, item, cb) {
         const LogPath = global["logPath"];
         const coreLogPath = global["coreLogPath"];
-        console.log('activate from show logs', logPath);
         shell.openItem(LogPath);
         shell.openItem(coreLogPath);
         this.win.hide();
-    }
-
-    activateUponEntry(pkgList, item) {
-        this.activate(pkgList, item, () => { return; });
     }
 }
 module.exports = SubSystemShowLogs;

@@ -20,7 +20,6 @@ class System extends AbstractHastePackage {
     }
 
     activate(pkgList, item, cb) {
-        console.log("run activate in system", pkgList, item);
         shell.openItem(item.getPath());
         this.win.hide();
     }

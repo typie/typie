@@ -22,7 +22,7 @@ export default class HasteListener {
         if (!HasteListener.isGlobal(obj)) {
             this.packageLoader.getPackageFromList(obj.pkgList)
                 .then(pkg => pkg.search(obj, res => HasteListener.sendList(e, res)))
-                .catch(err => console.error(err));
+                .catch(err => console.error("searching package failed", obj.pkgList, err));
         } else {
             new Haste("global").fuzzySearch(obj.value).go()
                 .then(res => HasteListener.sendList(e, res))
@@ -36,10 +36,10 @@ export default class HasteListener {
             item.countUp();
             this.update(item);
             try {
-                console.log("activate item:" + item.getTitle());
+                console.log("activate item: " + item.getTitle());
                 pkg.activate(obj.pkgList, item, res => HasteListener.sendList(e, res));
             } catch (err) {
-                console.error("error while activating item:", item, err);
+                console.error("error while activating item: ", item, err);
             }
         }).catch(err => console.error(err));
     }
@@ -56,7 +56,7 @@ export default class HasteListener {
                     console.log("entering package: " + item.getTitle());
                     pkg.enterPkg(obj.pkgList, item, res => HasteListener.sendList(e, res));
                 } catch (err) {
-                    console.error("error while entering package:" + pkg.getPackageName(), err);
+                    console.error("error while entering package: " + pkg.getPackageName(), err);
                 }
             })
             .catch(err => console.error(err));
@@ -69,7 +69,7 @@ export default class HasteListener {
                     console.log("clear package: " + pkg.getPackageName());
                     pkg.clear(obj.pkgList, res => HasteListener.sendList(e, res));
                 } catch (err) {
-                    console.error("error while clearing package:" + pkg.getPackageName(), err);
+                    console.error("error while clearing package: " + pkg.getPackageName(), err);
                 }
             })
             .catch(err => console.error(err));
@@ -83,7 +83,7 @@ export default class HasteListener {
                     console.log("remove item: " + item.getTitle());
                     pkg.remove(obj.pkgList, item, res => HasteListener.sendList(e, res));
                 } catch (err) {
-                    console.error("error while removing item:" + item.getTitle(), err);
+                    console.error("error while removing item: " + item.getTitle(), err);
                 }
             })
             .catch(err => console.error(err));
