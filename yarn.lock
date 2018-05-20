@@ -2122,6 +2122,10 @@ electron-is-dev@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.1.2.tgz#8a1043e32b3a1da1c3f553dce28ce764246167e3"
 
+electron-is-dev@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
+
 electron-is@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/electron-is/-/electron-is-2.4.0.tgz#69f65607d7d264ea0a476d552190aa2b01865f52"
@@ -2236,9 +2240,9 @@ electron-webpack@^1.13.0:
     webpack-merge "^4.1.1"
     yargs "^11.0.0"
 
-electron@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-2.0.0.tgz#e95dc7f3a089a52b8c2a52c7c9e1024db0c8d46e"
+electron@^1.8.6:
+  version "1.8.7"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-1.8.7.tgz#373c1dc4589d7ab4acd49aff8db4a1c0a6c3bcc1"
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^3.0.1"
@@ -3055,10 +3059,6 @@ hash.js@^1.0.0, hash.js@^1.0.3:
   dependencies:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.0"
-
-"typie-sdk@github:rotemgrim/typie-sdk":
-  version "1.0.0"
-  resolved "https://codeload.github.com/rotemgrim/typie-sdk/tar.gz/faf78d08ae5af37010a40cbf444292a105b0d867"
 
 hawk@3.1.3, hawk@~3.1.3:
   version "3.1.3"
@@ -6183,6 +6183,13 @@ typedarray@^0.0.6:
 typescript@^2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.8.3.tgz#5d817f9b6f31bb871835f4edf0089f21abe6c170"
+
+"typie-sdk@github:typie/typie-sdk":
+  version "1.0.4"
+  resolved "https://codeload.github.com/typie/typie-sdk/tar.gz/aec735ff8c9c8fb742c91c4a4dac88872c1e7dd7"
+  dependencies:
+    electron-is-dev "^0.3.0"
+    gonode "github:rotemgrim/gonode"
 
 uglify-es@^3.3.4:
   version "3.3.10"

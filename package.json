@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "electron-webpack dev --inspect --disable-gpu --enable-transparent-visuals",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder",
+    "dist": "yarn compile && build",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "check": "./node_modules/.bin/tslint --project tsconfig.json --config tslint.json",
     "fix": "./node_modules/.bin/tslint --fix --project tsconfig.json --config tslint.json"
@@ -16,7 +16,7 @@
     "electron-is": "^2.4.0",
     "electron-log": "^2.2.14",
     "gonode": "github:rotemgrim/gonode",
-    "typie-sdk": "github:rotemgrim/typie-sdk",
+    "typie-sdk": "github:typie/typie-sdk",
     "js-yaml": "^3.11.0",
     "mkdirp": "^0.5.1",
     "source-map-support": "^0.5.5"
@@ -39,6 +39,35 @@
     "renderer": {},
     "main": {
       "webpackConfig": "webpack.config.js"
+    }
+  },
+  "build": {
+    "appId": "typie",
+    "directories": {
+      "buildResources": "static/themes/default/images/icons/"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "nsis"
     }
   }
 }

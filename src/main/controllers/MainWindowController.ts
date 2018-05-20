@@ -2,6 +2,8 @@ import {BrowserWindowConstructorOptions, globalShortcut} from "electron";
 import {AppGlobal} from "typie-sdk";
 import StyleLoader from "../services/StyleLoader";
 import AbstractWindowController from "./AbstractWindowController";
+import Path from "path";
+declare const __static: any;
 
 export default class MainWindowController extends AbstractWindowController {
 
@@ -11,6 +13,7 @@ export default class MainWindowController extends AbstractWindowController {
         alwaysOnTop: true,
         frame: false,
         height: 900,
+        icon: Path.join(__static, "themes/default/images/icons/icon.png"),
         maximizable: false,
         show: false,
         transparent: true,
