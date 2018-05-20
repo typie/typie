@@ -20,21 +20,26 @@ class System extends AbstractHastePackage {
     }
 
     activate(pkgList, item, cb) {
-        shell.openItem(item.getPath());
-        this.win.hide();
+        console.log(item);
+        //shell.openItem(item.getPath());
+        //this.win.hide();
+    }
+
+    enterPkg(pkgList, item, cb) {
+        let asd = new HasteRowItem("Rotem");
+            asd.setDB("global");
+            asd.setPackage(this.packageName);
+            asd.setDescription("Open global log files");
+            asd.setIcon(this.icon);
+            asd.setPath('Rotem');
+            asd.setActions([{type: "openDir", description: "Open Logs Directory"}, {type: "openFiles", description: "Open Logs"}]);
+
+        this.haste.insert(asd, true).go();
     }
 
     populate(){
         let itemsArray = [];
-        itemsArray.push(
-            new HasteRowItem("Configure")
-                .setDB(this.packageName)
-                .setPackage(this.packageName)
-                .setDescription("Open and edit packages configuration")
-                .setIcon(this.icon)
-                .setPath('SubPackage|System->Configure'));
 
-        // copy for global search
         itemsArray.push(
             new HasteRowItem("Configure")
                 .setDB("global")
@@ -42,14 +47,6 @@ class System extends AbstractHastePackage {
                 .setDescription("Open and edit packages configuration")
                 .setIcon(this.icon)
                 .setPath('SubPackage|System->Configure'));
-
-        itemsArray.push(
-            new HasteRowItem("Install")
-                .setDB(this.packageName)
-                .setPackage(this.packageName)
-                .setDescription("Download and install haste packages")
-                .setIcon(this.icon)
-                .setPath('SubPackage|System->Install'));
 
         itemsArray.push(
             new HasteRowItem("Install")
@@ -65,7 +62,9 @@ class System extends AbstractHastePackage {
                 .setPackage(this.packageName)
                 .setDescription("Open global log files")
                 .setIcon(this.icon)
-                .setPath('SubPackage|System->ShowLogs'));
+                .setPath('SubPackage|System->ShowLogs')
+                .setActions([{type: "openDir", description: "Open Logs Directory"},
+                             {type: "openFiles", description: "Open Logs"}]));
 
         itemsArray.push(
             new HasteRowItem("Open config file")

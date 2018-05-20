@@ -29,8 +29,9 @@
                         <img src="[[item.i]]">
                         <div class="texts">
                             <span>[[ item.title ]]</span>
-                            <p hidden$="[[hideDesc(item.d)]]">[[item.d]]</p>
-                            <p hidden$="[[!hideDesc(item.d)]]">[[item.p]]</p>
+                            <p class$="selectedAction animated [[item.actionFlip]]" hidden$="[[hideAction(item.a)]]">[[ item.a.0.description ]]</p>
+                            <p hidden$="[[hideDesc(item.d, item.a)]]">[[item.d]]</p>
+                            <p hidden$="[[hidePath(item.d, item.a)]]">[[item.p]]</p>
                         </div>
                         <div class="score">
                             <span hidden$="[[hideScore(item.score)]]">[[item.score]]</span>
@@ -89,8 +90,16 @@
                 return !score || score === 0;
             }
 
-            hideDesc(description) {
-                return !description || description === "";
+            hideAction(actions) {
+                return !actions;
+            }
+
+            hideDesc(description, actions) {
+                return actions || !description || description === "";
+            }
+
+            hidePath(desc, actions) {
+                return desc || actions;
             }
 //            click() {
 //                console.log('click');
@@ -102,6 +111,7 @@
                     case "Enter":       this.onEnter(e); break;
                     case "ArrowUp":     this.onArrowUp(e); break;
                     case "ArrowDown":   this.onArrowDown(e); break;
+                    case "ArrowRight":  this.onArrowRight(); break;
                     case "Backspace":   this.onBackspace(e); break;
                     case "Delete":      this.onDelete(e); break;
                     case "Escape":      this.onEscape(e); break;
@@ -112,7 +122,7 @@
                 if (this.isPackageSelected()) {
                     this.setPackageList(false);
                 } else {
-                    this.input.value = this.itemList[this.selectedIndex].title;
+                    this.input.value = this.getItem().title;
                 }
             }
             onEnter(e) {
@@ -126,7 +136,7 @@
 
             setPackageList(countUp) {
                 if (this.isPackageSelected()) {
-                    let item = this.itemList[this.selectedIndex];
+                    let item = this.getItem();
                     let pkgList = JSON.parse(JSON.stringify(this.pkgList));
                     if (item.p.startsWith('SubPackage|')) {
                         pkgList = [];
@@ -158,6 +168,24 @@
                     this.set('selectedIndex', this.selectedIndex+1);
                 } else if (this.selectedIndex === this.itemList.length-1) {
                     this.set('selectedIndex', 0);
+                }
+            }
+            onArrowRight(e) {
+                let item = this.getItem();
+                if (item.a && item.a.length > 1 && this.input.selectionStart === this.input.value.length) {
+                    let tmp = JSON.parse(this.jsonList);
+                    let a = tmp[this.selectedIndex].a.shift();
+                    tmp[this.selectedIndex].a.push(a);
+                    // const animateArr = ["slideInUp", "slideInLeft", "zoomInUp", "zoomInRight", "zoomInLeft", "flipInX", "fadeInRightBig", "fadeInLeft", "bounceInUp", "bounceInLeft"];
+                    // tmp[this.selectedIndex].actionFlip = animateArr[Math.floor(Math.random() * animateArr.length)];
+                    if (tmp[this.selectedIndex].actionFlip === "bounceIn2") {
+                        tmp[this.selectedIndex].actionFlip = "bounceIn";
+                    } else {
+                        tmp[this.selectedIndex].actionFlip = "bounceIn2";
+                    }
+                    this.jsonList = JSON.stringify(tmp);
+                    tmp[this.selectedIndex].selected = "selected";
+                    this.set('itemList', tmp);
                 }
             }
             onBackspace(e) {
@@ -245,7 +273,7 @@
             sendActivate() {
                 this.resetTimer();
                 this.dispatchEvent(new CustomEvent('activate', {detail: {
-                    item: this.itemList[this.selectedIndex],
+                    item: this.getItem(),
                     pkgList: this.pkgList,
                 }}));
             }
@@ -254,7 +282,7 @@
                 this.resetTimer();
                 this.dispatchEvent(new CustomEvent('enterPkg', {detail: {
                     countUp: countUp,
-                    item: this.itemList[this.selectedIndex],
+                    item: this.getItem(),
                     pkgList: this.pkgList,
                 }}));
             }
@@ -277,7 +305,7 @@
             sendDelete() {
                 this.resetTimer();
                 this.dispatchEvent(new CustomEvent('delete', {detail: {
-                    item: this.itemList[this.selectedIndex],
+                    item: this.getItem(),
                     pkgList: this.pkgList,
                 }}));
             }
@@ -338,7 +366,11 @@
             }
 
             isPackageSelected() {
-                return HasteRowItem.isPackage(this.itemList[this.selectedIndex]);
+                return HasteRowItem.isPackage(this.getItem());
+            }
+
+            getItem() {
+                return this.itemList[this.selectedIndex];
             }
 
             resetTimer() {
