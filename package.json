@@ -31,7 +31,8 @@
     "tslint": "^5.9.1",
     "tslint-loader": "^3.6.0",
     "typescript": "^2.8.3",
-    "webpack": "^3.11.0"
+    "webpack": "^3.11.0",
+    "yarn": "^1.6.0"
   },
   "resolutions": {
     "webpack-sources": "1.0.1"
