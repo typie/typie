@@ -1,7 +1,7 @@
 <link rel="import"  href="bower_components/polymer/polymer-element.html">
 <link rel="import" href="bower_components/polymer/lib/elements/dom-repeat.html">
 
-<dom-module id="haste-search">
+<dom-module id="typie-search">
     <template>
         <div id="app" class$="[[isLoading]]">
             <div class="icon"></div>
@@ -43,16 +43,16 @@
             <div class="footer">
                 <div class="search-time">[[searchTime]]</div>
                 <div class="handle">· · · ·</div>
-                <div class="status">[[totalItems]] items in Catalog · Haste 2.0</div>
+                <div class="status">[[totalItems]] items in Catalog · Typie 2.0</div>
             </div>
         </div>
     </template>
 
     <script>
         //import { default as minifyCssString } from 'minify-css-string';
-        const { HasteRowItem } = require("haste-sdk");
-        class HasteSearch extends Polymer.Element {
-            static get is() { return "haste-search"; }
+        const { TypieRowItem } = require("typie-sdk");
+        class TypieSearch extends Polymer.Element {
+            static get is() { return "typie-search"; }
 
             constructor() {
                 super();
@@ -366,7 +366,7 @@
             }
 
             isPackageSelected() {
-                return HasteRowItem.isPackage(this.getItem());
+                return TypieRowItem.isPackage(this.getItem());
             }
 
             getItem() {
@@ -377,7 +377,7 @@
                 this.searchTimer = Date.now();
             }
         }
-        customElements.define(HasteSearch.is, HasteSearch);
+        customElements.define(TypieSearch.is, TypieSearch);
     </script>
 
 </dom-module>

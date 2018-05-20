@@ -1,9 +1,9 @@
 import {ipcMain} from "electron";
-import {Haste, HasteRowItem, SearchObject} from "haste-sdk";
+import {Typie, TypieRowItem, SearchObject} from "typie-sdk";
 import PackageLoader from "../services/PackageLoader";
-import AbstractHastePackage from "haste-sdk/dist/AbstractHastePackage";
+import AbstractTypiePackage from "typie-sdk/dist/AbstractTypiePackage";
 
-export default class HasteListener {
+export default class TypieListener {
 
     private static sendList(e, res) { e.sender.send("resultList", res); }
     private static isGlobal(obj) { return !(obj.pkgList && obj.pkgList.length > 0); }
@@ -19,25 +19,25 @@ export default class HasteListener {
     }
 
     private search(e: Electron.Event, obj: SearchObject) {
-        if (!HasteListener.isGlobal(obj)) {
+        if (!TypieListener.isGlobal(obj)) {
             this.packageLoader.getPackageFromList(obj.pkgList)
-                .then(pkg => pkg.search(obj, res => HasteListener.sendList(e, res)))
+                .then(pkg => pkg.search(obj, res => TypieListener.sendList(e, res)))
                 .catch(err => console.error("searching package failed", obj.pkgList, err));
         } else {
-            new Haste("global").fuzzySearch(obj.value).go()
-                .then(res => HasteListener.sendList(e, res))
+            new Typie("global").fuzzySearch(obj.value).go()
+                .then(res => TypieListener.sendList(e, res))
                 .catch(err => console.error("searching global DB failed", err));
         }
     }
 
     private activate(e: Electron.Event, obj) {
-        const item = HasteRowItem.create(obj.item);
+        const item = TypieRowItem.create(obj.item);
         this.getPackage(obj, item).then(pkg => {
             item.countUp();
             this.update(item);
             try {
                 console.log("activate item: " + item.getTitle());
-                pkg.activate(obj.pkgList, item, res => HasteListener.sendList(e, res));
+                pkg.activate(obj.pkgList, item, res => TypieListener.sendList(e, res));
             } catch (err) {
                 console.error("error while activating item: ", item, err);
             }
@@ -45,7 +45,7 @@ export default class HasteListener {
     }
 
     private enterPkg(e: Electron.Event, obj) {
-        const item = HasteRowItem.create(obj.item);
+        const item = TypieRowItem.create(obj.item);
         this.getPackage(obj, item)
             .then(pkg => {
                 if (obj.countUp === true) {
@@ -54,7 +54,7 @@ export default class HasteListener {
                 }
                 try {
                     console.log("entering package: " + item.getTitle());
-                    pkg.enterPkg(obj.pkgList, item, res => HasteListener.sendList(e, res));
+                    pkg.enterPkg(obj.pkgList, item, res => TypieListener.sendList(e, res));
                 } catch (err) {
                     console.error("error while entering package: ", pkg, err);
                 }
@@ -67,7 +67,7 @@ export default class HasteListener {
             .then(pkg => {
                 try {
                     console.log("clear package: " + pkg.getPackageName());
-                    pkg.clear(obj.pkgList, res => HasteListener.sendList(e, res));
+                    pkg.clear(obj.pkgList, res => TypieListener.sendList(e, res));
                 } catch (err) {
                     console.error("error while clearing package: " + pkg.getPackageName(), err);
                 }
@@ -76,12 +76,12 @@ export default class HasteListener {
     }
 
     private remove(e: Electron.Event, obj) {
-        const item = HasteRowItem.create(obj.item);
+        const item = TypieRowItem.create(obj.item);
         this.getPackage(obj, item)
             .then(pkg => {
                 try {
                     console.log("remove item: " + item.getTitle());
-                    pkg.remove(obj.pkgList, item, res => HasteListener.sendList(e, res));
+                    pkg.remove(obj.pkgList, item, res => TypieListener.sendList(e, res));
                 } catch (err) {
                     console.error("error while removing item: " + item.getTitle(), err);
                 }
@@ -89,9 +89,9 @@ export default class HasteListener {
             .catch(err => console.error(err));
     }
 
-    private getPackage(obj, item): Promise<AbstractHastePackage> {
+    private getPackage(obj, item): Promise<AbstractTypiePackage> {
         let pkgList = obj.pkgList;
-        if (HasteListener.isGlobal(obj)) {
+        if (TypieListener.isGlobal(obj)) {
             pkgList = [item.getPackage()];
         }
         return new Promise((resolve, reject) => {
@@ -101,8 +101,8 @@ export default class HasteListener {
         });
     }
 
-    private update(item: HasteRowItem): void {
-        new Haste(item.getDB()).setPkg(item.getPackage()).insert(item).go().then()
+    private update(item: TypieRowItem): void {
+        new Typie(item.getDB()).setPkg(item.getPackage()).insert(item).go().then()
             .catch(err => console.warn("did not update item: " + item.getTitle(), err));
     }
 }

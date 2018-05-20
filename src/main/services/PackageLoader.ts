@@ -1,5 +1,5 @@
 import fs from "fs";
-import {AbstractHastePackage, AppGlobal, Haste, HasteRowItem} from "haste-sdk";
+import {AbstractTypiePackage, AppGlobal, Typie, TypieRowItem} from "typie-sdk";
 import * as Path from "path";
 import MainWindowController from "../controllers/MainWindowController";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
@@ -24,8 +24,8 @@ export default class PackageLoader {
         AppGlobal.set("PackageLoader", this);
     }
 
-    public getPackage(pkg: string): Promise<AbstractHastePackage> {
-        return new Promise<AbstractHastePackage>((resolve, reject) => {
+    public getPackage(pkg: string): Promise<AbstractTypiePackage> {
+        return new Promise<AbstractTypiePackage>((resolve, reject) => {
             if (this.packages[pkg]) {
                 resolve(this.packages[pkg]);
             } else {
@@ -34,12 +34,12 @@ export default class PackageLoader {
         });
     }
 
-    public getPackageFromList(pkgList: string[]): Promise<AbstractHastePackage> {
+    public getPackageFromList(pkgList: string[]): Promise<AbstractTypiePackage> {
         if (pkgList.length === 1) {
             return this.getPackage(pkgList[0]);
         } else if (pkgList.length > 1) {
             let pkg: any = this;
-            return new Promise<AbstractHastePackage>((resolve, reject) => {
+            return new Promise<AbstractTypiePackage>((resolve, reject) => {
                 while (pkgList.length >= 1) {
                     const pk: any = pkgList.shift();
                     if (pkg.packages[pk]) {
@@ -51,7 +51,7 @@ export default class PackageLoader {
                 resolve(pkg);
             });
         } else {
-            return new Promise<AbstractHastePackage>((resolve, reject) =>
+            return new Promise<AbstractTypiePackage>((resolve, reject) =>
                 reject("cannot get package with empty pkgList"));
         }
     }
@@ -78,7 +78,7 @@ export default class PackageLoader {
         this.destroyIfExist(packageName);
         console.log("Loading package from " + relativePath);
 
-        new Haste(packageName).addCollection().go()
+        new Typie(packageName).addCollection().go()
             .then((data) => {
                 const pkgConfig = this.config.loadPkgConfig(packageName, absPath);
                 const Package = eval("require('" + relativePath + "/index.js')");
@@ -86,7 +86,7 @@ export default class PackageLoader {
                 console.log("Loaded package '" + packageName + "'");
 
                 this.globalInsertPackage(
-                    new HasteRowItem(packageName)
+                    new TypieRowItem(packageName)
                         .setDB("global")
                         .setPackage(packageName)
                         .setDescription("Package")
@@ -113,7 +113,7 @@ export default class PackageLoader {
     }
 
     public destroyIfExist(packageName): void {
-        const pkg: AbstractHastePackage = this.packages[packageName];
+        const pkg: AbstractTypiePackage = this.packages[packageName];
         if (pkg) {
             console.log("package '" + packageName + "' already exist...");
             pkg.destroy();
@@ -133,8 +133,8 @@ export default class PackageLoader {
     //     });
     // }
 
-    private globalInsertPackage(item: HasteRowItem) {
-        new Haste(item.getPackage(), "global").insert(item, false).go()
+    private globalInsertPackage(item: TypieRowItem) {
+        new Typie(item.getPackage(), "global").insert(item, false).go()
             .then(res => {
                 if (res.err === 0) {
                     console.log("Package '" + item.getTitle() + "' is now searchable.");

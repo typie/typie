@@ -1,5 +1,5 @@
 import {BrowserWindowConstructorOptions, globalShortcut} from "electron";
-import {AppGlobal} from "haste-sdk";
+import {AppGlobal} from "typie-sdk";
 import StyleLoader from "../services/StyleLoader";
 import AbstractWindowController from "./AbstractWindowController";
 

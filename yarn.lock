@@ -3056,9 +3056,9 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.0"
 
-"haste-sdk@github:rotemgrim/haste-sdk":
+"typie-sdk@github:rotemgrim/typie-sdk":
   version "1.0.0"
-  resolved "https://codeload.github.com/rotemgrim/haste-sdk/tar.gz/faf78d08ae5af37010a40cbf444292a105b0d867"
+  resolved "https://codeload.github.com/rotemgrim/typie-sdk/tar.gz/faf78d08ae5af37010a40cbf444292a105b0d867"
 
 hawk@3.1.3, hawk@~3.1.3:
   version "3.1.3"

@@ -1,4 +1,4 @@
-# Haste - Electron Framework
+# Typie - Electron Framework
 > A Small minimal framework structure to get started developing with electron
 
 ## Getting Started

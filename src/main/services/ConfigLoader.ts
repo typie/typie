@@ -6,7 +6,7 @@ import fs from "fs";
 import yaml from "js-yaml";
 import mkdirP from "mkdirp";
 import Path from "path";
-import {AppGlobal} from "haste-sdk";
+import {AppGlobal} from "typie-sdk";
 
 export default class ConfigLoader extends EventEmitter {
 
@@ -74,7 +74,7 @@ export default class ConfigLoader extends EventEmitter {
             console.log("building new config file from scratch");
             this.settings = {
                 meta: {
-                    version: "Haste 2.0",
+                    version: "Typie 2.0",
                 },
                 toggleKeys: this.getToggleKeys(),
             };

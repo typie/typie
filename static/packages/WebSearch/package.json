@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "haste-sdk": "github:rotemgrim/haste-sdk",
+    "typie-sdk": "github:rotemgrim/typie-sdk",
     "node-ini": "^1.0.0"
   }
 }

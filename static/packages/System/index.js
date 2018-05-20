@@ -1,4 +1,4 @@
-const {AbstractHastePackage, HasteRowItem, Haste} = require('haste-sdk');
+const {AbstractTypiePackage, TypieRowItem, Typie} = require('typie-sdk');
 const {app, shell} = require('electron');
 const Path = require('path');
 
@@ -6,7 +6,7 @@ const SubSystemConfigure = require('./SubSystemConfigure');
 const SubSystemShowLogs = require('./SubSystemShowLogs');
 const SubSystemInstall = require('./SubSystemInstall');
 
-class System extends AbstractHastePackage {
+class System extends AbstractTypiePackage {
 
     constructor(win, config, pkgPath){
         super(win, config, pkgPath);
@@ -26,7 +26,7 @@ class System extends AbstractHastePackage {
     }
 
     enterPkg(pkgList, item, cb) {
-        let asd = new HasteRowItem("Rotem");
+        let asd = new TypieRowItem("Rotem");
             asd.setDB("global");
             asd.setPackage(this.packageName);
             asd.setDescription("Open global log files");
@@ -34,14 +34,14 @@ class System extends AbstractHastePackage {
             asd.setPath('Rotem');
             asd.setActions([{type: "openDir", description: "Open Logs Directory"}, {type: "openFiles", description: "Open Logs"}]);
 
-        this.haste.insert(asd, true).go();
+        this.typie.insert(asd, true).go();
     }
 
     populate(){
         let itemsArray = [];
 
         itemsArray.push(
-            new HasteRowItem("Configure")
+            new TypieRowItem("Configure")
                 .setDB("global")
                 .setPackage(this.packageName)
                 .setDescription("Open and edit packages configuration")
@@ -49,15 +49,15 @@ class System extends AbstractHastePackage {
                 .setPath('SubPackage|System->Configure'));
 
         itemsArray.push(
-            new HasteRowItem("Install")
+            new TypieRowItem("Install")
                 .setDB("global")
                 .setPackage(this.packageName)
-                .setDescription("Download and install haste packages")
+                .setDescription("Download and install typie packages")
                 .setIcon(this.icon)
                 .setPath('SubPackage|System->Install'));
 
         itemsArray.push(
-            new HasteRowItem("Show Logs")
+            new TypieRowItem("Show Logs")
                 .setDB(this.packageName)
                 .setPackage(this.packageName)
                 .setDescription("Open global log files")
@@ -67,7 +67,7 @@ class System extends AbstractHastePackage {
                              {type: "openFiles", description: "Open Logs"}]));
 
         itemsArray.push(
-            new HasteRowItem("Open config file")
+            new TypieRowItem("Open config file")
                 .setDB(this.packageName)
                 .setPackage(this.packageName)
                 .setDescription("Click to open global config file")
@@ -75,14 +75,14 @@ class System extends AbstractHastePackage {
                 .setPath(Path.join(app.getPath("userData"), "/config/config.yml")));
 
         itemsArray.push(
-            new HasteRowItem("Open config folder")
+            new TypieRowItem("Open config folder")
                 .setDB(this.packageName)
                 .setPackage(this.packageName)
                 .setDescription("Click to open global config file")
                 .setIcon(this.icon)
                 .setPath(Path.join(app.getPath("userData"), "/config")));
 
-        this.haste.multipleInsert(itemsArray).go()
+        this.typie.multipleInsert(itemsArray).go()
             .then(data => console.info('System plugin done adding', data))
             .catch(err => console.error('System plugin insert error', err));
     }

@@ -1,14 +1,14 @@
-const {AbstractHastePackage, HasteRowItem, Haste} = require('haste-sdk');
+const {AbstractTypiePackage, TypieRowItem, Typie} = require('typie-sdk');
 const {app, shell} = require('electron');
 const Path = require('path');
 
-class SubSystemConfigure extends AbstractHastePackage {
+class SubSystemConfigure extends AbstractTypiePackage {
 
     constructor(win, config, pkgPath, parent){
         super(win, config, pkgPath);
         this.packageName = 'System->Configure';
         this.db = "System";
-        this.haste = new Haste(this.packageName, "System");
+        this.typie = new Typie(this.packageName, "System");
         // Object.assign(this, parent);
     }
 
@@ -23,7 +23,7 @@ class SubSystemConfigure extends AbstractHastePackage {
         let resultList = [];
         for (let pkg of pkgs) {
             resultList.push(
-                new HasteRowItem(pkg)
+                new TypieRowItem(pkg)
                     .setDB(this.db)
                     .setPackage(this.packageName)
                     .setDescription("Open " + pkg + " configuration")
@@ -31,7 +31,7 @@ class SubSystemConfigure extends AbstractHastePackage {
                     .setPath(Path.join(global.Settings.configDir, pkg + ".yml")));
         }
         this.win.send('resultList', {data: resultList, length: resultList.length, err: 0});
-        this.haste.multipleInsert(resultList).go().then().catch();
+        this.typie.multipleInsert(resultList).go().then().catch();
     }
 }
 module.exports = SubSystemConfigure;

@@ -1,6 +1,6 @@
 {
-  "name": "Haste",
-  "version": "1.0.3",
+  "name": "Typie",
+  "version": "1.0.4",
   "license": "MIT",
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
   "scripts": {
@@ -16,7 +16,7 @@
     "electron-is": "^2.4.0",
     "electron-log": "^2.2.14",
     "gonode": "github:rotemgrim/gonode",
-    "haste-sdk": "github:rotemgrim/haste-sdk",
+    "typie-sdk": "github:rotemgrim/typie-sdk",
     "js-yaml": "^3.11.0",
     "mkdirp": "^0.5.1",
     "source-map-support": "^0.5.5"

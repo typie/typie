@@ -1,13 +1,13 @@
-const {AbstractHastePackage, AppGlobal, Haste} = require('haste-sdk');
+const {AbstractTypiePackage, AppGlobal, Typie} = require('typie-sdk');
 const {shell} = require('electron');
 
-class SubSystemShowLogs extends AbstractHastePackage {
+class SubSystemShowLogs extends AbstractTypiePackage {
 
     constructor(win, config, pkgPath){
         super(win, config, pkgPath);
         this.packageName = 'System->ShowLogs';
         this.db = "System";
-        this.haste = new Haste(this.packageName, "System");
+        this.typie = new Typie(this.packageName, "System");
     }
 
     activate(pkgList, item, cb) {

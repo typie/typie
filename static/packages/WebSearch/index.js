@@ -1,10 +1,10 @@
-const {AbstractHastePackage, HasteRowItem, SearchObject, getPath} = require('haste-sdk');
+const {AbstractTypiePackage, TypieRowItem, SearchObject, getPath} = require('typie-sdk');
 const {shell} = require('electron');
 const Path = require('path');
 const ini = require('node-ini');
 const WebSearchPkgFactory = require('./WebSearchPkgFactory');
 
-class WebSearch extends AbstractHastePackage
+class WebSearch extends AbstractTypiePackage
 {
 
     constructor(win, config, pkgPath){
@@ -15,13 +15,13 @@ class WebSearch extends AbstractHastePackage
     }
 
     search(obj, callback) {
-        this.haste.setPkg('WebSearch').setDB('global');
+        this.typie.setPkg('WebSearch').setDB('global');
         super.search(obj, callback);
     }
 
     enterPkg(pkgList, item, cb) {
-        this.haste.setPkg('WebSearch').setDB('global');
-        this.haste.getRows(10).orderBy("count").desc().go()
+        this.typie.setPkg('WebSearch').setDB('global');
+        this.typie.getRows(10).orderBy("count").desc().go()
             .then(res => this.win.send("resultList", res))
             .catch(e => console.error("error getting first records", e));
     }
@@ -29,7 +29,7 @@ class WebSearch extends AbstractHastePackage
     populate(){
         let itemsArray = [];
         Object.keys(this.pkgConfig.sites).map((siteName, i) => {
-            let item = new HasteRowItem(siteName + ': WebSearch');
+            let item = new TypieRowItem(siteName + ': WebSearch');
             item.setIcon(this.getIcon(siteName));
             item.setDescription(this.pkgConfig.sites[siteName].url);
             item.setPackage('WebSearch');
@@ -42,7 +42,7 @@ class WebSearch extends AbstractHastePackage
                 db: 'WebSearch',
             });
         });
-        this.haste.multipleInsert(itemsArray).go()
+        this.typie.multipleInsert(itemsArray).go()
             .then(data => console.info('WebSearch done adding', data))
             .catch(err => console.error('WebSearch insert error', err));
     }

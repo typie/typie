@@ -1,6 +1,6 @@
 import {app, ipcMain} from "electron";
 import AppController from "../controllers/AppController";
-import {AppGlobal} from "haste-sdk";
+import {AppGlobal} from "typie-sdk";
 import ConfigLoader from "../services/ConfigLoader";
 import MainWindowController from "../controllers/MainWindowController";
 import ShortcutListener from "../listeners/ShortcutListener";

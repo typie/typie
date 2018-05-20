@@ -12,6 +12,6 @@
     "axios": "^0.18.0",
     "download-git-repo": "^1.0.2",
     "fs-extra": "^5.0.0",
-    "haste-sdk": "github:rotemgrim/haste-sdk"
+    "typie-sdk": "github:rotemgrim/typie-sdk"
   }
 }

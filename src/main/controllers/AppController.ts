@@ -1,18 +1,18 @@
 declare const __static: any;
 import {app, globalShortcut} from "electron";
 import is from "electron-is";
-import {AppGlobal, GoDispatcher} from "haste-sdk";
+import {AppGlobal, GoDispatcher} from "typie-sdk";
 import Path from "path";
-import HasteListener from "../listeners/HasteListener";
+import TypieListener from "../listeners/TypieListener";
 import PackageLoader from "../services/PackageLoader";
 import ConfigLoader from "../services/ConfigLoader";
 import MainWindowController from "./MainWindowController";
 
 let goDispatchPath;
 if (is.windows()) {
-    goDispatchPath = Path.join(__static, "bin/haste_go.exe");
+    goDispatchPath = Path.join(__static, "bin/typie_go.exe");
 } else if (is.osx()) {
-    goDispatchPath = Path.join(__static, "bin/haste_go");
+    goDispatchPath = Path.join(__static, "bin/typie_go");
 }
 
 export default class AppController {
@@ -24,7 +24,7 @@ export default class AppController {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);
                 AppGlobal.set("GoDispatcher", AppController.goDispatcher);
-                AppController.hasteListener = new HasteListener(new PackageLoader(win, config));
+                AppController.typieListener = new TypieListener(new PackageLoader(win, config));
             }
         }, 1);
     }
@@ -52,5 +52,5 @@ export default class AppController {
     }
 
     private static goDispatcher: GoDispatcher;
-    private static hasteListener: HasteListener;
+    private static typieListener: TypieListener;
 }

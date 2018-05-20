@@ -1,4 +1,4 @@
-const {AbstractHastePackage, HasteRowItem, Haste} = require('haste-sdk');
+const {AbstractTypiePackage, TypieRowItem, Typie} = require('typie-sdk');
 const {app, shell} = require('electron');
 const Path = require('path');
 const axios = require('axios');
@@ -7,13 +7,13 @@ const packagesPath = "static/packages/";
 const fs = require('fs-extra');
 
 
-class SubSystemInstall extends AbstractHastePackage {
+class SubSystemInstall extends AbstractTypiePackage {
 
     constructor(win, config, pkgPath){
         super(win, config, pkgPath);
         this.packageName = 'System->Install';
         this.db = "System";
-        this.haste = new Haste(this.packageName, "System");
+        this.typie = new Typie(this.packageName, "System");
         // Object.assign(this, parent);
     }
 
@@ -39,7 +39,7 @@ class SubSystemInstall extends AbstractHastePackage {
                 let resultList = [];
                 for (let repo of repos){
                     resultList.push(
-                        new HasteRowItem(repo.name)
+                        new TypieRowItem(repo.name)
                             .setDB(this.db)
                             .setPackage(this.packageName)
                             .setDescription(repo.description)
@@ -47,7 +47,7 @@ class SubSystemInstall extends AbstractHastePackage {
                             .setPath(repo.full_name));
                 }
                 this.win.send('resultList', {data: resultList, length: resultList.length, err: 0});
-                this.haste.multipleInsert(resultList).go().then().catch();
+                this.typie.multipleInsert(resultList).go().then().catch();
             })
             .catch(e => console.log(e));
     }
