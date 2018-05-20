@@ -7,6 +7,7 @@
     "dev": "electron-webpack dev --inspect --disable-gpu --enable-transparent-visuals",
     "compile": "electron-webpack",
     "dist": "yarn compile && build",
+    "release": "yarn compile && build",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "check": "./node_modules/.bin/tslint --project tsconfig.json --config tslint.json",
     "fix": "./node_modules/.bin/tslint --fix --project tsconfig.json --config tslint.json"
