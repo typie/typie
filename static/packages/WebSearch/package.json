@@ -1,5 +1,5 @@
 {
-  "name": "WebSearch",
+  "name": "websearch-pkg",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,5 +11,8 @@
   "dependencies": {
     "typie-sdk": "github:typie/typie-sdk",
     "node-ini": "^1.0.0"
+  },
+  "typie": {
+    "title": "WebSearch"
   }
 }

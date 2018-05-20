@@ -1,5 +1,5 @@
 {
-  "name": "System",
+  "name": "system-pkg",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,5 +13,8 @@
     "download-git-repo": "^1.0.2",
     "fs-extra": "^5.0.0",
     "typie-sdk": "github:typie/typie-sdk"
+  },
+  "typie": {
+    "title": "System"
   }
 }

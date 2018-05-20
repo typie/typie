@@ -73,7 +73,8 @@ export default class PackageLoader {
 
         const relativePath = getRelativePath(absPath);
         const pkJson = this.getPackageJsonFromPath(absPath);
-        const packageName = pkJson.name;
+        console.log(pkJson);
+        const packageName = pkJson.typie.title;
 
         this.destroyIfExist(packageName);
         console.log("Loading package from " + relativePath);

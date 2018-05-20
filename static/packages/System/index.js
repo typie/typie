@@ -25,17 +25,17 @@ class System extends AbstractTypiePackage {
         //this.win.hide();
     }
 
-    enterPkg(pkgList, item, cb) {
-        let asd = new TypieRowItem("Rotem");
-            asd.setDB("global");
-            asd.setPackage(this.packageName);
-            asd.setDescription("Open global log files");
-            asd.setIcon(this.icon);
-            asd.setPath('Rotem');
-            asd.setActions([{type: "openDir", description: "Open Logs Directory"}, {type: "openFiles", description: "Open Logs"}]);
-
-        this.typie.insert(asd, true).go();
-    }
+    // enterPkg(pkgList, item, cb) {
+    //     let asd = new TypieRowItem("Rotem");
+    //         asd.setDB("global");
+    //         asd.setPackage(this.packageName);
+    //         asd.setDescription("Open global log files");
+    //         asd.setIcon(this.icon);
+    //         asd.setPath('Rotem');
+    //         asd.setActions([{type: "openDir", description: "Open Logs Directory"}, {type: "openFiles", description: "Open Logs"}]);
+    //
+    //     this.typie.insert(asd, true).go();
+    // }
 
     populate(){
         let itemsArray = [];
@@ -62,9 +62,9 @@ class System extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Open global log files")
                 .setIcon(this.icon)
-                .setPath('SubPackage|System->ShowLogs')
-                .setActions([{type: "openDir", description: "Open Logs Directory"},
-                             {type: "openFiles", description: "Open Logs"}]));
+                .setPath('SubPackage|System->ShowLogs'));
+                //.setActions([{type: "openDir", description: "Open Logs Directory"}, {type: "openFiles", description: "Open Logs"}]));
+
 
         itemsArray.push(
             new TypieRowItem("Open config file")
