@@ -1,7 +1,6 @@
 const {AbstractTypiePackage, TypieRowItem, SearchObject, getPath} = require('typie-sdk');
 const {shell} = require('electron');
 const Path = require('path');
-const ini = require('node-ini');
 const WebSearchPkgFactory = require('./WebSearchPkgFactory');
 
 class WebSearch extends AbstractTypiePackage

@@ -4,6 +4,8 @@ import * as Path from "path";
 import MainWindowController from "../controllers/MainWindowController";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import ConfigLoader from "./ConfigLoader";
+import System from "../packages/system/System";
+import npm from "npm";
 
 declare const __static: any;
 const packagesPath = Path.join(__static, "/packages");
@@ -18,6 +20,8 @@ export default class PackageLoader {
         this.win = win;
         this.config = config;
         this.packages = {};
+
+        this.loadSystemPkg();
         this.loadPackages();
         // this.watchForPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));
@@ -73,27 +77,47 @@ export default class PackageLoader {
 
         const relativePath = getRelativePath(absPath);
         const pkJson = this.getPackageJsonFromPath(absPath);
-        console.log(pkJson);
         const packageName = pkJson.typie.title;
 
         this.destroyIfExist(packageName);
         console.log("Loading package from " + relativePath);
 
-        new Typie(packageName).addCollection().go()
-            .then((data) => {
-                const pkgConfig = this.config.loadPkgConfig(packageName, absPath);
-                const Package = eval("require('" + relativePath + "/index.js')");
-                this.packages[packageName] = new Package(this.win, pkgConfig, staticPath);
-                console.log("Loaded package '" + packageName + "'");
+        Promise.all([
+            this.installDependencies(absPath),
+            (new Typie(packageName)).addCollection().go(),
+        ]).then(data => {
+            const pkgConfig = this.config.loadPkgConfig(packageName, absPath);
+            const Package = eval("require('" + relativePath + "/index.js')");
+            this.packages[packageName] = new Package(this.win, pkgConfig, staticPath);
+            this.addPkgToGlobal(packageName);
+        }).catch((err) => console.error("cannot load package from: " + relativePath, err));
+    }
 
-                this.globalInsertPackage(
-                    new TypieRowItem(packageName)
-                        .setDB("global")
-                        .setPackage(packageName)
-                        .setDescription("Package")
-                        .setIcon(this.packages[packageName].icon));
-            })
-            .catch((err) => console.error("cannot load package from: " + relativePath, err));
+    public addPkgToGlobal(pkgName) {
+        console.log("Loaded package '" + pkgName + "'");
+        this.globalInsertPackage(
+            new TypieRowItem(pkgName)
+                .setDB("global")
+                .setPackage(pkgName)
+                .setDescription("Package")
+                .setIcon(this.packages[pkgName].icon));
+    }
+
+    public installDependencies(absPath: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (!fs.existsSync(Path.join(absPath, "node_modules"))) {
+                console.log("installing dependencies");
+                npm.load({}, (er) => {
+                    if (er) { reject(er); }
+                    npm.commands.install(absPath, [], (err, data) => {
+                        if (err) { reject(err); }
+                        resolve(data);
+                    });
+                });
+            } else {
+                resolve();
+            }
+        });
     }
 
     public isViablePackage(absPath): boolean {
@@ -133,6 +157,15 @@ export default class PackageLoader {
     //         }, 2000);
     //     });
     // }
+
+    private loadSystemPkg() {
+        const pkgName = "System";
+        (new Typie(pkgName)).addCollection().go()
+            .then(() => {
+                this.packages[pkgName] = new System(this.win, this.config, "");
+                this.addPkgToGlobal(pkgName);
+            }).catch(e => console.error(e));
+    }
 
     private globalInsertPackage(item: TypieRowItem) {
         new Typie(item.getPackage(), "global").insert(item, false).go()

@@ -9,8 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typie-sdk": "github:typie/typie-sdk",
-    "node-ini": "^1.0.0"
+    "typie-sdk": "github:typie/typie-sdk"
   },
   "typie": {
     "title": "WebSearch"

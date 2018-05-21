@@ -9,6 +9,7 @@ class SubSystemConfigure extends AbstractTypiePackage {
         this.packageName = 'System->Configure';
         this.db = "System";
         this.typie = new Typie(this.packageName, "System");
+        this.icon = "themes/default/images/icons/icon.png";
         // Object.assign(this, parent);
     }
 

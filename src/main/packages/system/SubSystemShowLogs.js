@@ -8,13 +8,20 @@ class SubSystemShowLogs extends AbstractTypiePackage {
         this.packageName = 'System->ShowLogs';
         this.db = "System";
         this.typie = new Typie(this.packageName, "System");
+        this.icon = "themes/default/images/icons/icon.png";
     }
 
     activate(pkgList, item, cb) {
         const LogPath = AppGlobal.get("logPath");
         const coreLogPath = AppGlobal.get("coreLogPath");
-        shell.openItem(LogPath);
-        shell.openItem(coreLogPath);
+        const action = item.getActions()[0].type;
+        if (action === "openDir") {
+            shell.showItemInFolder(LogPath);
+            shell.showItemInFolder(coreLogPath);
+        } else if (action === "openFiles") {
+            shell.openItem(LogPath);
+            shell.openItem(coreLogPath);
+        }
         this.win.hide();
     }
 

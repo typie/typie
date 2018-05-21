@@ -14,6 +14,7 @@ class SubSystemInstall extends AbstractTypiePackage {
         this.packageName = 'System->Install';
         this.db = "System";
         this.typie = new Typie(this.packageName, "System");
+        this.icon = "themes/default/images/icons/icon.png";
         // Object.assign(this, parent);
     }
 
