@@ -45,6 +45,12 @@ export default class TypieListener {
     }
 
     private enterPkg(e: Electron.Event, obj) {
+        if (!obj || !obj.item) {
+            this.getPackage(obj).then(pkg => {
+                pkg.enterPkg(obj.pkgList, null, res => TypieListener.sendList(e, res));
+            });
+            return;
+        }
         const item = TypieRowItem.create(obj.item);
         this.getPackage(obj, item)
             .then(pkg => {
