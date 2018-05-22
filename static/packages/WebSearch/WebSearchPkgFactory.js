@@ -30,8 +30,6 @@ class WebSearchPkgFactory extends AbstractTypiePackage {
     }
 
     activate(pkgList, item, cb) {
-        item.countUp();
-        this.insertItem(item);
         shell.openExternal(item.getPath());
         this.win.hide();
     }

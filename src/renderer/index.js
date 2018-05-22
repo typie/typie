@@ -1,30 +1,9 @@
-'use strict';
 const {ipcRenderer} = require('electron');
 const Path = require('path');
-
-const getRelativeLink = function(dir) {
-    let relPath = dir; //Path.join(__static, dir);
-    if (__dirname.endsWith('asar')) {
-        relPath = '../static/' + relPath;
-    }
-    relPath = relPath.replace(/\\/g, '/');
-    console.log(relPath);
-    return relPath;
-};
-
-const polymer=document.createElement('script');
-polymer.setAttribute('type','text/javascript');
-polymer.setAttribute('src', getRelativeLink('polymer/bower_components/webcomponentsjs/webcomponents-loader.js'));
-
-const importElement=document.createElement('link');
-importElement.setAttribute('rel','import');
-importElement.setAttribute('href', getRelativeLink('polymer/typie-search.html'));
+require('@webcomponents/webcomponentsjs/webcomponents-loader.js');
+require('./typie-search');
 
 const typieSearch=document.createElement('typie-search');
-
-//vueScript.onload = init;
-document.head.appendChild(polymer);
-document.head.appendChild(importElement);
 document.getElementById("app").appendChild(typieSearch);
 
 // listen for ui events and pass them to the main process

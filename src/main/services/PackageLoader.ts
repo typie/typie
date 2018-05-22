@@ -88,7 +88,7 @@ export default class PackageLoader {
         ]).then(data => {
             const pkgConfig = this.config.loadPkgConfig(packageName, absPath);
             const Package = eval("require('" + relativePath + "/index.js')");
-            this.packages[packageName] = new Package(this.win, pkgConfig, staticPath);
+            this.packages[packageName] = new Package(this.win, pkgConfig, packageName);
             this.addPkgToGlobal(packageName);
         }).catch((err) => console.error("cannot load package from: " + relativePath, err));
     }
@@ -162,7 +162,7 @@ export default class PackageLoader {
         const pkgName = "System";
         (new Typie(pkgName)).addCollection().go()
             .then(() => {
-                this.packages[pkgName] = new System(this.win, this.config, "");
+                this.packages[pkgName] = new System(this.win, [], pkgName);
                 this.addPkgToGlobal(pkgName);
             }).catch(e => console.error(e));
     }
