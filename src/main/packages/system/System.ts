@@ -3,7 +3,7 @@ import {app, shell} from "electron";
 import Path from "path";
 
 import SubSystemConfigure from "./SubSystemConfigure";
-// import SubSystemShowLogs from "./SubSystemShowLogs";
+import SubSystemShowLogs from "./SubSystemShowLogs";
 import SubSystemInstall from "./SubSystemInstall";
 
 export default class System extends AbstractTypiePackage {
@@ -13,7 +13,7 @@ export default class System extends AbstractTypiePackage {
         this.packages = {
             Configure: new SubSystemConfigure(win, config, "System->Configure"),
             Install: new SubSystemInstall(win, config, "System->Install"),
-            // ShowLogs: new SubSystemShowLogs(win, config, "System->ShowLogs"),
+            ShowLogs: new SubSystemShowLogs(win, config, "System->ShowLogs"),
         };
         this.icon = getPath("themes/default/images/icons/icon.png");
         this.populate();

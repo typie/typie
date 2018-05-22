@@ -1,17 +1,17 @@
-const {AbstractTypiePackage, AppGlobal, Typie} = require('typie-sdk');
-const {shell} = require('electron');
+import {AbstractTypiePackage, AppGlobal, Typie} from "typie-sdk";
+import {shell} from "electron";
 
-class SubSystemShowLogs extends AbstractTypiePackage {
+export default class SubSystemShowLogs extends AbstractTypiePackage {
 
-    constructor(win, config, pkgPath){
+    constructor(win, config, pkgPath) {
         super(win, config, pkgPath);
-        this.packageName = 'System->ShowLogs';
+        this.packageName = "System->ShowLogs";
         this.db = "System";
         this.typie = new Typie(this.packageName, "System");
         this.icon = "themes/default/images/icons/icon.png";
     }
 
-    activate(pkgList, item, cb) {
+    public activate(pkgList, item, cb) {
         const LogPath = AppGlobal.get("logPath");
         const coreLogPath = AppGlobal.get("coreLogPath");
         const action = item.getActions()[0].type;
@@ -25,8 +25,7 @@ class SubSystemShowLogs extends AbstractTypiePackage {
         this.win.hide();
     }
 
-    enterPkg(pkgList, item, cb) {
+    public enterPkg(pkgList, item, cb) {
         this.activate(pkgList, item, cb);
     }
 }
-module.exports = SubSystemShowLogs;
