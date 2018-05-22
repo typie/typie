@@ -9,12 +9,10 @@ class WebSearchPkgFactory extends AbstractTypiePackage {
         this.packageName = options.pkgName;
         this.db = options.db;
         this.typie = new Typie(this.packageName, this.db);
-        this.iconPath = getPath(this.packagePath + 'icons/');
+        this.iconPath = getPath('packages/WebSearch/icons/');
     }
 
     search(obj, callback) {
-        console.log("search", obj);
-        //this.typie.setPkg(pkg).setDB('WebSearch');
         this.typie.fuzzySearch(obj.value).orderBy('score').desc().go()
             .then(data => {
                 if (data.data.length === 0 || data.data[0].score !== 1000) {

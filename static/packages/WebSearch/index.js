@@ -6,10 +6,9 @@ const WebSearchPkgFactory = require('./WebSearchPkgFactory');
 class WebSearch extends AbstractTypiePackage
 {
 
-    constructor(win, config, pkgPath){
-        super(win, config, pkgPath);
-        //this.cfg = ini.parseSync(Path.join(__dirname, 'WebSearch.ini'));
-        this.iconPath = getPath(this.packagePath + 'icons/');
+    constructor(win, config, pkgName){
+        super(win, config, pkgName);
+        this.iconPath = this.getPackagePath() + 'icons/';
         this.populate();
     }
 
