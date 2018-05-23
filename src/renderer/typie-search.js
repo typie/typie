@@ -265,7 +265,7 @@ class TypieSearch extends PolymerElement {
     }
 
     updateList(data) {
-        console.log('updateList', data);
+        // console.log('updateList', data);
         this.clearLoading();
         if (data && data.data && data.data.length > 0) {
             this.set('itemList', data.data);
@@ -277,6 +277,20 @@ class TypieSearch extends PolymerElement {
             this.clearList();
         }
         this.set('searchTime', (Date.now() - this.searchTimer) + " ms");
+    }
+
+    deleteItem(item) {
+        if (item) {
+            let tmp = JSON.parse(this.jsonList);
+            for (let key in tmp) {
+                if (tmp[key].title === item.title && tmp[key].t === item.t && tmp[key].p === item.p) {
+                    console.log("removing: " + item.title);
+                    tmp.splice(key);
+                    this.updateList({data: tmp, length: tmp.length, err: 0});
+                    return;
+                }
+            }
+        }
     }
 
     listLoading(string) {

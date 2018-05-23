@@ -19,4 +19,5 @@ ipcRenderer.on('resultList', (event, data) => typieSearch.updateList(data));
 ipcRenderer.on('listLoading', (event, res) => typieSearch.listLoading(res.data));
 ipcRenderer.on('injectCss', (event, css) => typieSearch.loadStyles(css));
 ipcRenderer.on('changePackage', (event, data) => typieSearch.changePackage(data));
+ipcRenderer.on('deleteItem', (event, data) => typieSearch.deleteItem(data));
 ipcRenderer.on('focus', (event, data) => typieSearch.focus());

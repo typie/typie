@@ -34,6 +34,13 @@ class WebSearchPkgFactory extends AbstractTypiePackage {
         this.win.hide();
     }
 
+    remove(pkgList, item, cb) {
+        this.typie.remove(item).go()
+            .then(data => {
+                this.win.send("deleteItem", item);
+            }).catch(e => console.error(e));
+    }
+
     getIcon(siteName) {
         return this.pkgConfig.icon ?  this.iconPath + this.pkgConfig.icon : defaultUrlIco
     }
