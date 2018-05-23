@@ -20,6 +20,8 @@ class WebSearchPkgFactory extends AbstractTypiePackage {
                     let url = this.pkgConfig.url.replace(/%s/g, obj.value);
                     firstItem.setIcon(this.getIcon(this.packageName));
                     firstItem.setPath(url);
+                    firstItem.setDB(this.db);
+                    firstItem.setPackage(this.packageName);
                     data.data.unshift(firstItem.toPayload());
                 }
                 callback(data);
