@@ -68,7 +68,7 @@ export default class PackageLoader {
         });
     }
 
-    public loadPackage(dirName) {
+    public loadPackage(dirName, callBack?: (pkg) => void , errCallBack?: () => void) {
         const absPath = Path.join(packagesPath, dirName);
         const staticPath = "packages/" + dirName + "/";
         if (!this.isViablePackage(absPath)) {
@@ -89,18 +89,37 @@ export default class PackageLoader {
             const pkgConfig = this.config.loadPkgConfig(packageName, absPath);
             const Package = eval("require('" + relativePath + "/index.js')");
             this.packages[packageName] = new Package(this.win, pkgConfig, packageName);
-            this.addPkgToGlobal(packageName);
-        }).catch((err) => console.error("cannot load package from: " + relativePath, err));
+            const pkgItem = this.addPkgToGlobal(packageName);
+            if (callBack) {
+                callBack(pkgItem);
+            }
+        }).catch((err) => {
+            console.error("cannot load package from: " + relativePath, err);
+            if (errCallBack) {
+                errCallBack();
+            }
+        });
+    }
+
+    public loadPkgPromise(dirName) {
+        return new Promise((resolve, reject) => {
+            this.loadPackage(dirName, (pkgItem) => {
+                resolve(pkgItem);
+            }, () => {
+                reject();
+            });
+        });
     }
 
     public addPkgToGlobal(pkgName) {
         console.log("Loaded package '" + pkgName + "'");
-        this.globalInsertPackage(
-            new TypieRowItem(pkgName)
-                .setDB("global")
-                .setPackage(pkgName)
-                .setDescription("Package")
-                .setIcon(this.packages[pkgName].icon));
+        const newGlobalPackage = new TypieRowItem(pkgName)
+            .setDB("global")
+            .setPackage(pkgName)
+            .setDescription("Package")
+            .setIcon(this.packages[pkgName].icon);
+        this.globalInsertPackage(newGlobalPackage);
+        return newGlobalPackage;
     }
 
     public installDependencies(absPath: string): Promise<any> {

@@ -23,8 +23,12 @@ export default class SubSystemInstall extends AbstractTypiePackage {
             if (err) {
                 console.error(err);
             }
-            AppGlobal.get("PackageLoader").loadPackage(item.getTitle());
-            this.win.send("resultList", {data: [], length: 0, err: 0});
+            AppGlobal.get("PackageLoader").loadPkgPromise(item.getTitle())
+                .then((pkgItem) => {
+                    this.win.send("changePackage", null);
+                    this.win.send("resultList", {data: [pkgItem], length: 0, err: 0});
+                })
+                .catch(er => console.error(er));
         });
     }
 
