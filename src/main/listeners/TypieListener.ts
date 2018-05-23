@@ -46,7 +46,7 @@ export default class TypieListener {
 
     private enterPkg(e: Electron.Event, obj) {
         if (!obj || !obj.item) {
-            this.packageLoader.getPackage(obj).then(pkg => {
+            this.packageLoader.getPackage(obj.pkgList).then(pkg => {
                 pkg.enterPkg(obj.pkgList, undefined, res => TypieListener.sendList(e, res));
             }).catch(er => console.error(er));
             return;
