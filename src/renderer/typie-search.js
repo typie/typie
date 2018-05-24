@@ -83,6 +83,9 @@ class TypieSearch extends PolymerElement {
         this.input = this.shadowRoot.getElementById("inputField");
         this.input.addEventListener('input', () => this.inputChange());
         this.input.addEventListener('keydown', e => this.keyDown(e));
+        // this.shadowRoot.addEventListener("dom-change", (e) => {
+        //     this.setHeight();
+        // });
     }
 
     hideScore(score) {
@@ -423,6 +426,13 @@ class TypieSearch extends PolymerElement {
 
     resetTimer() {
         this.searchTimer = Date.now();
+    }
+
+    setHeight() {
+        const height = this.shadowRoot.getElementById("app").offsetHeight;
+        this.dispatchEvent(new CustomEvent('setHeight', {
+            detail: height
+        }));
     }
 }
 customElements.define('typie-search', TypieSearch);

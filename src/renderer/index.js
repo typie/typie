@@ -5,6 +5,7 @@ require('./typie-search');
 
 const typieSearch=document.createElement('typie-search');
 document.getElementById("app").appendChild(typieSearch);
+document.body.style.margin = 0;
 
 // listen for ui events and pass them to the main process
 typieSearch.addEventListener('search', e => ipcRenderer.send('search', e.detail));
@@ -13,6 +14,7 @@ typieSearch.addEventListener('enterPkg', e => ipcRenderer.send('enterPkg', e.det
 typieSearch.addEventListener('clear', e => ipcRenderer.send('clear', e.detail));
 typieSearch.addEventListener('delete', e => ipcRenderer.send('delete', e.detail));
 typieSearch.addEventListener('escape', e => ipcRenderer.send('hide'));
+// typieSearch.addEventListener('setHeight', e => ipcRenderer.send('setHeight', e.detail));
 
 // listen for main process events and pass them to the ui
 ipcRenderer.on('resultList', (event, data) => typieSearch.updateList(data));

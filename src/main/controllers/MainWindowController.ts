@@ -12,7 +12,7 @@ export default class MainWindowController extends AbstractWindowController {
     private options: BrowserWindowConstructorOptions = {
         alwaysOnTop: true,
         frame: false,
-        height: 900,
+        height: 437,
         icon: Path.join(__static, "themes/default/images/icons/icon.png"),
         maximizable: false,
         show: false,
