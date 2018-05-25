@@ -21,6 +21,7 @@ export default class SubSystemInstall extends AbstractTypiePackage {
         fs.removeSync(pkgDir);
         download(item.getPath(), pkgDir, (err) => {
             if (err) {
+                this.sendEmptyResult();
                 console.error(err);
             }
             AppGlobal.get("PackageLoader").loadPkgPromise(item.getTitle())
@@ -28,7 +29,10 @@ export default class SubSystemInstall extends AbstractTypiePackage {
                     this.win.send("changePackage", null);
                     this.win.send("resultList", {data: [pkgItem], length: 0, err: 0});
                 })
-                .catch(er => console.error(er));
+                .catch(er => {
+                    this.sendEmptyResult();
+                    console.error(er);
+                });
         });
     }
 
@@ -46,7 +50,7 @@ export default class SubSystemInstall extends AbstractTypiePackage {
                 this.fetchAllPkgs(reposToFetch);
             })
             .catch(e => {
-                this.win.send("resultList", {data: [], length: 0, err: 1});
+                this.sendEmptyResult();
                 console.log(e);
             });
     }
@@ -85,5 +89,9 @@ export default class SubSystemInstall extends AbstractTypiePackage {
 
         this.win.send("resultList", {data: resultList, length: resultList.length, err: 0});
         this.typie.multipleInsert(resultList).go().then().catch();
+    }
+
+    private sendEmptyResult() {
+        this.win.send("resultList", {data: [], length: 0, err: 1});
     }
 }
