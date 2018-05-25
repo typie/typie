@@ -20,7 +20,8 @@ export default class System extends AbstractTypiePackage {
     }
 
     public activate(pkgList, item, cb) {
-        console.log(item);
+        shell.openItem(item.getPath());
+        this.win.hide();
     }
 
     // public enterPkg(pkgList, item, cb) {
@@ -36,7 +37,9 @@ export default class System extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Open and edit packages configuration")
                 .setIcon(this.icon)
-                .setPath("SubPackage|System->Configure"));
+                .setPath("SubPackage|System->Configure")
+                .setLabels([{text: "windows", style: "green"},
+                    {text: "mac", style: "orange"}]));
 
         itemsArray.push(
             new TypieRowItem("Install")
