@@ -33,6 +33,9 @@ class TypieSearch extends PolymerElement {
                         <img src="[[item.i]]">
                         <div class="texts">
                             <span>[[ item.title ]]</span>
+                            <template is="dom-repeat" items="[[item.l]]" as="label">
+                                <span class$="label [[label.style]]">[[ label.text ]]</span>
+                            </template>
                             <p class$="selectedAction animated [[item.actionFlip]]" hidden$="[[hideAction(item.a)]]">[[ item.a.0.description ]]</p>
                             <p hidden$="[[hideDesc(item.d, item.a)]]">[[item.d]]</p>
                             <p hidden$="[[hidePath(item.d, item.a)]]">[[item.p]]</p>
@@ -409,6 +412,9 @@ class TypieSearch extends PolymerElement {
         let style = document.createElement('style');
         style.appendChild(document.createTextNode(cssString));
         this.shadowRoot.appendChild(style);
+        // this.shadowRoot.addEventListener("dom-change", (e) => {
+        //     this.setHeight();
+        // });
     }
 
     disconnectedCallback() {

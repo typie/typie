@@ -88,9 +88,9 @@
     font-size: 13px;
     font-weight: 100;
     letter-spacing: 0.05em;
-    margin: 0;
+    margin: 0 5px 0 0;
     color: #fff;
-    -webkit-font-smoothing: subpixel-antialiased !important;
+    /*-webkit-font-smoothing: subpixel-antialiased !important;*/
 }
 
 .results li p {
@@ -139,6 +139,26 @@
 
 .results li.selected span {
     color: #a6e5ff;
+}
+
+.results li span.label {
+    color: black;
+    font-size: 60%;
+    font-weight: 600;
+    background-color: #a6e5ff;
+    padding: 0 6px;
+    border-radius: 8px;
+    letter-spacing: 0.05em;
+}
+
+.results li span.label.green{
+    color: black;
+    background-color: #18b195;
+}
+
+.results li span.label.orange{
+    color: black;
+    background-color: #e27824;
 }
 
 .results li > img {
