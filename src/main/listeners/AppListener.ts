@@ -48,7 +48,7 @@ export default class AppListener {
             win.onWebContent("devtools-opened", () => win.setFocusAfterDevToolOpen());
 
             ipcMain.on("hide", () => win.hide());
-            // ipcMain.on("setHeight", (e, height) => win.setHeight(height));
+            ipcMain.on("setHeight", (e, height) => win.setHeight(height));
         });
     }
 }
