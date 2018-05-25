@@ -14,6 +14,13 @@ export default class ConfigLoader extends EventEmitter {
         let data;
         try {
             data = yaml.safeLoad(fs.readFileSync(path, "utf8"));
+            if (data) {
+                if (is.windows() && data.windows) {
+                    data = data.windows;
+                } else if (is.osx() && data.mac) {
+                    data = data.mac;
+                }
+            }
         } catch (e) {
             console.warn("Missing configuration file at '" + path + "' using empty one", e);
         }
