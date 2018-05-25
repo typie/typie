@@ -45,7 +45,10 @@ export default class SubSystemInstall extends AbstractTypiePackage {
                 }
                 this.fetchAllPkgs(reposToFetch);
             })
-            .catch(e => console.log(e));
+            .catch(e => {
+                this.win.send("resultList", {data: [], length: 0, err: 1});
+                console.log(e);
+            });
     }
 
     public fetchAllPkgs(reposToFetch) {
@@ -75,7 +78,8 @@ export default class SubSystemInstall extends AbstractTypiePackage {
                         .setPackage(this.packageName)
                         .setDescription(pkgs[pkg].typie.description)
                         .setIcon(this.icon)
-                        .setPath("typie/" + pkg));
+                        .setPath("typie/" + pkg)
+                        .setLabels(pkgs[pkg].typie.labels));
             }
         }
 
