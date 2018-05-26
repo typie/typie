@@ -328,7 +328,7 @@ class TypieSearch extends PolymerElement {
     }
 
     _indexChange() {
-        console.log('active change');
+        // console.log('active change');
         if (this.jsonList && this.selectedIndex >= 0) {
             let tmp = JSON.parse(this.jsonList);
             tmp[this.selectedIndex].selected = "selected";
@@ -419,7 +419,7 @@ class TypieSearch extends PolymerElement {
     }
 
     focus() {
-        console.log('do focus');
+        // console.log('do focus');
         this.input.focus();
     }
 

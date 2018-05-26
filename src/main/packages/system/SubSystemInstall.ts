@@ -85,6 +85,8 @@ export default class SubSystemInstall extends AbstractTypiePackage {
         const resultList: TypieRowItem[] = [];
         for (const pkg in pkgs) {
             if (pkgs.hasOwnProperty(pkg)) {
+                const labels = pkgs[pkg].typie.labels;
+                labels.unshift({text: "v" + pkgs[pkg].version});
                 resultList.push(
                     new TypieRowItem(pkgs[pkg].typie.title)
                         .setDB(this.db)

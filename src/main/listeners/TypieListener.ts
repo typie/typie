@@ -41,7 +41,7 @@ export default class TypieListener {
             } catch (err) {
                 console.error("error while activating item: ", item, err);
             }
-        }).catch(err => console.error(err));
+        }).catch(err => console.warn(err));
     }
 
     private enterPkg(e: Electron.Event, obj) {
@@ -65,7 +65,7 @@ export default class TypieListener {
                     console.error("error while entering package: ", pkg, err);
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => console.warn(err));
     }
 
     private clear(e: Electron.Event, obj) {
@@ -78,7 +78,7 @@ export default class TypieListener {
                     console.error("error while clearing package: " + pkg.getPackageName(), err);
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => console.warn(err));
     }
 
     private remove(e: Electron.Event, obj) {
@@ -92,7 +92,7 @@ export default class TypieListener {
                     console.error("error while removing item: " + item.getTitle(), err);
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => console.warn(err));
     }
 
     private getPackage(obj, item): Promise<AbstractTypiePackage> {

@@ -126,7 +126,8 @@ export default class PackageLoader {
         console.log("Loaded package '" + pkgName + "'");
         const newGlobalPackage = new TypieRowItem(pkgName)
             .setDB("global")
-            .setPackage(pkgName)
+            .setPackage("global")
+            .setPath(pkgName)
             .setDescription("Package")
             .setIcon(this.packages[pkgName].icon);
         this.globalInsertPackage(newGlobalPackage);

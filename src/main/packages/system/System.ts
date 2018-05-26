@@ -37,9 +37,7 @@ export default class System extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Open and edit packages configuration")
                 .setIcon(this.icon)
-                .setPath("SubPackage|System->Configure")
-                .setLabels([{text: "windows", style: "green"},
-                    {text: "mac", style: "orange"}]));
+                .setPath("SubPackage|System->Configure"));
 
         itemsArray.push(
             new TypieRowItem("Install")
