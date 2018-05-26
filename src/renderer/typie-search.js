@@ -50,7 +50,7 @@ class TypieSearch extends PolymerElement {
             <div class="footer">
                 <div class="search-time">[[searchTime]]</div>
                 <div class="handle">· · · ·</div>
-                <div class="status">[[totalItems]] items in Catalog · Typie 2.0</div>
+                <div class="status">[[totalItems]] items in Catalog · Typie {%VERSION%}</div>
             </div>
         </div>
         `;

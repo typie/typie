@@ -37,6 +37,7 @@
     "electron-rebuild": "^1.7.3",
     "electron-webpack": "^1.13.0",
     "electron-webpack-ts": "^1.4.0",
+    "string-replace-loader": "^2.1.1",
     "tslint": "^5.9.1",
     "tslint-loader": "^3.6.0",
     "typescript": "^2.8.3",
@@ -47,7 +48,9 @@
     "webpack-sources": "1.0.1"
   },
   "electronWebpack": {
-    "renderer": {},
+    "renderer": {
+      "webpackConfig": "webpack.config.js"
+    },
     "main": {
       "webpackConfig": "webpack.config.js"
     }

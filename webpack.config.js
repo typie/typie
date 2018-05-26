@@ -4,6 +4,14 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.js$/,
+                loader: 'string-replace-loader',
+                options: {
+                    search: '{%VERSION%}',
+                    replace: process.env.npm_package_version,
+                }
+            },
+            {
                 test: /\.ts$/,
                 enforce: 'pre',
                 loader: 'tslint-loader',
