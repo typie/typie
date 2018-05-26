@@ -19,6 +19,7 @@ typieSearch.addEventListener('setHeight', e => ipcRenderer.send('setHeight', e.d
 // listen for main process events and pass them to the ui
 ipcRenderer.on('resultList', (event, data) => typieSearch.updateList(data));
 ipcRenderer.on('listLoading', (event, res) => typieSearch.listLoading(res.data));
+ipcRenderer.on('resultMsg', (event, res) => typieSearch.setResultMsg(res.data));
 ipcRenderer.on('injectCss', (event, css) => typieSearch.loadStyles(css));
 ipcRenderer.on('changePackage', (event, data) => typieSearch.changePackage(data));
 ipcRenderer.on('deleteItem', (event, data) => typieSearch.deleteItem(data));

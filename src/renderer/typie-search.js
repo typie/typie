@@ -48,9 +48,14 @@ class TypieSearch extends PolymerElement {
                 </template>
             </ul>
             <div class="footer">
-                <div class="search-time">[[searchTime]]</div>
+                <div class="search-time">
+                    <span>[[searchTime]]</span>
+                    <span hidden$="[[isEmpty(resultMsg)]]"> | [[resultMsg]]</span>
+                </div>
+                
                 <div class="handle">· · · ·</div>
-                <div class="status">[[totalItems]] items in Catalog · Typie {%VERSION%}</div>
+                <div class="status">Typie {%VERSION%}</div>
+                <!--<div class="status">[[totalItems]] items in Catalog · Typie {%VERSION%}</div>-->
             </div>
         </div>
         `;
@@ -71,14 +76,17 @@ class TypieSearch extends PolymerElement {
 
             isLoading: String,
             loadingTitle: String,
+            resultMsg: String,
         }
     }
 
     constructor() {
         super();
-        this.input = null;
-        this.searchTimer;
         this.pkgList = [];
+        this.input = null;
+        this.searchTimer = null;
+        this.resultMsgTimer = null;
+        this.clearResultMsg();
     }
 
     connectedCallback() {
@@ -89,6 +97,10 @@ class TypieSearch extends PolymerElement {
         // this.shadowRoot.addEventListener("dom-change", (e) => {
         //     this.setHeight();
         // });
+    }
+
+    isEmpty(variable) {
+        return !variable || variable === "" || variable === 0;
     }
 
     hideScore(score) {
@@ -305,6 +317,16 @@ class TypieSearch extends PolymerElement {
         this.set('loadingTitle', string);
     }
 
+    setResultMsg(string) {
+        this.set('resultMsg', string);
+        if (this.resultMsgTimer) {
+            this.resultMsgTimer = null;
+        }
+        this.resultMsgTimer = setTimeout(() => {
+            this.clearResultMsg();
+        }, 7000);
+    }
+
     _indexChange() {
         console.log('active change');
         if (this.jsonList && this.selectedIndex >= 0) {
@@ -390,6 +412,10 @@ class TypieSearch extends PolymerElement {
         this.set('isLoading', "");
         this.set('loadingTitle', "");
         this.focus();
+    }
+
+    clearResultMsg() {
+        this.set('resultMsg', "");
     }
 
     focus() {

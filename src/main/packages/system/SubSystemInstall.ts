@@ -16,28 +16,36 @@ export default class SubSystemInstall extends AbstractTypiePackage {
 
     public activate(pkgList, item, cb) {
         console.log("activate install", item.getPath());
-        this.win.send("listLoading", {data: "Downloading Package...", length: 0, err: 0});
+        this.win.send("listLoading", {data: "Downloading Package..."});
+        this.win.send("resultMsg", {data: "Downloading..."});
         const pkgDir = Path.join(AppGlobal.get("staticPath"), "packages/" + item.getTitle());
         fs.removeSync(pkgDir);
         download(item.getPath(), pkgDir, (err) => {
             if (err) {
+                this.win.send("resultMsg", {data: "Download failed"});
                 this.sendEmptyResult();
                 console.error(err);
+            } else {
+                this.win.send("listLoading", {data: "Installing Package..."});
+                this.win.send("resultMsg", {data: "Installing..."});
+                AppGlobal.get("PackageLoader").loadPkgPromise(item.getTitle())
+                    .then((pkgItem) => {
+                        this.win.send("changePackage", null);
+                        this.win.send("resultList", {data: [pkgItem], length: 0, err: 0});
+                        this.win.send("resultMsg", {data: item.getTitle() + " Installed!"});
+                    })
+                    .catch(er => {
+                        this.win.send("resultMsg", {data: "Install failed"});
+                        this.sendEmptyResult();
+                        console.error(er);
+                    });
             }
-            AppGlobal.get("PackageLoader").loadPkgPromise(item.getTitle())
-                .then((pkgItem) => {
-                    this.win.send("changePackage", null);
-                    this.win.send("resultList", {data: [pkgItem], length: 0, err: 0});
-                })
-                .catch(er => {
-                    this.sendEmptyResult();
-                    console.error(er);
-                });
         });
     }
 
     public enterPkg(pkgList, item, cb) {
-        this.win.send("listLoading", {data: "Loading...", length: 0, err: 0});
+        this.win.send("listLoading", {data: "Loading Packages...", length: 0, err: 0});
+        this.win.send("resultMsg", {data: "loading..."});
         axios.get("https://api.github.com/users/typie/repos")
             .then(res => {
                 const repos = res.data;
@@ -50,6 +58,7 @@ export default class SubSystemInstall extends AbstractTypiePackage {
                 this.fetchAllPkgs(reposToFetch);
             })
             .catch(e => {
+                this.win.send("resultMsg", {data: "Loading timed out"});
                 this.sendEmptyResult();
                 console.log(e);
             });
@@ -88,6 +97,7 @@ export default class SubSystemInstall extends AbstractTypiePackage {
         }
 
         this.win.send("resultList", {data: resultList, length: resultList.length, err: 0});
+        this.win.send("resultMsg", {data: "found " + resultList.length + " packages"});
         this.typie.multipleInsert(resultList).go().then().catch();
     }
 
