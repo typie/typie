@@ -13,12 +13,12 @@ class WebSearch extends AbstractTypiePackage
     }
 
     search(obj, callback) {
-        this.typie.setPkg('WebSearch').setDB('global');
+        this.typie.setPkg('WebSearchInner').setDB('global');
         super.search(obj, callback);
     }
 
     enterPkg(pkgList, item, cb) {
-        this.typie.setPkg('WebSearch').setDB('global');
+        this.typie.setPkg('WebSearchInner').setDB('global');
         this.typie.getRows(10).orderBy("count").desc().go()
             .then(res => this.win.send("resultList", res))
             .catch(e => console.error("error getting first records", e));
@@ -30,7 +30,7 @@ class WebSearch extends AbstractTypiePackage
             let item = new TypieRowItem(siteName + ': WebSearch');
             item.setIcon(this.getIcon(siteName));
             item.setDescription(this.pkgConfig.sites[siteName].url);
-            item.setPackage('WebSearch');
+            item.setPackage('WebSearchInner');
             item.setPath('SubPackage|WebSearch->'+siteName);
             item.setDB('global');
             itemsArray.push(item);
