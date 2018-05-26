@@ -2,11 +2,12 @@ declare const __static: any;
 import { app } from "electron";
 import is from "electron-is";
 import {EventEmitter} from "events";
-import fs from "fs";
+import fs, {Stats} from "fs";
 import yaml from "js-yaml";
 import mkdirP from "mkdirp";
 import Path from "path";
 import {AppGlobal} from "typie-sdk";
+import chokidar from "chokidar";
 
 export default class ConfigLoader extends EventEmitter {
 
@@ -73,16 +74,36 @@ export default class ConfigLoader extends EventEmitter {
         return this.settings;
     }
 
+    public watchConfDir(): void {
+        console.log("Watching config folder");
+
+        // Initialize watcher.
+        const watcher = chokidar.watch(this.configDir, {
+            ignored: /(^|[\/\\])\../,
+            persistent: true,
+        });
+
+        watcher.on("change", (path: string, stats: Stats) => {
+            if (stats) {
+                const packageChanged = Path.basename(path, Path.extname(path));
+                if (packageChanged !== "config") {
+                    console.log(`change detected at '${packageChanged}' init package reload`);
+                    this.emit("reloadPackage", packageChanged);
+                } else {
+                    console.log("change detected at main config -> reload needed");
+                    this.configReload();
+                }
+            }
+        });
+    }
+
     private loadOrCreate(): void {
         if (fs.existsSync(this.configPath)) {
-            console.log("loading main config file from: " + this.configPath);
+            console.log("Loading main config file from: " + this.configPath);
             this.settings = yaml.safeLoad(fs.readFileSync(this.configPath, "utf8"));
         } else {
-            console.log("building new config file from scratch");
+            console.log("Building new config file from scratch");
             this.settings = {
-                meta: {
-                    version: "Typie 2.0",
-                },
                 toggleKeys: this.getToggleKeys(),
             };
             this.writeToFile(this.configPath, this.settings);
@@ -93,23 +114,9 @@ export default class ConfigLoader extends EventEmitter {
         this.emit("config-loaded");
     }
 
-    private watchFile(): void {
-        if (!this.isWatching) {
-            this.isWatching = true;
-            let timeout: any = setTimeout(() => { return; });
-            fs.watch(this.configPath, (event, path) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    this.configReload(event, path);
-                }, 1000);
-            });
-        }
-    }
-
-    private configReload(event, path): void {
+    private configReload(): void {
         if (!this.isLoading) {
             this.isLoading = true;
-            console.log("Config file " + event + " detected at: " + path);
             this.emit("config-reload");
             this.loadOrCreate();
         }
@@ -149,43 +156,10 @@ export default class ConfigLoader extends EventEmitter {
                 try {
                     fs.writeFileSync(path, yaml.safeDump(data));
                     this.isLoading = false;
-                    this.watchFile();
                 } catch (e) {
                     console.error("could not create user config file in: " + path, e);
                 }
             }
         });
     }
-
-    // public writeEntry(name: string, data: object): void {
-    //     this.settings[name] = data;
-    //     this.writeToFile();
-    // }
-    //
-    // /**
-    //  * this function will load the default pkg config that placed
-    //  * in the package directory. if there already an entry in the main config
-    //  * then it will use it and won't load the defaults.
-    //  * @param pkgName
-    //  * @param pkgPath
-    //  */
-    // public loadPkgConfig_deprecated(pkgName, pkgPath): any {
-    //     let pkgConfig;
-    //     if (this.getEntry(pkgName)) {
-    //         console.log("Loading '" + pkgName + "' config from user config");
-    //         return this.getEntry(pkgName);
-    //     } else {
-    //         console.log("Loading '" + pkgName + "' config from defaults");
-    //         let defaultConfigPath = Path.join(__static, "packages/" + pkgName + "/defaultConfig.yml");
-    //         defaultConfigPath = defaultConfigPath.replace(/\\/g, "/");
-    //         try {
-    //             pkgConfig = yaml.safeLoad(fs.readFileSync(defaultConfigPath, "utf8"));
-    //             this.writeEntry(pkgName, pkgConfig);
-    //         } catch (err) {
-    //             console.error("Missing 'defaultConfig.yml' file for " + pkgName + " in " + defaultConfigPath, err);
-    //             pkgConfig = {};
-    //         }
-    //     }
-    //     return pkgConfig;
-    // }
 }

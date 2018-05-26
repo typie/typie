@@ -20,10 +20,8 @@ export default class PackageLoader {
         this.win = win;
         this.config = config;
         this.packages = {};
-
         this.loadSystemPkg();
         this.loadPackages();
-        // this.watchForPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));
         AppGlobal.set("PackageLoader", this);
     }
@@ -62,10 +60,20 @@ export default class PackageLoader {
 
     public loadPackages() {
         const packagesDirs = getDirectories(packagesPath);
+        const promises: Array<Promise<any>> = [];
         console.log(packagesDirs);
         packagesDirs.forEach((dirName) => {
-            this.loadPackage(dirName);
+            promises.push(this.loadPkgPromise(dirName));
         });
+        Promise.all(promises)
+            .then(data => {
+                console.log("All " + promises.length + " packages loaded successfully");
+                this.config.watchConfDir();
+            })
+            .catch(e => {
+                console.warn(e);
+                this.config.watchConfDir();
+            });
     }
 
     public loadPackage(dirName, callBack?: (pkg) => void , errCallBack?: () => void) {
@@ -164,18 +172,6 @@ export default class PackageLoader {
             delete this.packages[packageName];
         }
     }
-
-    // watchForPackages() {
-    //     // if its a process that copying files wait for it to finish
-    //     let placeHolder;
-    //     fs.watch(packagesPath, (event, dirPath) => {
-    //         clearTimeout(placeHolder);
-    //         placeHolder = setTimeout(() => {
-    //             console.log("Detect package '"+event+"', reloading '"+dirPath+"'");
-    //             this.loadPackage(dirPath);
-    //         }, 2000);
-    //     });
-    // }
 
     private loadSystemPkg() {
         const pkgName = "System";

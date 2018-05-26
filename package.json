@@ -19,6 +19,7 @@
     "@types/js-yaml": "^3.10.1",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "axios": "^0.18.0",
+    "chokidar": "^2.0.3",
     "download-git-repo": "^1.0.2",
     "electron-is": "^2.4.0",
     "electron-log": "^2.2.14",
