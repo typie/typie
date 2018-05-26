@@ -75,7 +75,7 @@ export default class ConfigLoader extends EventEmitter {
     }
 
     public watchConfDir(): void {
-        console.log("Watching config folder");
+        console.log("Watching Config folder...");
 
         // Initialize watcher.
         const watcher = chokidar.watch(this.configDir, {
@@ -87,7 +87,7 @@ export default class ConfigLoader extends EventEmitter {
             if (stats) {
                 const packageChanged = Path.basename(path, Path.extname(path));
                 if (packageChanged !== "config") {
-                    console.log(`change detected at '${packageChanged}' init package reload`);
+                    console.log(`config change detected at '${packageChanged}'`);
                     this.emit("reloadPackage", packageChanged);
                 } else {
                     console.log("change detected at main config -> reload needed");

@@ -1,9 +1,10 @@
-import fs from "fs";
+import fs, {Stats} from "fs";
 import {AbstractTypiePackage, AppGlobal, Typie, TypieRowItem} from "typie-sdk";
 import * as Path from "path";
 import MainWindowController from "../controllers/MainWindowController";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import ConfigLoader from "./ConfigLoader";
+import chokidar from "chokidar";
 import System from "../packages/system/System";
 import npm from "npm";
 
@@ -69,10 +70,12 @@ export default class PackageLoader {
             .then(data => {
                 console.log("All " + promises.length + " packages loaded successfully");
                 this.config.watchConfDir();
+                this.watchPakcagesFolder();
             })
             .catch(e => {
                 console.warn(e);
                 this.config.watchConfDir();
+                this.watchPakcagesFolder();
             });
     }
 
@@ -190,5 +193,30 @@ export default class PackageLoader {
                 }
             })
             .catch(err => console.error(err));
+    }
+
+    private watchPakcagesFolder() {
+        console.log("Watching Packages folder...");
+
+        // Initialize watcher.
+        const watcher = chokidar.watch(packagesPath, {
+            ignored: [
+                "node_modules",
+                "bower_components",
+                /(^|[\/\\])\../,
+            ],
+            persistent: true,
+        });
+
+        watcher.on("change", (path: string, stats: Stats) => {
+            if (stats) {
+                let packageChanged = path.split(Path.join(packagesPath, "/"))[1];
+                packageChanged = packageChanged.split(Path.sep).shift() || "";
+                if (packageChanged) {
+                    console.log(`files change detected at '${packageChanged}'`);
+                    this.loadPackage(packageChanged);
+                }
+            }
+        });
     }
 }
