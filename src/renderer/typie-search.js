@@ -304,7 +304,7 @@ class TypieSearch extends PolymerElement {
             for (let key in tmp) {
                 if (tmp[key].title === item.title && tmp[key].t === item.t && tmp[key].p === item.p) {
                     console.log("removing: " + item.title);
-                    tmp.splice(key);
+                    tmp.splice(key, 1);
                     this.updateList({data: tmp, length: tmp.length, err: 0});
                     return;
                 }
