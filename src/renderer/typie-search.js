@@ -276,10 +276,12 @@ class TypieSearch extends PolymerElement {
                 console.log('pkgList', pkgList);
                 this.clearAll();
                 this.sendEnterPkg();
+                this.focus();
             }
         } else {
             this.set('pkgList', []);
             this.clearAll();
+            this.focus();
         }
     }
 

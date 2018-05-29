@@ -24,3 +24,7 @@ ipcRenderer.on('injectCss', (event, css) => typieSearch.loadStyles(css));
 ipcRenderer.on('changePackage', (event, data) => typieSearch.changePackage(data));
 ipcRenderer.on('deleteItem', (event, data) => typieSearch.deleteItem(data));
 ipcRenderer.on('focus', (event, data) => typieSearch.focus());
+
+ipcRenderer.on('hideCss', (event, data) => document.body.style.opacity = 0);
+ipcRenderer.on('showCss', (event, data) => document.body.style.opacity = 1);
+
