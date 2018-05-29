@@ -209,8 +209,8 @@ class TypieSearch extends PolymerElement {
     }
 
     onArrowRight(e) {
-        let item = this.getItem();
-        if (item.a && item.a.length > 1 && this.input.selectionStart === this.input.value.length) {
+        const item = this.getItem();
+        if (item && item.a && item.a.length > 1 && this.isCaretAtEnd()) {
             let tmp = JSON.parse(this.jsonList);
             let a = tmp[this.selectedIndex].a.shift();
             tmp[this.selectedIndex].a.push(a);
@@ -242,11 +242,10 @@ class TypieSearch extends PolymerElement {
     }
 
     onDelete(e) {
-        // if cursor is at the end of the search value
-        // send delete event with item
-        this.sendDelete();
-        // else
-        // do nothing and delete the character
+        const item = this.getItem();
+        if (item && this.isCaretAtEnd()) {
+            this.sendDelete();
+        }
     }
 
     onEscape(e) {
@@ -421,6 +420,10 @@ class TypieSearch extends PolymerElement {
     focus() {
         // console.log('do focus');
         this.input.focus();
+    }
+
+    isCaretAtEnd() {
+        return this.input.selectionStart === this.input.value.length;
     }
 
     removeStyles() {

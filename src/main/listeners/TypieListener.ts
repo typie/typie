@@ -82,6 +82,9 @@ export default class TypieListener {
     }
 
     private remove(e: Electron.Event, obj) {
+        if (!obj || !obj.item) {
+            return;
+        }
         const item = TypieRowItem.create(obj.item);
         this.getPackage(obj, item)
             .then(pkg => {
