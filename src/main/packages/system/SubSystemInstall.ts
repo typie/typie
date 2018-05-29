@@ -19,28 +19,13 @@ export default class SubSystemInstall extends AbstractTypiePackage {
         this.win.send("listLoading", {data: "Downloading Package..."});
         this.win.send("resultMsg", {data: "Downloading..."});
         const pkgDir = Path.join(AppGlobal.get("staticPath"), "packages/" + item.getTitle());
-        fs.removeSync(pkgDir);
-        download(item.getPath(), pkgDir, (err) => {
-            if (err) {
-                this.win.send("resultMsg", {data: "Download failed"});
+        fs.remove(pkgDir)
+            .then(() => this.startDownload(item))
+            .catch(e => {
+                console.error("Cant remove old folder", e);
+                this.win.send("resultMsg", {data: "Install failed"});
                 this.sendEmptyResult();
-                console.error(err);
-            } else {
-                this.win.send("listLoading", {data: "Installing Package..."});
-                this.win.send("resultMsg", {data: "Installing..."});
-                AppGlobal.get("PackageLoader").loadPkgPromise(item.getTitle())
-                    .then((pkgItem) => {
-                        this.win.send("changePackage", null);
-                        this.win.send("resultList", {data: [pkgItem], length: 0, err: 0});
-                        this.win.send("resultMsg", {data: item.getTitle() + " Installed!"});
-                    })
-                    .catch(er => {
-                        this.win.send("resultMsg", {data: "Install failed"});
-                        this.sendEmptyResult();
-                        console.error(er);
-                    });
-            }
-        });
+            });
     }
 
     public enterPkg(pkgList, item, cb) {
@@ -79,6 +64,34 @@ export default class SubSystemInstall extends AbstractTypiePackage {
             }
             this.buildResultList(availablePkgs);
         });
+    }
+
+    private startDownload(item) {
+        download(item.getPath(), pkgDir, (err) => {
+            if (err) {
+                this.win.send("resultMsg", {data: "Download failed"});
+                this.sendEmptyResult();
+                console.error(err);
+            } else {
+                this.win.send("listLoading", {data: "Installing Package..."});
+                this.win.send("resultMsg", {data: "Installing..."});
+                this.startInstall(item);
+            }
+        });
+    }
+
+    private startInstall(item) {
+        AppGlobal.get("PackageLoader").loadPkgPromise(item.getTitle())
+            .then((pkgItem) => {
+                this.win.send("changePackage", null);
+                this.win.send("resultList", {data: [pkgItem], length: 0, err: 0});
+                this.win.send("resultMsg", {data: item.getTitle() + " Installed!"});
+            })
+            .catch(er => {
+                this.win.send("resultMsg", {data: "Install failed"});
+                this.sendEmptyResult();
+                console.error(er);
+            });
     }
 
     private buildResultList(pkgs) {
