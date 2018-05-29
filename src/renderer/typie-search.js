@@ -261,6 +261,8 @@ class TypieSearch extends PolymerElement {
             this.sendSearch();
         } else if (this.pkgList.length > 0) {
             this.sendClear();
+        } else {
+            this.clearList();
         }
     }
 
