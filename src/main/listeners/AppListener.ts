@@ -41,8 +41,8 @@ export default class AppListener {
             AppController.bootstrapApp(win, config);
             ShortcutListener.listen(win, config);
             win.on("resize", () => { return; });
-            win.on("blur",   () => console.log("blur happen"));
-            win.on("focus",  () => {console.log("focus event trigger"); win.send("focus"); });
+            win.on("blur",   () => win.hide());
+            win.on("focus",  () => win.send("focus"));
             win.on("closed", () => win.closed());
 
             win.onWebContent("did-finish-load", () => win.init());
