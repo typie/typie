@@ -34,7 +34,7 @@ export default class AppListener {
         config.on("config-loaded", () => ShortcutListener.listen(win, config));
         config.on("config-reload", () => ShortcutListener.removeListeners(config));
 
-        // app.on("window-all-closed", () => AppController.windowAllClosed());
+        app.on("window-all-closed", () => AppController.windowAllClosed());
         app.on("will-quit", (e) => AppController.willQuit(e));
         app.on("activate", () => win.activate());
         app.on("ready", () => {

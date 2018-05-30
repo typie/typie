@@ -32,13 +32,13 @@ export default class AppController {
         }, 1);
     }
 
-    // public static windowAllClosed() {
-    //     // quit application when all windows are closed
-    //     // on macOS it is common for applications to stay open until the user explicitly quits
-    //     if (process.platform !== "darwin") {
-    //         AppController.quit();
-    //     }
-    // }
+    public static windowAllClosed() {
+        // quit application when all windows are closed
+        // on macOS it is common for applications to stay open until the user explicitly quits
+        // if (process.platform !== "darwin") {
+            AppController.quit();
+        // }
+    }
 
     public static willQuit(e) {
         if (!AppController.persisted && !AppController.allowQuit) {
