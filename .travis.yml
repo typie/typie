@@ -1,19 +1,20 @@
 language: node_js
 node_js: '9'
 services: docker
-
-matrix:
-  include:
-    - os: osx
-      env: ELECTRON_CACHE=$HOME/.cache/electron ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-    - os: linux
-      env: ELECTRON_CACHE=$HOME/.cache/electron
+env:
+  - ELECTRON_CACHE=$HOME/.cache/electron
+  - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
 cache:
   directories:
   - node_modules
   - $HOME/.cache/electron
   - $HOME/.cache/electron-builder
+
+matrix:
+  include:
+    - os: osx
+    - os: linux
 
 before_install:
   - |
@@ -53,11 +54,11 @@ deploy:
     skip_cleanup: true
     overwrite: true
     draft: true
-    name: $TRAVIS_TAG
     file_glob: true
     file: dist/Typie-*.exe
     on:
-      condition: $TRAVIS_OS_NAME = "linux"
+      condition: $TRAVIS_OS_NAME = linux
+      repo: typie/typie
 
   - provider: releases
     api_key:
@@ -65,9 +66,9 @@ deploy:
     skip_cleanup: true
     overwrite: true
     draft: true
-    name: $TRAVIS_TAG
     file_glob: true
     file: dist/Typie-*.dmg
     on:
-      condition: $TRAVIS_OS_NAME = "osx"
+      condition: $TRAVIS_OS_NAME = osx
+      repo: typie/typie
 
