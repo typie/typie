@@ -50,12 +50,14 @@ deploy:
     skip_cleanup: true
     overwrite: true
     target_commitish: $TRAVIS_COMMIT
-    draft: true
+    tag_name: $TRAVIS_TAG
+    name: testname
     file_glob: true
     file:
       - dist/Typie*.exe
       - dist/Typie*.dmg
     on:
+      tags: true
       repo: typie/typie
 
 before_cache:
