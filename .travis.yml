@@ -1,9 +1,6 @@
 language: node_js
 node_js: '9'
 services: docker
-env:
-  - ELECTRON_CACHE=$HOME/.cache/electron
-  - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
 cache:
   directories:
@@ -14,6 +11,9 @@ cache:
 matrix:
   include:
     - os: osx
+      env:
+      - ELECTRON_CACHE=$HOME/.cache/electron
+      - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
     - os: linux
 
 before_install:
