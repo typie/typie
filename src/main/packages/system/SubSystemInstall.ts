@@ -11,7 +11,7 @@ export default class SubSystemInstall extends AbstractTypiePackage {
         this.packageName = "System->Install";
         this.db = "System";
         this.typie = new Typie(this.packageName, "System");
-        this.icon = "themes/default/images/icons/icon.png";
+        this.icon = Path.join(AppGlobal.get("staticPath"), "themes/default/images/icons/icon.png");
     }
 
     public activate(pkgList, item, cb) {
@@ -20,7 +20,7 @@ export default class SubSystemInstall extends AbstractTypiePackage {
         this.win.send("resultMsg", {data: "Downloading..."});
         const pkgDir = Path.join(AppGlobal.get("staticPath"), "packages/" + item.getTitle());
         fs.remove(pkgDir)
-            .then(() => this.startDownload(item))
+            .then(() => this.startDownload(pkgDir, item))
             .catch(e => {
                 console.error("Cant remove old folder", e);
                 this.win.send("resultMsg", {data: "Install failed"});
@@ -66,7 +66,7 @@ export default class SubSystemInstall extends AbstractTypiePackage {
         });
     }
 
-    private startDownload(item) {
+    private startDownload(pkgDir, item) {
         download(item.getPath(), pkgDir, (err) => {
             if (err) {
                 this.win.send("resultMsg", {data: "Download failed"});
