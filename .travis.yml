@@ -5,11 +5,9 @@ services: docker
 matrix:
   include:
     - os: osx
-      env:
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+      env: ELECTRON_CACHE=$HOME/.cache/electron ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
     - os: linux
-      env:
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+      env: ELECTRON_CACHE=$HOME/.cache/electron
 
 cache:
   directories:
@@ -59,9 +57,7 @@ deploy:
     file_glob: true
     file: dist/Typie-*.exe
     on:
-      condition: $TRAVIS_OS_NAME = linux
-      repo: typie/typie
-      tags: true
+      condition: $TRAVIS_OS_NAME = "linux"
 
   - provider: releases
     api_key:
@@ -73,7 +69,5 @@ deploy:
     file_glob: true
     file: dist/Typie-*.dmg
     on:
-      condition: $TRAVIS_OS_NAME = osx
-      repo: typie/typie
-      tags: true
+      condition: $TRAVIS_OS_NAME = "osx"
 
