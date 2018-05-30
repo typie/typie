@@ -1,19 +1,17 @@
-# Typie - Electron Framework
-> A Small minimal framework structure to get started developing with electron
+# Typie - key launcher
+> The fastest, fuzzy search, open source key launcher around
 
 ## Getting Started
-Just clone it to your dev machine and run `yarn` to install dependencies.
+Just fork it to your dev machine and run `yarn` to install dependencies.
 
 ```bash
-git clone https://github.com/electron-userland/electron-webpack-quick-start.git
-cd electron-webpack-quick-start
-rm -rf .git
+git clone https://github.com/typie/typie.git
 
 # install dependencies
 yarn
 ```
 
- [yarn](https://yarnpkg.com/) package manager is `npm` on steroids -> use it, don't by lazy.
+ [yarn](https://yarnpkg.com/) package manager is `npm` on steroids -> use it, don't be lazy.
 
 ### Scripts
 
