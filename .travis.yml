@@ -1,14 +1,16 @@
-language: node_js
-node_js: '9'
-services: docker
-
 matrix:
   include:
     - os: osx
+      osx_image: xcode9.3
+      language: node_js
+      node_js: "9"
       env:
-      - ELECTRON_CACHE=$HOME/.cache/electron
-      - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+
     - os: linux
+      services: docker
+      language: generic
 
 cache:
   directories:
@@ -40,29 +42,20 @@ script:
       yarn release
     fi
 
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
+
 deploy:
   - provider: releases
     api_key:
       secure: jOQgeKva6cZNbzt6MJzMg8kn76EgZfJfbg/fZW2oSNsTKv+Ma84Uy4KvSnYdkskS2PpiFtsdfZ2uNFWqnFDwipZjJGEbGe/vbaTOame0GfAA6JLBWmpfxW12q4nUl26qD9mCT4cEACO2w8ghFamo5gqLKw70Cf0HL4oOqmOHqe2azotP7oAjpGNe5TTHYBgRHhhYLUu9i9p6KwhC/iFKbFthA6zti+DzWICV3QN2KKIIFJkyWwBE7OVdPrhsE0Z4zVuMJXlyFO14d7PO7C/ecwwo/AhMjkBCZixJFCgj5i0miwdO8XbEnHs0dSM6xvTgRiVmlWZgqvUYMdWrQ9E/sSL53mtL0kWYcO3nzis5O/a1CH3KbTcV0jsdP5FlstlrkYnIlQyKJuNjTr0Vjgb1mDYvSk4LursazVrUHAJXRkrw8XvYOglZPzUjV9Oo8eDPRJHQu2GfTcT808ADY51McBD2wfio38nPbgi0HNOcR1wN+GQ+EsOvQT36x5PhkVZzBRZIs7OO+EUPBkNV+irgAHoBS+MEgX4PiTrOLTKzJTxIpp3VkBTGN5yapSYEO3UeHBJGLipkumWj/vKqrK62szY9isxbM1zwUl6VKXwb0Gu3YMIAsd1RIcU5+IEm1HbGnc1RJEKJM6lOwxdHM3iq4pvk9L8R34nzUy1fUryL/LY=
     skip_cleanup: true
-    overwrite: true
     target_commitish: $TRAVIS_COMMIT
     tag_name: $TRAVIS_TAG
-    name: testname
     file_glob: true
     file:
       - dist/Typie*.exe
       - dist/Typie*.dmg
     on:
       repo: typie/typie
-
-before_cache:
-  - rm -rf $HOME/.cache/electron-builder/wine
-
-branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
-
-notifications:
-  email:
-    on_success: never
+      tags: true
