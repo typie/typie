@@ -1,6 +1,8 @@
 # Typie - key launcher
 > The fastest, fuzzy search, open source key launcher around
 
+[![Build Status](https://travis-ci.org/typie/typie.svg?branch=master)](https://travis-ci.org/typie/typie)
+
 ## Getting Started
 Just fork it to your dev machine and run `yarn` to install dependencies.
 
