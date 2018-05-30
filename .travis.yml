@@ -9,9 +9,6 @@ matrix:
       - ELECTRON_CACHE=$HOME/.cache/electron
       - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
     - os: linux
-      env:
-      - ELECTRON_CACHE=$HOME/.cache/electron
-      - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
 cache:
   directories:
@@ -57,7 +54,6 @@ deploy:
       - dist/Typie*.exe
       - dist/Typie*.dmg
     on:
-      tags: true
       repo: typie/typie
 
 before_cache:
