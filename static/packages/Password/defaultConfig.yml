@@ -1,0 +1,10 @@
+
+windows:
+  # this keyboard shortcut will change to clipboard package
+  shortcut: "Alt+p"
+  salt: "randomSalt"
+
+
+mac:
+  shortcut: "Ctrl+p"
+  salt: "randomSalt"

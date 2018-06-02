@@ -33,8 +33,10 @@ export default class TypieListener {
     private activate(e: Electron.Event, obj) {
         const item = TypieRowItem.create(obj.item);
         this.getPackage(obj, item).then(pkg => {
-            item.countUp();
-            this.update(item);
+            if (item.getDB() !== "null") {
+                item.countUp();
+                this.update(item);
+            }
             try {
                 console.log("activate item: " + item.getTitle());
                 pkg.activate(obj.pkgList, item, res => TypieListener.sendList(e, res));
