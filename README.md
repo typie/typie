@@ -4,7 +4,13 @@
 [![Build Status](https://travis-ci.org/typie/typie.svg?branch=master)](https://travis-ci.org/typie/typie)
 
 ## Getting Started
-Just fork it to your dev machine and run `yarn` to install dependencies.
+Wanna try typie out? download an executable from [Typie releases](http://github.com/typie/typie/releases)
+
+* [About Typie](https://github.com/typie/typie/wiki)
+* [How to use Typie?](https://github.com/typie/typie/wiki/How-to-use-Typie)
+
+Consider yourself a development ninja machine? wanna contribute?
+Just fork it clone it and run `yarn` to install dependencies.
 
 ```bash
 git clone https://github.com/typie/typie.git
@@ -17,23 +23,12 @@ yarn
 
 ### Scripts
 
-> run application in development mode
+> run typie in development mode
 ```bash
 yarn dev
 ```
-
-> compile source code and create webpack output
-```bash
-yarn compile
-```
-
-> `yarn compile` & create build with electron-builder
+> compile & create build with electron-builder
 ```bash
 yarn dist
-```
-
-> `yarn compile` & create unpacked build with electron-builder
-```bash
-yarn dist:dir
 ```
 
