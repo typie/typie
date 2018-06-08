@@ -1,19 +1,19 @@
-import {AbstractTypiePackage, TypieRowItem, Typie, getPath} from "typie-sdk";
+import {AbstractTypiePackage, TypieRowItem, TypieCore, getPath} from "typie-sdk";
 import {app, shell} from "electron";
 import Path from "path";
 
-import SubSystemConfigure from "./SubSystemConfigure";
-import SubSystemShowLogs from "./SubSystemShowLogs";
-import SubSystemInstall from "./SubSystemInstall";
+import SubTypieConfigure from "./SubTypieConfigure";
+import SubTypieInstall from "./SubTypieInstall";
+import SubTypieShowLogs from "./SubTypieShowLogs";
 
-export default class System extends AbstractTypiePackage {
+export default class Typie extends AbstractTypiePackage {
 
     constructor(win, config, pkgName) {
         super(win, config, pkgName);
         this.packages = {
-            Configure: new SubSystemConfigure(win, config, "System->Configure"),
-            Install: new SubSystemInstall(win, config, "System->Install"),
-            ShowLogs: new SubSystemShowLogs(win, config, "System->ShowLogs"),
+            Configure: new SubTypieConfigure(win, config, "Typie->Configure"),
+            Install: new SubTypieInstall(win, config, "Typie->Install"),
+            ShowLogs: new SubTypieShowLogs(win, config, "Typie->ShowLogs"),
         };
         this.icon = getPath("themes/default/images/icons/icon.png");
         this.populate();
@@ -37,7 +37,7 @@ export default class System extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Open and edit packages configuration")
                 .setIcon(this.icon)
-                .setPath("SubPackage|System->Configure"));
+                .setPath("SubPackage|Typie->Configure"));
 
         itemsArray.push(
             new TypieRowItem("Install")
@@ -45,7 +45,7 @@ export default class System extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Download and install typie packages")
                 .setIcon(this.icon)
-                .setPath("SubPackage|System->Install"));
+                .setPath("SubPackage|Typie->Install"));
 
         itemsArray.push(
             new TypieRowItem("Show Logs")
@@ -53,17 +53,19 @@ export default class System extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Open global log files")
                 .setIcon(this.icon)
-                .setPath("SubPackage|System->ShowLogs")
+                .setPath("SubPackage|Typie->ShowLogs")
                 .setActions([{type: "openDir", description: "Open Logs Directory"},
                         {type: "openFiles", description: "Open Logs"}]));
 
         itemsArray.push(
-            new TypieRowItem("Open config file")
+            new TypieRowItem("Open Config")
                 .setDB(this.packageName)
                 .setPackage(this.packageName)
                 .setDescription("Click to open global config file")
                 .setIcon(this.icon)
-                .setPath(Path.join(app.getPath("userData"), "/config/config.yml")));
+                .setPath("SubPackage|Typie->ShowLogs")
+                .setActions([{type: "openConfigDir", description: "Open Config Directory"},
+                    {type: "openConfigFile", description: "Open Config for editing"}]));
 
         itemsArray.push(
             new TypieRowItem("Open config folder")
@@ -74,7 +76,7 @@ export default class System extends AbstractTypiePackage {
                 .setPath(Path.join(app.getPath("userData"), "/config")));
 
         this.typie.multipleInsert(itemsArray).go()
-            .then(data => console.info("System plugin done adding", data))
-            .catch(err => console.error("System plugin insert error", err));
+            .then(data => console.info("Typie plugin done adding", data))
+            .catch(err => console.error("Typie plugin insert error", err));
     }
 }

@@ -1,14 +1,14 @@
-import {AbstractTypiePackage, AppGlobal, TypieRowItem, Typie, getPath} from "typie-sdk";
+import {AbstractTypiePackage, AppGlobal, TypieRowItem, TypieCore, getPath} from "typie-sdk";
 import {app, shell} from "electron";
 import Path from "path";
 
-export default class SubSystemConfigure extends AbstractTypiePackage {
+export default class SubTypieConfigure extends AbstractTypiePackage {
 
     constructor(win, config, pkgPath) {
         super(win, config, pkgPath);
-        this.packageName = "System->Configure";
-        this.db = "System";
-        this.typie = new Typie(this.packageName, "System");
+        this.packageName = "Typie->Configure";
+        this.db = "Typie";
+        this.typie = new TypieCore(this.packageName, "Typie");
         this.icon = getPath("themes/default/images/icons/icon.png");
         // Object.assign(this, parent);
     }

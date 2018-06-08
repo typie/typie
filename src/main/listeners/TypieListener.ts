@@ -1,5 +1,5 @@
 import {ipcMain} from "electron";
-import {Typie, TypieRowItem, SearchObject} from "typie-sdk";
+import {TypieCore, TypieRowItem, SearchObject} from "typie-sdk";
 import PackageLoader from "../services/PackageLoader";
 import AbstractTypiePackage from "typie-sdk/dist/AbstractTypiePackage";
 
@@ -24,7 +24,7 @@ export default class TypieListener {
                 .then(pkg => pkg.search(obj, res => TypieListener.sendList(e, res)))
                 .catch(err => console.error("searching package failed", obj.pkgList, err));
         } else {
-            new Typie("global").fuzzySearch(obj.value).go()
+            new TypieCore("global").fuzzySearch(obj.value).go()
                 .then(res => TypieListener.sendList(e, res))
                 .catch(err => console.error("searching global DB failed", err));
         }
@@ -113,7 +113,7 @@ export default class TypieListener {
     }
 
     private update(item: TypieRowItem): void {
-        new Typie(item.getDB()).setPkg(item.getPackage()).insert(item).go().then()
+        new TypieCore(item.getDB()).setPkg(item.getPackage()).insert(item).go().then()
             .catch(err => console.warn("did not update item: " + item.getTitle(), err));
     }
 }

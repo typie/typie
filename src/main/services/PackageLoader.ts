@@ -1,11 +1,11 @@
 import fs, {Stats} from "fs";
-import {AbstractTypiePackage, AppGlobal, Typie, TypieRowItem} from "typie-sdk";
+import {AbstractTypiePackage, AppGlobal, TypieCore, TypieRowItem} from "typie-sdk";
 import * as Path from "path";
 import MainWindowController from "../controllers/MainWindowController";
 import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import ConfigLoader from "./ConfigLoader";
 import chokidar from "chokidar";
-import System from "../packages/system/System";
+import Typie from "../packages/typie/Typie";
 import npm from "npm";
 
 declare const __static: any;
@@ -21,7 +21,7 @@ export default class PackageLoader {
         this.win = win;
         this.config = config;
         this.packages = {};
-        this.loadSystemPkg();
+        this.loadTypiePkg();
         this.loadPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));
         AppGlobal.set("PackageLoader", this);
@@ -95,7 +95,7 @@ export default class PackageLoader {
 
         Promise.all([
             this.installDependencies(absPath),
-            (new Typie(packageName)).addCollection().go(),
+            (new TypieCore(packageName)).addCollection().go(),
         ]).then(data => {
             const pkgConfig = this.config.loadPkgConfig(packageName, absPath);
             const Package = eval("require('" + relativePath + "/index.js')");
@@ -177,17 +177,17 @@ export default class PackageLoader {
         }
     }
 
-    private loadSystemPkg() {
-        const pkgName = "System";
-        (new Typie(pkgName)).addCollection().go()
+    private loadTypiePkg() {
+        const pkgName = "Typie";
+        (new TypieCore(pkgName)).addCollection().go()
             .then(() => {
-                this.packages[pkgName] = new System(this.win, [], pkgName);
+                this.packages[pkgName] = new Typie(this.win, [], pkgName);
                 this.addPkgToGlobal(pkgName);
             }).catch(e => console.error(e));
     }
 
     private globalInsertPackage(item: TypieRowItem) {
-        new Typie(item.getPackage(), "global").insert(item, false).go()
+        new TypieCore(item.getPackage(), "global").insert(item, false).go()
             .then(res => {
                 if (res.err === 0) {
                     console.log("Package '" + item.getTitle() + "' is now searchable.");
