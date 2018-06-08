@@ -6,6 +6,7 @@ import MainWindowController from "../controllers/MainWindowController";
 import ShortcutListener from "../listeners/ShortcutListener";
 import log from "electron-log";
 import Path from "path";
+import TrayBuilder from "../helpers/TrayBuilder";
 declare const __static: any;
 
 export default class AppListener {
@@ -40,6 +41,8 @@ export default class AppListener {
         app.on("ready", () => {
             AppController.bootstrapApp(win, config);
             ShortcutListener.listen(win, config);
+            TrayBuilder.init();
+
             win.on("resize", () => { return; });
             win.on("blur",   () => win.hide());
             win.on("focus",  () => win.send("focus"));

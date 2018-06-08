@@ -16,6 +16,7 @@ export default class MainWindowController extends AbstractWindowController {
         icon: Path.join(__static, "themes/default/images/icons/icon.png"),
         maximizable: false,
         show: false,
+        skipTaskbar: true,
         transparent: true,
         width: 475,
     };
