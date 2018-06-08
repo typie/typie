@@ -3,8 +3,12 @@ windows:
   # this keyboard shortcut will change to clipboard package
   shortcut: "Alt+p"
   salt: "randomSalt"
+  availabelChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  numOfChars: 8
 
 
 mac:
   shortcut: "Ctrl+p"
   salt: "randomSalt"
+  availabelChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  numOfChars: 8

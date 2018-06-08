@@ -10,19 +10,15 @@ class SubPasswordGenerate extends AbstractTypiePackage {
         this.db = "Password";
         this.typie = new Typie(this.packageName, "Password");
         this.icon = Path.join(this.getPackagePath(), "icons", "generate-pass.svg");
-        this.availabelChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        this.numOfChars = 8;
+        this.availabelChars = config.availabelChars;
+        this.numOfChars = config.numOfChars;
     }
 
     activate(pkgList, item, cb) {
         this.win.hide();
         this.lastPaste = item.getPath();
         clipboard.writeText(item.getPath());
-        this.typie.updateCalled(item).go()
-            .then(()=>{
-                this.typie.pasteText().go();
-            })
-            .catch(()=>{});
+        this.typie.pasteText().go();
     }
 
     enterPkg(pkgList, item, cb) {
@@ -32,7 +28,7 @@ class SubPasswordGenerate extends AbstractTypiePackage {
                 .setIcon(this.icon)
                 .setPath(this.generate())
                 .setDescription("Activate to Paste")
-                .setDB(this.packageName)
+                .setDB("null")
                 .setPackage(this.packageName).toPayload());
         }
         res.length = res.data.length;

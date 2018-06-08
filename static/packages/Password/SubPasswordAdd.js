@@ -49,7 +49,7 @@ class SubPasswordAdd extends AbstractTypiePackage {
             .setIcon(this.infoIcon)
             .setPath("name|password")
             .setDescription("Provide name and password separated by | to store")
-            .setDB(this.packageName)
+            .setDB("null")
             .setPackage(this.packageName).toPayload());
         cb(res);
     }
