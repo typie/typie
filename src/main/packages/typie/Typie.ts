@@ -1,6 +1,5 @@
 import {AbstractTypiePackage, TypieRowItem, TypieCore, getPath} from "typie-sdk";
 import {app, shell} from "electron";
-import Path from "path";
 
 import SubTypieConfigure from "./SubTypieConfigure";
 import SubTypieInstall from "./SubTypieInstall";
@@ -20,7 +19,15 @@ export default class Typie extends AbstractTypiePackage {
     }
 
     public activate(pkgList, item, cb) {
-        shell.openItem(item.getPath());
+        const path = item.getPath();
+        switch (path) {
+            case "quit":
+                app.quit();
+                break;
+            default:
+                shell.openItem(item.getPath());
+                break;
+        }
         this.win.hide();
     }
 
@@ -61,19 +68,19 @@ export default class Typie extends AbstractTypiePackage {
             new TypieRowItem("Open Config")
                 .setDB(this.packageName)
                 .setPackage(this.packageName)
-                .setDescription("Click to open global config file")
                 .setIcon(this.icon)
                 .setPath("SubPackage|Typie->ShowLogs")
                 .setActions([{type: "openConfigDir", description: "Open Config Directory"},
                     {type: "openConfigFile", description: "Open Config for editing"}]));
 
         itemsArray.push(
-            new TypieRowItem("Open config folder")
+            new TypieRowItem("Quit / Exit")
                 .setDB(this.packageName)
                 .setPackage(this.packageName)
-                .setDescription("Click to open global config file")
+                .setDescription("Close and exit Typie")
                 .setIcon(this.icon)
-                .setPath(Path.join(app.getPath("userData"), "/config")));
+                .setPath("quit")
+                .setActions([{type: "openConfigDir", description: "Open Config Directory"}]));
 
         this.typie.multipleInsert(itemsArray).go()
             .then(data => console.info("Typie plugin done adding", data))
