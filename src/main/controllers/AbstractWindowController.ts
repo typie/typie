@@ -67,11 +67,8 @@ class AbstractWindowController {
         this.win.focus();
         if (!this.isVisible) {
             if (is.windows()) {
-                console.log("restore position", this.position);
                 this.win.setPosition(this.position[0], this.position[1], false);
-                console.log("restored position", this.win.getPosition());
                 this.win.setPosition(this.position[0], this.position[1], false);
-                console.log("restored position again", this.win.getPosition());
                 // this.send("showCss");
             } else if (is.osx()) {
                 app.show();
@@ -86,7 +83,6 @@ class AbstractWindowController {
     public hide(): void {
         if (this.isVisible) {
             this.position = this.win.getPosition();
-            console.log("save position", this.position);
             if (is.windows()) {
                 this.win.setPosition(5000, 5000, false);
                 // this.send("hideCss");
