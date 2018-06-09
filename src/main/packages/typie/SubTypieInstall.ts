@@ -1,4 +1,5 @@
 import {AbstractTypiePackage, AppGlobal, TypieRowItem, TypieCore, getPath} from "typie-sdk";
+import {shell} from "electron";
 import Path from "path";
 import axios, {AxiosPromise} from "axios";
 import download from "download-git-repo";
@@ -67,6 +68,7 @@ export default class SubTypieInstall extends AbstractTypiePackage {
     }
 
     private startDownload(pkgDir, item) {
+        // shell.openExternal("https://github.com/" + item.getPath());
         download(item.getPath(), pkgDir, (err) => {
             if (err) {
                 this.win.send("resultMsg", {data: "Download failed"});
