@@ -73,7 +73,7 @@ export default class SubTypieInstall extends AbstractTypiePackage {
             if (err) {
                 this.win.send("resultMsg", {data: "Download failed"});
                 this.sendEmptyResult();
-                console.error(err);
+                console.error("Download pkg error", err);
             } else {
                 this.win.send("listLoading", {data: "Installing Package..."});
                 this.win.send("resultMsg", {data: "Installing..."});

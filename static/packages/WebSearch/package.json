@@ -1,7 +1,7 @@
 {
   "name": "websearch-pkg",
   "version": "1.0.0",
-  "description": "",
+  "description": "Typie WebSearch Package",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,9 +9,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typie-sdk": "^1.0.7"
+    "typie-sdk": "^1.0.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/typie/websearch-pkg.git"
   },
   "typie": {
-    "title": "WebSearch"
+    "title": "WebSearch",
+    "labels": [
+      {
+        "text": "Windows",
+        "style": "green"
+      },
+      {
+        "text": "Mac",
+        "style": "orange"
+      }
+    ],
+    "description": "Typie WebSearch Package"
   }
 }

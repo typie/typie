@@ -10,17 +10,20 @@ import npm from "npm";
 
 declare const __static: any;
 const packagesPath = Path.join(__static, "/packages");
+let watcher: any;
 
 export default class PackageLoader {
 
     private packages: object;
     private win: MainWindowController;
     private config: ConfigLoader;
+    private timeoutsArray: any;
 
     constructor(win: MainWindowController, config: ConfigLoader) {
         this.win = win;
         this.config = config;
         this.packages = {};
+        this.timeoutsArray = {};
         this.loadTypiePkg();
         this.loadPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));
@@ -101,11 +104,13 @@ export default class PackageLoader {
             const Package = eval("require('" + relativePath + "/index.js')");
             this.packages[packageName] = new Package(this.win, pkgConfig, packageName);
             const pkgItem = this.addPkgToGlobal(packageName);
+            this.watchPakcagesFolder();
             if (callBack) {
                 callBack(pkgItem);
             }
         }).catch((err) => {
             console.error("cannot load package from: " + relativePath, err);
+            this.watchPakcagesFolder();
             if (errCallBack) {
                 errCallBack();
             }
@@ -138,10 +143,17 @@ export default class PackageLoader {
         return new Promise((resolve, reject) => {
             if (!fs.existsSync(Path.join(absPath, "node_modules"))) {
                 console.log("installing dependencies");
+                this.stopWatch();
                 npm.load({}, (er) => {
-                    if (er) { reject(er); }
+                    if (er) {
+                        console.error("Installing Dependencies for " + absPath + " failed 1", er);
+                        reject(er);
+                    }
                     npm.commands.install(absPath, [], (err, data) => {
-                        if (err) { reject(err); }
+                        if (err) {
+                            console.error("Installing Dependencies for " + absPath + " failed 2", err);
+                            reject(err);
+                        }
                         resolve(data);
                     });
                 });
@@ -196,11 +208,19 @@ export default class PackageLoader {
             .catch(err => console.error(err));
     }
 
+    private stopWatch() {
+        if (watcher) {
+            watcher.close();
+            watcher = null;
+        }
+    }
+
     private watchPakcagesFolder() {
         console.log("Watching Packages folder...");
+        this.stopWatch();
 
         // Initialize watcher.
-        const watcher = chokidar.watch(packagesPath, {
+        watcher = chokidar.watch(packagesPath, {
             ignored: [
                 "node_modules",
                 "bower_components",
@@ -214,8 +234,11 @@ export default class PackageLoader {
                 let packageChanged = path.split(Path.join(packagesPath, "/"))[1];
                 packageChanged = packageChanged.split(Path.sep).shift() || "";
                 if (packageChanged) {
-                    console.log(`files change detected at '${packageChanged}'`);
-                    this.loadPackage(packageChanged);
+                    clearTimeout(this.timeoutsArray[packageChanged]);
+                    this.timeoutsArray[packageChanged] = setTimeout(() => {
+                        console.log(`files change detected at '${packageChanged}'`);
+                        this.loadPackage(packageChanged);
+                    }, 1000);
                 }
             }
         });
