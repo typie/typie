@@ -61,7 +61,7 @@ export default class Typie extends AbstractTypiePackage {
                 .setDescription("Open global log files")
                 .setIcon(this.icon)
                 .setPath("SubPackage|Typie->ShowLogs")
-                .setActions([{type: "openDir", description: "Open Logs Directory"},
+                .setActions([{type: "openDir", description: "Show Directory"},
                         {type: "openFiles", description: "Open Logs"}]));
 
         itemsArray.push(
@@ -70,8 +70,8 @@ export default class Typie extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setIcon(this.icon)
                 .setPath("SubPackage|Typie->ShowLogs")
-                .setActions([{type: "openConfigDir", description: "Open Config Directory"},
-                    {type: "openConfigFile", description: "Open Config for editing"}]));
+                .setActions([{type: "openConfigDir", description: "Show Directory"},
+                    {type: "openConfigFile", description: "Edit config"}]));
 
         itemsArray.push(
             new TypieRowItem("Quit / Exit")
@@ -79,8 +79,7 @@ export default class Typie extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Close and exit Typie")
                 .setIcon(this.icon)
-                .setPath("quit")
-                .setActions([{type: "openConfigDir", description: "Open Config Directory"}]));
+                .setPath("quit"));
 
         this.typie.multipleInsert(itemsArray).go()
             .then(data => console.info("Typie plugin done adding", data))

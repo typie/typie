@@ -1,3 +1,4 @@
+import AppController from "../controllers/AppController";
 declare const __static: any;
 import { app } from "electron";
 import is from "electron-is";
@@ -103,6 +104,7 @@ export default class ConfigLoader extends EventEmitter {
             this.settings = yaml.safeLoad(fs.readFileSync(this.configPath, "utf8"));
         } else {
             console.log("Building new config file from scratch");
+            AppController.setStartOnStartup();
             this.settings = {
                 toggleKeys: this.getToggleKeys(),
             };

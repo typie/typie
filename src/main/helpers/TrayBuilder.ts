@@ -1,5 +1,6 @@
 import {app, shell, Menu, Tray} from "electron";
 import Path from "path";
+import AppController from "../controllers/AppController";
 declare const __static: any;
 
 let tray;
@@ -17,10 +18,24 @@ export default class TrayBuilder {
                 label: "How to use",
                 click() { shell.openExternal("https://github.com/typie/typie/wiki/How-to-use-Typie"); },
             },
+            {
+                checked: AppController.isStatupAtLoginOn(),
+                label: "Start on login",
+                type: "checkbox",
+                click(event) { TrayBuilder.toggleStartup(event.checked); },
+            },
             {type: "separator"},
             {role: "quit"},
         ]);
 
         tray.setContextMenu(contextMenu);
+    }
+
+    private static toggleStartup(checked): void {
+        if (checked) {
+            AppController.setStartOnStartup();
+        } else {
+            AppController.setDoNotStartOnStartup();
+        }
     }
 }

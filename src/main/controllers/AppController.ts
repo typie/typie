@@ -67,6 +67,34 @@ export default class AppController {
         app.quit();
     }
 
+    public static setStartOnStartup() {
+        // const appFolder = path.dirname(process.execPath);
+        // const updateExe = Path.resolve(appFolder, "..", "Update.exe");
+        // const exeName = Path.basename(process.execPath);
+
+        app.setLoginItemSettings({
+            openAsHidden: true,
+            openAtLogin: true,
+            // path: updateExe,
+            // args: [
+            //     "--processStart", `"${exeName}"`,
+            //     "--process-start-args", `"--hidden"`,
+            // ]
+        });
+    }
+
+    public static setDoNotStartOnStartup() {
+        app.setLoginItemSettings({
+            openAsHidden: false,
+            openAtLogin: false,
+        });
+    }
+
+    public static isStatupAtLoginOn(): boolean {
+        const settingsObj = app.getLoginItemSettings();
+        return settingsObj.openAtLogin;
+    }
+
     private static goDispatcher: GoDispatcher;
     private static typieListener: TypieListener;
 }

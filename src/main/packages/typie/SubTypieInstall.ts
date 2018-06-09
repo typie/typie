@@ -1,4 +1,4 @@
-import {AbstractTypiePackage, AppGlobal, TypieRowItem, TypieCore} from "typie-sdk";
+import {AbstractTypiePackage, AppGlobal, TypieRowItem, TypieCore, getPath} from "typie-sdk";
 import Path from "path";
 import axios, {AxiosPromise} from "axios";
 import download from "download-git-repo";
@@ -11,7 +11,7 @@ export default class SubTypieInstall extends AbstractTypiePackage {
         this.packageName = "Typie->Install";
         this.db = "Typie";
         this.typie = new TypieCore(this.packageName, "Typie");
-        this.icon = Path.join(AppGlobal.get("staticPath"), "themes/default/images/icons/icon.png");
+        this.icon = getPath("themes/default/images/icons/icon.png");
     }
 
     public activate(pkgList, item, cb) {
