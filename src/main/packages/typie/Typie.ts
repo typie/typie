@@ -1,6 +1,6 @@
-import {AbstractTypiePackage, TypieRowItem, TypieCore, getPath} from "typie-sdk";
+import {AbstractTypiePackage, AppGlobal, TypieRowItem, TypieCore, getPath} from "typie-sdk";
 import {app, shell} from "electron";
-
+import Path from "path";
 import SubTypieConfigure from "./SubTypieConfigure";
 import SubTypieInstall from "./SubTypieInstall";
 import SubTypieShowLogs from "./SubTypieShowLogs";
@@ -80,6 +80,14 @@ export default class Typie extends AbstractTypiePackage {
                 .setDescription("Close and exit Typie")
                 .setIcon(this.icon)
                 .setPath("quit"));
+
+        itemsArray.push(
+            new TypieRowItem("Edit Theme")
+                .setDB(this.packageName)
+                .setPackage(this.packageName)
+                .setDescription("Close and exit Typie")
+                .setIcon(this.icon)
+                .setPath(Path.join(AppGlobal.get("staticPath"), "themes/default/style.css")));
 
         this.typie.multipleInsert(itemsArray).go()
             .then(data => console.info("Typie plugin done adding", data))

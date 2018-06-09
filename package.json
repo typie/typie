@@ -1,6 +1,6 @@
 {
   "name": "Typie",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "license": "MIT",
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
   "homepage": "https://github.com/typie",
@@ -30,7 +30,7 @@
     "mkdirp": "^0.5.1",
     "npm": "^6.0.1",
     "source-map-support": "^0.5.5",
-    "typie-sdk": "^1.0.7"
+    "typie-sdk": "^1.0.10"
   },
   "devDependencies": {
     "electron": "^1.8.6",
