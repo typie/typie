@@ -5,8 +5,8 @@ import math from "mathjs";
 const calcIcon = getPath("themes/default/images/calculator-icon.png");
 math.config({predictable: true});
 
-export default class Calculator extends AbstractTypiePackage
-{
+export default class Calculator extends AbstractTypiePackage {
+
     public static tryMathExpression(res, obj: SearchObject) {
         try {
             const answer = String(math.eval(obj.value));
