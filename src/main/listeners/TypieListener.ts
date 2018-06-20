@@ -1,11 +1,14 @@
 import {ipcMain} from "electron";
-import {TypieCore, TypieRowItem, SearchObject} from "typie-sdk";
+import {TypieCore, TypieRowItem, SearchObject, getPath} from "typie-sdk";
 import PackageLoader from "../services/PackageLoader";
 import AbstractTypiePackage from "typie-sdk/dist/AbstractTypiePackage";
+import Calculator from "../packages/calculator/Calculator";
 
 export default class TypieListener {
 
-    private static sendList(e, res) { e.sender.send("resultList", res); }
+    private static sendList(e, obj, res) {
+        e.sender.send("resultList", res);
+    }
     private static isGlobal(obj) { return !(obj.pkgList && obj.pkgList.length > 0); }
     private packageLoader: PackageLoader;
 
@@ -21,11 +24,14 @@ export default class TypieListener {
     private search(e: Electron.Event, obj: SearchObject) {
         if (!TypieListener.isGlobal(obj)) {
             this.packageLoader.getPackageFromList(obj.pkgList)
-                .then(pkg => pkg.search(obj, res => TypieListener.sendList(e, res)))
+                .then(pkg => pkg.search(obj, res => TypieListener.sendList(e, obj, res)))
                 .catch(err => console.error("searching package failed", obj.pkgList, err));
         } else {
             new TypieCore("global").fuzzySearch(obj.value).go()
-                .then(res => TypieListener.sendList(e, res))
+                .then(res => {
+                    Calculator.tryMathExpression(res, obj);
+                    TypieListener.sendList(e, obj, res);
+                })
                 .catch(err => console.error("searching global DB failed", err));
         }
     }
@@ -39,7 +45,7 @@ export default class TypieListener {
             }
             try {
                 console.log("activate item: " + item.getTitle());
-                pkg.activate(obj.pkgList, item, res => TypieListener.sendList(e, res));
+                pkg.activate(obj.pkgList, item, res => TypieListener.sendList(e, obj, res));
             } catch (err) {
                 console.error("error while activating item: ", item, err);
             }
@@ -49,7 +55,7 @@ export default class TypieListener {
     private enterPkg(e: Electron.Event, obj) {
         if (!obj || !obj.item) {
             this.packageLoader.getPackage(obj.pkgList).then(pkg => {
-                pkg.enterPkg(obj.pkgList, undefined, res => TypieListener.sendList(e, res));
+                pkg.enterPkg(obj.pkgList, undefined, res => TypieListener.sendList(e, obj, res));
             }).catch(er => console.error(er));
             return;
         }
@@ -62,7 +68,7 @@ export default class TypieListener {
                 }
                 try {
                     console.log("entering package: " + item.getTitle());
-                    pkg.enterPkg(obj.pkgList, item, res => TypieListener.sendList(e, res));
+                    pkg.enterPkg(obj.pkgList, item, res => TypieListener.sendList(e, obj, res));
                 } catch (err) {
                     console.error("error while entering package: ", pkg, err);
                 }
@@ -75,7 +81,7 @@ export default class TypieListener {
             .then(pkg => {
                 try {
                     console.log("clear package: " + pkg.getPackageName());
-                    pkg.clear(obj.pkgList, res => TypieListener.sendList(e, res));
+                    pkg.clear(obj.pkgList, res => TypieListener.sendList(e, obj, res));
                 } catch (err) {
                     console.error("error while clearing package: " + pkg.getPackageName(), err);
                 }
@@ -92,7 +98,7 @@ export default class TypieListener {
             .then(pkg => {
                 try {
                     console.log("remove item: " + item.getTitle());
-                    pkg.remove(obj.pkgList, item, res => TypieListener.sendList(e, res));
+                    pkg.remove(obj.pkgList, item, res => TypieListener.sendList(e, obj, res));
                 } catch (err) {
                     console.error("error while removing item: " + item.getTitle(), err);
                 }
