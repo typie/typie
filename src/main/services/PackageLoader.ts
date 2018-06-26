@@ -6,6 +6,7 @@ import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import ConfigLoader from "./ConfigLoader";
 import chokidar from "chokidar";
 import Typie from "../packages/typie/Typie";
+import Calculator from "../packages/calculator/Calculator";
 import npm from "npm";
 
 declare const __static: any;
@@ -190,11 +191,18 @@ export default class PackageLoader {
     }
 
     private loadTypiePkg() {
-        const pkgName = "Typie";
-        (new TypieCore(pkgName)).addCollection().go()
+        const typieName = "Typie";
+        (new TypieCore(typieName)).addCollection().go()
             .then(() => {
-                this.packages[pkgName] = new Typie(this.win, [], pkgName);
-                this.addPkgToGlobal(pkgName);
+                this.packages[typieName] = new Typie(this.win, [], typieName);
+                this.addPkgToGlobal(typieName);
+            }).catch(e => console.error(e));
+
+        const calcName = "Calculator";
+        (new TypieCore(calcName)).addCollection().go()
+            .then(() => {
+                this.packages[calcName] = new Calculator(this.win, [], calcName);
+                this.addPkgToGlobal(calcName);
             }).catch(e => console.error(e));
     }
 

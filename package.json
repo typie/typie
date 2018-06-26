@@ -1,6 +1,6 @@
 {
   "name": "Typie",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "license": "MIT",
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
   "homepage": "https://github.com/typie",
@@ -25,11 +25,12 @@
     "electron-is": "^2.4.0",
     "electron-log": "^2.2.14",
     "fs-extra": "^5.0.0",
-    "typie-go": "^0.1.5",
     "js-yaml": "^3.11.0",
+    "mathjs": "^5.0.0",
     "mkdirp": "^0.5.1",
     "npm": "^6.0.1",
     "source-map-support": "^0.5.5",
+    "typie-go": "^0.1.5",
     "typie-sdk": "^1.0.10"
   },
   "devDependencies": {
