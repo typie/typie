@@ -17,6 +17,9 @@ export default class Calculator extends AbstractTypiePackage {
             item.setDB("Calculator");
             item.setIcon(calcIcon);
             res.data.unshift(item);
+            if (res.data.length > 10) {
+                res.data.pop();
+            }
         } catch (e) {
             // do nothing
         }
