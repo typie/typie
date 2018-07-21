@@ -16,8 +16,8 @@ export default class SubTypieShowLogs extends AbstractTypiePackage {
     }
 
     public activate(pkgList, item, cb) {
-        const LogPath = AppGlobal.get("logPath");
-        const coreLogPath = AppGlobal.get("coreLogPath");
+        const LogPath = AppGlobal.paths().getLogPath();
+        const coreLogPath = Path.join(AppGlobal.paths().getLogsDir(), "go-logger.log");
         const action = item.getActions()[0].type;
         if (action === "openDir") {
             shell.showItemInFolder(LogPath);

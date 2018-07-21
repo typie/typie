@@ -26,9 +26,13 @@ export default class AppListener {
         config.on("config-reload", () => ShortcutListener.removeListeners(config));
 
         win.on("resize", () => { return; });
-        win.on("blur",   () => win.hide());
         win.on("focus",  () => win.send("focus"));
         win.on("closed", () => win.closed());
+        win.on("blur",   () => {
+            if (config.getSettings().hideOnBlur) {
+                win.hide();
+            }
+        });
 
         win.onWebContent("did-finish-load", () => win.init());
         win.onWebContent("devtools-opened", () => win.setFocusAfterDevToolOpen());

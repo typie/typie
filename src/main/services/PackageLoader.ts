@@ -26,6 +26,7 @@ export default class PackageLoader {
         this.config = config;
         this.packages = {};
         this.timeoutsArray = {};
+
         this.loadTypiePkg();
         this.loadPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));

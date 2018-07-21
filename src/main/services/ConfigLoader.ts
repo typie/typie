@@ -111,6 +111,7 @@ export default class ConfigLoader extends EventEmitter {
             console.info("Building new config file from scratch");
             AppController.setStartOnStartup();
             this.settings = {
+                hideOnBlur: true,
                 toggleKeys: this.getToggleKeys(),
             };
             this.writeToFile(this.configPath, this.settings);

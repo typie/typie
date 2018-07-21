@@ -18,6 +18,9 @@ export default class MainWindowController extends AbstractWindowController {
         show: false,
         skipTaskbar: true,
         transparent: true,
+        webPreferences: {
+            webSecurity: false,
+        },
         width: 475,
     };
 
