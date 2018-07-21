@@ -4,22 +4,48 @@ import TypieListener from "../listeners/TypieListener";
 import PackageLoader from "../services/PackageLoader";
 import ConfigLoader from "../services/ConfigLoader";
 import MainWindowController from "./MainWindowController";
+import {createFolderIfNotExist} from "../helpers/HelperFunc";
 
 export default class AppController {
 
     public static persisted: boolean = false;
     public static allowQuit: boolean = false;
 
-    public static bootstrapApp(win: MainWindowController, config: ConfigLoader) {
-        win.createWindow();
-        AppController.goDispatcher = new GoDispatcher(AppGlobal.paths().getGoDispatchPath());
-        const bootstrap = setInterval(() => {
-            if (GoDispatcher.listening && win.isExist) {
-                clearInterval(bootstrap);
-                AppGlobal.set("GoDispatcher", AppController.goDispatcher);
-                AppController.typieListener = new TypieListener(new PackageLoader(win, config));
-            }
-        }, 1);
+    public static bootstrapGoDispatcher(win: MainWindowController, config: ConfigLoader): Promise<any> {
+        return new Promise((resolve, reject) => {
+            AppController.goDispatcher = new GoDispatcher(AppGlobal.paths().getGoDispatchPath());
+            let bootstrapTimeout = 10000;
+            const bootstrap = setInterval(() => {
+                if (GoDispatcher.listening && win.isExist) {
+                    clearInterval(bootstrap);
+                    AppGlobal.set("GoDispatcher", AppController.goDispatcher);
+                    AppController.typieListener = new TypieListener(new PackageLoader(win, config));
+                    resolve();
+                }
+                bootstrapTimeout--;
+                if (bootstrapTimeout <= 0) {
+                    console.error("could not bootstrap go dispatcher");
+                    reject();
+                }
+            }, 1);
+        });
+    }
+
+    public static async bootstrapApp(win: MainWindowController, config: ConfigLoader): Promise<any> {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                createFolderIfNotExist(AppGlobal.paths().getConfigDir()),
+                createFolderIfNotExist(AppGlobal.paths().getDbFolder()),
+                createFolderIfNotExist(AppGlobal.paths().getLogsDir()),
+            ]).then(() => {
+                config.init();
+                win.createWindow();
+                resolve();
+            }).catch(err => {
+                console.error("Could not start Application", err);
+                reject(err);
+            });
+        });
     }
 
     public static windowAllClosed() {

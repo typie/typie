@@ -52,6 +52,9 @@ export default class ConfigLoader extends EventEmitter {
         this.packagesPath = AppGlobal.paths().getPackagesPath();
         this.isLoading = true;
         this.isWatching = false;
+    }
+
+    public init() {
         this.loadSettings();
         AppGlobal.set("Settings", this);
     }
@@ -152,18 +155,12 @@ export default class ConfigLoader extends EventEmitter {
     }
 
     private writeToFile(path, data) {
-        createFolderIfNotExist(this.configDir)
-            .then(() => {
-                try {
-                    console.info("creating user config file...");
-                    fs.writeFileSync(path, yaml.safeDump(data));
-                    this.isLoading = false;
-                } catch (e) {
-                    console.error("could not create user config file in: " + path, e);
-                }
-            })
-            .catch(e => {
-                console.error("could not create path for user config file: " + path, e);
-            });
+        try {
+            console.info("creating user config file...");
+            fs.writeFileSync(path, yaml.safeDump(data));
+            this.isLoading = false;
+        } catch (e) {
+            console.error("could not create user config file in: " + path, e);
+        }
     }
 }

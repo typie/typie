@@ -46,7 +46,7 @@ export default class SubTypieInstall extends AbstractTypiePackage {
             .catch(e => {
                 this.win.send("resultMsg", {data: "Loading timed out"});
                 this.sendEmptyResult();
-                console.log(e);
+                console.warn("Loading packages from repos timed out", e);
             });
     }
 

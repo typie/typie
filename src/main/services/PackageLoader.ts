@@ -69,7 +69,7 @@ export default class PackageLoader {
             .then(() => {
                 const packagesDirs = getDirectories(this.packagesPath);
                 const promises: Array<Promise<any>> = [];
-                console.log(packagesDirs);
+                console.info("packages:", packagesDirs);
                 packagesDirs.forEach((dirName) => {
                     promises.push(this.loadPkgPromise(dirName));
                 });
