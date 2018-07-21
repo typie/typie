@@ -51,9 +51,9 @@ export default class AppController {
         globalShortcut.unregisterAll();
         if (AppController.goDispatcher && AppController.goDispatcher.hasOwnProperty("close")) {
             AppController.goDispatcher.close();
-            console.log("Closing Go Dispatcher");
+            console.info("Closing Go Dispatcher");
         }
-        console.log("Quitting App -> Bye Bye");
+        console.info("Quitting App -> Bye Bye");
         app.quit();
     }
 

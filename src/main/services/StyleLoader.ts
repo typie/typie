@@ -18,25 +18,22 @@ export default class StyleLoader {
     }
 
     public init(): void {
-        console.log("sdf", this.selectedThemePath);
         this.loadStyle(this.selectedThemePath);
         fs.watch(this.themesPath, {recursive: true}, (event, filePath) => {
             const themeDir = Path.join(this.themesPath, Path.dirname(Path.normalize(filePath)));
             const newThemeStyle = Path.join(themeDir, "style.css");
-            console.log("loading style form", newThemeStyle);
             if (fs.existsSync(newThemeStyle)) {
-                console.log("loading style form", newThemeStyle);
                 this.loadStyle(newThemeStyle);
             }
         });
     }
 
     public loadStyle(newThemeStyle): void {
-        console.log("loading style form", newThemeStyle);
         fs.readFile(newThemeStyle, "utf8", (err, data) => {
             if (err) {
-                console.error("did not found any default styles", err);
+                console.error("did not found any styles at: " + newThemeStyle, err);
             } else {
+                console.info("loading style form", newThemeStyle);
                 const theme = data.replace(/\n/g, "").replace(/\s\s+/g, " ");
                 this.win.send("injectCss", theme);
             }
