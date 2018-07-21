@@ -4,8 +4,8 @@ import Path from "path";
 
 export default class SubTypieShowLogs extends AbstractTypiePackage {
 
-    private configDir: string = Path.join(app.getPath("userData"), "/config/");
-    private configFile: string = Path.join(this.configDir, "config.yml");
+    private configDir: string = AppGlobal.paths().getConfigDir();
+    private configFile: string = AppGlobal.paths().getMainConfigPath();
 
     constructor(win, config, pkgPath) {
         super(win, config, pkgPath);

@@ -1,19 +1,9 @@
-declare const __static: any;
 import {app, globalShortcut} from "electron";
-import is from "electron-is";
 import {AppGlobal, GoDispatcher, Packet} from "typie-sdk";
-import Path from "path";
 import TypieListener from "../listeners/TypieListener";
 import PackageLoader from "../services/PackageLoader";
 import ConfigLoader from "../services/ConfigLoader";
 import MainWindowController from "./MainWindowController";
-
-let goDispatchPath;
-if (is.windows()) {
-    goDispatchPath = Path.join(__static, "bin/typie_go.exe");
-} else if (is.osx()) {
-    goDispatchPath = Path.join(__static, "bin/typie_go");
-}
 
 export default class AppController {
 
@@ -22,7 +12,7 @@ export default class AppController {
 
     public static bootstrapApp(win: MainWindowController, config: ConfigLoader) {
         win.createWindow();
-        AppController.goDispatcher = new GoDispatcher(goDispatchPath);
+        AppController.goDispatcher = new GoDispatcher(AppGlobal.paths().getGoDispatchPath());
         const bootstrap = setInterval(() => {
             if (GoDispatcher.listening && win.isExist) {
                 clearInterval(bootstrap);

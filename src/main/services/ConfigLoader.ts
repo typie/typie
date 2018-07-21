@@ -40,14 +40,16 @@ export default class ConfigLoader extends EventEmitter {
     public isLoading: boolean;
     public configDir: string;
     private configPath: string;
+    private packagesPath: string;
     private isWatching: boolean;
     private settings: any;
 
     constructor() {
         super();
         this.settings = {};
-        this.configDir = Path.join(app.getPath("userData"), "config");
-        this.configPath = Path.join(this.configDir, "config.yml");
+        this.configDir = AppGlobal.paths().getConfigDir();
+        this.configPath = AppGlobal.paths().getMainConfigPath();
+        this.packagesPath = AppGlobal.paths().getPackagesPath();
         this.isLoading = true;
         this.isWatching = false;
         this.loadSettings();
@@ -55,7 +57,7 @@ export default class ConfigLoader extends EventEmitter {
     }
 
     public loadPkgConfig(pkgName, pkgPath): any {
-        const defaultPkgConfigPath = Path.join(__static, "packages/" + pkgName + "/defaultConfig.yml");
+        const defaultPkgConfigPath = Path.join(this.packagesPath, pkgName, "defaultConfig.yml");
         const userPkgConfigPath = Path.join(this.configDir, pkgName + ".yml");
         let pkgConfig = {};
         if (fs.existsSync(userPkgConfigPath)) {

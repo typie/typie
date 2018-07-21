@@ -1,13 +1,13 @@
 import {app, shell, Menu, Tray} from "electron";
 import Path from "path";
 import AppController from "../controllers/AppController";
-declare const __static: any;
+import {AppGlobal} from "typie-sdk";
 
 let tray;
 
 export default class TrayBuilder {
     public static init() {
-        tray = new Tray(Path.join(__static, "themes/default/images/icons/icon.png"));
+        tray = new Tray(Path.join(AppGlobal.paths().getSelectedThemeDir(), "images/icons/icon.png"));
         tray.setToolTip("This is my application.");
         const contextMenu = Menu.buildFromTemplate([
             {

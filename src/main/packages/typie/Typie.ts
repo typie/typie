@@ -87,7 +87,7 @@ export default class Typie extends AbstractTypiePackage {
                 .setPackage(this.packageName)
                 .setDescription("Close and exit Typie")
                 .setIcon(this.icon)
-                .setPath(Path.join(AppGlobal.get("staticPath"), "themes/default/style.css")));
+                .setPath(AppGlobal.paths().getSelectedThemePath()));
 
         this.typie.multipleInsert(itemsArray).go()
             .then(data => console.info("Typie plugin done adding", data))

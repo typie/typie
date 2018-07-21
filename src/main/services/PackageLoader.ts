@@ -9,15 +9,6 @@ import chokidar from "chokidar";
 import Typie from "../packages/typie/Typie";
 import Calculator from "../packages/calculator/Calculator";
 import npm from "npm";
-// import * as is from "electron-is";
-
-declare const __static: any;
-
-// if (is.dev()) {
-//     const packagesPath = Path.join(__static, "packages");
-// } else {
-const packagesPath = Path.join(app.getPath("userData"), "packages");
-// }
 
 let watcher: any;
 
@@ -27,8 +18,10 @@ export default class PackageLoader {
     private win: MainWindowController;
     private config: ConfigLoader;
     private timeoutsArray: any;
+    private packagesPath: string;
 
     constructor(win: MainWindowController, config: ConfigLoader) {
+        this.packagesPath = AppGlobal.paths().getPackagesPath();
         this.win = win;
         this.config = config;
         this.packages = {};
@@ -72,9 +65,9 @@ export default class PackageLoader {
     }
 
     public loadPackages() {
-        createFolderIfNotExist(packagesPath)
+        createFolderIfNotExist(this.packagesPath)
             .then(() => {
-                const packagesDirs = getDirectories(packagesPath);
+                const packagesDirs = getDirectories(this.packagesPath);
                 const promises: Array<Promise<any>> = [];
                 console.log(packagesDirs);
                 packagesDirs.forEach((dirName) => {
@@ -93,14 +86,13 @@ export default class PackageLoader {
                     });
             })
             .catch((e) => {
-                console.error("could not create folder: " + packagesPath, e);
-                throw new Error("could not create folder: " + packagesPath);
+                console.error("could not create folder: " + this.packagesPath, e);
+                throw new Error("could not create folder: " + this.packagesPath);
             });
     }
 
     public loadPackage(dirName, callBack?: (pkg) => void , errCallBack?: () => void) {
-        const absPath = Path.join(packagesPath, dirName);
-        const staticPath = "packages/" + dirName + "/";
+        const absPath = Path.join(this.packagesPath, dirName);
         if (!this.isViablePackage(absPath)) {
             return;
         }
@@ -243,7 +235,7 @@ export default class PackageLoader {
         this.stopWatch();
 
         // Initialize watcher.
-        watcher = chokidar.watch(packagesPath, {
+        watcher = chokidar.watch(this.packagesPath, {
             ignored: [
                 "node_modules",
                 "bower_components",
@@ -254,7 +246,7 @@ export default class PackageLoader {
 
         watcher.on("change", (path: string, stats: Stats) => {
             if (stats) {
-                let packageChanged = path.split(Path.join(packagesPath, "/"))[1];
+                let packageChanged = path.split(Path.join(this.packagesPath, "/"))[1];
                 packageChanged = packageChanged.split(Path.sep).shift() || "";
                 if (packageChanged) {
                     clearTimeout(this.timeoutsArray[packageChanged]);
