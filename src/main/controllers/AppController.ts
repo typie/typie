@@ -35,12 +35,12 @@ export default class AppController {
             e.preventDefault();
             AppController.goDispatcher.send(new Packet("persist"))
                 .then(res => {
-                    console.log("Persist request: ", res);
+                    console.info("Persist request: ", res);
                     AppController.persisted = true;
                     AppController.quit();
                 })
                 .catch(err => {
-                    console.log("could not persist DB on quit", err);
+                    console.warn("could not persist DB on quit", err);
                     AppController.allowQuit = true;
                     AppController.quit();
                 });

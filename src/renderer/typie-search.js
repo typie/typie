@@ -305,7 +305,7 @@ class TypieSearch extends PolymerElement {
             let tmp = JSON.parse(this.jsonList);
             for (let key in tmp) {
                 if (tmp[key].title === item.title && tmp[key].t === item.t && tmp[key].p === item.p) {
-                    console.log("removing: " + item.title);
+                    console.info("removing: " + item.title);
                     tmp.splice(key, 1);
                     this.updateList({data: tmp, length: tmp.length, err: 0});
                     return;
@@ -441,7 +441,7 @@ class TypieSearch extends PolymerElement {
 
     loadStyles(cssString) {
         this.removeStyles();
-        console.log('Loading styles...');
+        console.info('Loading styles...');
         let style = document.createElement('style');
         style.appendChild(document.createTextNode(cssString));
         this.shadowRoot.appendChild(style);

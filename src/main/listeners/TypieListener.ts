@@ -44,7 +44,7 @@ export default class TypieListener {
                 this.update(item);
             }
             try {
-                console.log("activate item: " + item.getTitle());
+                console.info("activate item: " + item.getTitle());
                 pkg.activate(obj.pkgList, item, res => TypieListener.sendList(e, obj, res));
             } catch (err) {
                 console.error("error while activating item: ", item, err);
@@ -67,7 +67,7 @@ export default class TypieListener {
                     this.update(item);
                 }
                 try {
-                    console.log("entering package: " + item.getTitle());
+                    console.info("entering package: " + item.getTitle());
                     pkg.enterPkg(obj.pkgList, item, res => TypieListener.sendList(e, obj, res));
                 } catch (err) {
                     console.error("error while entering package: ", pkg, err);
@@ -80,7 +80,7 @@ export default class TypieListener {
         this.packageLoader.getPackageFromList(obj.pkgList)
             .then(pkg => {
                 try {
-                    console.log("clear package: " + pkg.getPackageName());
+                    console.info("clear package: " + pkg.getPackageName());
                     pkg.clear(obj.pkgList, res => TypieListener.sendList(e, obj, res));
                 } catch (err) {
                     console.error("error while clearing package: " + pkg.getPackageName(), err);
@@ -97,7 +97,7 @@ export default class TypieListener {
         this.getPackage(obj, item)
             .then(pkg => {
                 try {
-                    console.log("remove item: " + item.getTitle());
+                    console.info("remove item: " + item.getTitle());
                     pkg.remove(obj.pkgList, item, res => TypieListener.sendList(e, obj, res));
                 } catch (err) {
                     console.error("error while removing item: " + item.getTitle(), err);

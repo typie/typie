@@ -42,7 +42,7 @@ export default class MainWindowController extends AbstractWindowController {
     public init() {
         super.init();
         // this.win.setIgnoreMouseEvents(true);
-        console.log("content window finished loading in " + (AppGlobal.getTimeSinceInit() / 1000) + " seconds");
+        console.info("content window finished loading in " + (AppGlobal.getTimeSinceInit() / 1000) + " seconds");
         this.styleLoader.init();
         // this.show();
     }

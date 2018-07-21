@@ -75,7 +75,7 @@ export default class PackageLoader {
                 });
                 Promise.all(promises)
                     .then(data => {
-                        console.log("All " + promises.length + " packages loaded successfully");
+                        console.info("All " + promises.length + " packages loaded successfully");
                         this.config.watchConfDir();
                         this.watchPakcagesFolder();
                     })
@@ -102,7 +102,7 @@ export default class PackageLoader {
         const packageName = pkJson.typie.title;
 
         this.destroyIfExist(packageName);
-        console.log("Loading package from " + relativePath);
+        console.info("Loading package from " + relativePath);
 
         Promise.all([
             this.installDependencies(absPath),
@@ -136,7 +136,7 @@ export default class PackageLoader {
     }
 
     public addPkgToGlobal(pkgName) {
-        console.log("Loaded package '" + pkgName + "'");
+        console.info("Loaded package '" + pkgName + "'");
         const newGlobalPackage = new TypieRowItem(pkgName)
             .setDB("global")
             .setPackage("global")
@@ -150,7 +150,7 @@ export default class PackageLoader {
     public installDependencies(absPath: string): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!fs.existsSync(Path.join(absPath, "node_modules"))) {
-                console.log("installing dependencies");
+                console.info("installing dependencies");
                 this.stopWatch();
                 npm.load({}, (er) => {
                     if (er) {
@@ -191,7 +191,7 @@ export default class PackageLoader {
     public destroyIfExist(packageName): void {
         const pkg: AbstractTypiePackage = this.packages[packageName];
         if (pkg) {
-            console.log("package '" + packageName + "' already exist...");
+            console.info("package '" + packageName + "' already exist...");
             pkg.destroy();
             delete this.packages[packageName];
         }
@@ -217,7 +217,7 @@ export default class PackageLoader {
         new TypieCore(item.getPackage(), "global").insert(item, false).go()
             .then(res => {
                 if (res.err === 0) {
-                    console.log("Package '" + item.getTitle() + "' is now searchable.");
+                    console.info("Package '" + item.getTitle() + "' is now searchable.");
                 }
             })
             .catch(err => console.error(err));
@@ -231,7 +231,7 @@ export default class PackageLoader {
     }
 
     private watchPakcagesFolder() {
-        console.log("Watching Packages folder...");
+        console.info("Watching Packages folder...");
         this.stopWatch();
 
         // Initialize watcher.
@@ -251,7 +251,7 @@ export default class PackageLoader {
                 if (packageChanged) {
                     clearTimeout(this.timeoutsArray[packageChanged]);
                     this.timeoutsArray[packageChanged] = setTimeout(() => {
-                        console.log(`files change detected at '${packageChanged}'`);
+                        console.info(`files change detected at '${packageChanged}'`);
                         this.loadPackage(packageChanged);
                     }, 1000);
                 }

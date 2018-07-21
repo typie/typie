@@ -61,10 +61,10 @@ export default class ConfigLoader extends EventEmitter {
         const userPkgConfigPath = Path.join(this.configDir, pkgName + ".yml");
         let pkgConfig = {};
         if (fs.existsSync(userPkgConfigPath)) {
-            console.log("Loading user config for '" + pkgName);
+            console.info("Loading user config for '" + pkgName);
             pkgConfig = ConfigLoader.getData(userPkgConfigPath);
         } else if (fs.existsSync(defaultPkgConfigPath)) {
-            console.log("Loading default config for '" + pkgName);
+            console.info("Loading default config for '" + pkgName);
             pkgConfig = ConfigLoader.getData(defaultPkgConfigPath);
             ConfigLoader.copy(defaultPkgConfigPath, userPkgConfigPath);
         } else {
@@ -78,7 +78,7 @@ export default class ConfigLoader extends EventEmitter {
     }
 
     public watchConfDir(): void {
-        console.log("Watching Config folder...");
+        console.info("Watching Config folder...");
 
         // Initialize watcher.
         const watcher = chokidar.watch(this.configDir, {
@@ -90,10 +90,10 @@ export default class ConfigLoader extends EventEmitter {
             if (stats) {
                 const packageChanged = Path.basename(path, Path.extname(path));
                 if (packageChanged !== "config") {
-                    console.log(`config change detected at '${packageChanged}'`);
+                    console.info(`config change detected at '${packageChanged}'`);
                     this.emit("reloadPackage", packageChanged);
                 } else {
-                    console.log("change detected at main config -> reload needed");
+                    console.info("change detected at main config -> reload needed");
                     this.configReload();
                 }
             }
@@ -102,10 +102,10 @@ export default class ConfigLoader extends EventEmitter {
 
     private loadOrCreate(): void {
         if (fs.existsSync(this.configPath)) {
-            console.log("Loading main config file from: " + this.configPath);
+            console.info("Loading main config file from: " + this.configPath);
             this.settings = yaml.safeLoad(fs.readFileSync(this.configPath, "utf8"));
         } else {
-            console.log("Building new config file from scratch");
+            console.info("Building new config file from scratch");
             AppController.setStartOnStartup();
             this.settings = {
                 toggleKeys: this.getToggleKeys(),
@@ -114,7 +114,7 @@ export default class ConfigLoader extends EventEmitter {
         }
         AppGlobal.settings = this.settings;
         this.isLoading = false;
-        console.log("Config loaded:", this.settings);
+        console.info("Config loaded:", this.settings);
         this.emit("config-loaded");
     }
 

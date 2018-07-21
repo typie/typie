@@ -18,7 +18,7 @@ class AbstractWindowController {
     }
 
     public absCreateWindow(options: Electron.BrowserWindowConstructorOptions): void {
-        console.log("Create Window");
+        console.info("Create Window");
         this.win = new Electron.BrowserWindow(options);
 
         if (is.dev()) {
@@ -101,8 +101,6 @@ class AbstractWindowController {
     // todo: when electron api will better support transparent click through both in mac and windows
     // todo: we will need to replace this logic; and never call setHeight -> its sluggish now.qwe
     public setHeight(height): void {
-        // console.log("contentSize", this.win.getContentSize()[0], this.win.getContentSize()[1], height);
-        // console.log("appSize", this.win.getSize()[0], this.win.getSize()[1], height);
         this.win.setSize(this.win.getContentSize()[0], height);
     }
 

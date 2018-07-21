@@ -16,7 +16,7 @@ export default class SubTypieInstall extends AbstractTypiePackage {
     }
 
     public activate(pkgList, item, cb) {
-        console.log("activate install", item.getPath());
+        console.info("activate install", item.getPath());
         this.win.send("listLoading", {data: "Downloading Package..."});
         this.win.send("resultMsg", {data: "Downloading..."});
         const pkgDir = Path.join(AppGlobal.paths().getPackagesPath(), item.getTitle());
