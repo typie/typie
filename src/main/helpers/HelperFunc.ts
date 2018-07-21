@@ -1,5 +1,6 @@
 import fs from "fs";
 import Path from "path";
+import mkdirP from "mkdirp";
 declare const __static: any;
 
 export function randomStr(): string {
@@ -26,4 +27,21 @@ export function getRelativePath(absPath): string {
         relPath = "../../static/" + relPath;
     }
     return relPath;
+}
+
+export async function createFolderIfNotExist(folderPath: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        if (!fs.existsSync(folderPath)) {
+            mkdirP(folderPath, err => {
+                if (err) {
+                    console.error("could not create folder: " + folderPath, err);
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        } else {
+            resolve();
+        }
+    });
 }

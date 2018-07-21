@@ -1,16 +1,24 @@
 import fs, {Stats} from "fs";
 import {AbstractTypiePackage, AppGlobal, TypieCore, TypieRowItem} from "typie-sdk";
 import * as Path from "path";
+import {app} from "electron";
 import MainWindowController from "../controllers/MainWindowController";
-import {getDirectories, getRelativePath} from "../helpers/HelperFunc";
+import {createFolderIfNotExist, getDirectories, getRelativePath} from "../helpers/HelperFunc";
 import ConfigLoader from "./ConfigLoader";
 import chokidar from "chokidar";
 import Typie from "../packages/typie/Typie";
 import Calculator from "../packages/calculator/Calculator";
 import npm from "npm";
+// import * as is from "electron-is";
 
 declare const __static: any;
-const packagesPath = Path.join(__static, "/packages");
+
+// if (is.dev()) {
+//     const packagesPath = Path.join(__static, "packages");
+// } else {
+const packagesPath = Path.join(app.getPath("userData"), "packages");
+// }
+
 let watcher: any;
 
 export default class PackageLoader {
@@ -64,22 +72,29 @@ export default class PackageLoader {
     }
 
     public loadPackages() {
-        const packagesDirs = getDirectories(packagesPath);
-        const promises: Array<Promise<any>> = [];
-        console.log(packagesDirs);
-        packagesDirs.forEach((dirName) => {
-            promises.push(this.loadPkgPromise(dirName));
-        });
-        Promise.all(promises)
-            .then(data => {
-                console.log("All " + promises.length + " packages loaded successfully");
-                this.config.watchConfDir();
-                this.watchPakcagesFolder();
+        createFolderIfNotExist(packagesPath)
+            .then(() => {
+                const packagesDirs = getDirectories(packagesPath);
+                const promises: Array<Promise<any>> = [];
+                console.log(packagesDirs);
+                packagesDirs.forEach((dirName) => {
+                    promises.push(this.loadPkgPromise(dirName));
+                });
+                Promise.all(promises)
+                    .then(data => {
+                        console.log("All " + promises.length + " packages loaded successfully");
+                        this.config.watchConfDir();
+                        this.watchPakcagesFolder();
+                    })
+                    .catch(e => {
+                        console.warn(e);
+                        this.config.watchConfDir();
+                        this.watchPakcagesFolder();
+                    });
             })
-            .catch(e => {
-                console.warn(e);
-                this.config.watchConfDir();
-                this.watchPakcagesFolder();
+            .catch((e) => {
+                console.error("could not create folder: " + packagesPath, e);
+                throw new Error("could not create folder: " + packagesPath);
             });
     }
 

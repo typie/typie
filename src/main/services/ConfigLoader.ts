@@ -5,10 +5,10 @@ import is from "electron-is";
 import {EventEmitter} from "events";
 import fs, {Stats} from "fs";
 import yaml from "js-yaml";
-import mkdirP from "mkdirp";
 import Path from "path";
 import {AppGlobal} from "typie-sdk";
 import chokidar from "chokidar";
+import {createFolderIfNotExist} from "../helpers/HelperFunc";
 
 export default class ConfigLoader extends EventEmitter {
 
@@ -150,18 +150,18 @@ export default class ConfigLoader extends EventEmitter {
     }
 
     private writeToFile(path, data) {
-        console.log("creating user config file...");
-        mkdirP(Path.dirname(path), err => {
-            if (err) {
-                console.error("could not create path for user config file: " + path, err);
-            } else {
+        createFolderIfNotExist(this.configDir)
+            .then(() => {
                 try {
+                    console.info("creating user config file...");
                     fs.writeFileSync(path, yaml.safeDump(data));
                     this.isLoading = false;
                 } catch (e) {
                     console.error("could not create user config file in: " + path, e);
                 }
-            }
-        });
+            })
+            .catch(e => {
+                console.error("could not create path for user config file: " + path, e);
+            });
     }
 }

@@ -12,7 +12,7 @@ declare const __static: any;
 export default class AppListener {
 
     public static init(win: MainWindowController): void {
-        const logPath = Path.join(Path.join(__static, "db"), "typie.log");
+        const logPath = Path.join(app.getPath("userData"), "logs", "typie.log");
         log.transports.file.file = logPath;
         log.transports.file.level = "debug";
         log.transports.console.level = "debug";

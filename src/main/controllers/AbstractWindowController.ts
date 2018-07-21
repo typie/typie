@@ -5,7 +5,6 @@ import { format as formatUrl } from "url";
 
 import {app} from "electron";
 import * as is from "electron-is";
-const isDevelopment = process.env.NODE_ENV !== "production";
 
 class AbstractWindowController {
     public isExist: boolean = false;
@@ -22,11 +21,11 @@ class AbstractWindowController {
         console.log("Create Window");
         this.win = new Electron.BrowserWindow(options);
 
-        if (isDevelopment) {
+        if (is.dev()) {
             this.win.webContents.openDevTools();
         }
 
-        if (isDevelopment) {
+        if (is.dev()) {
             this.win.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
         } else {
             this.win.loadURL(formatUrl({

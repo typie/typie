@@ -1,5 +1,5 @@
 import {AbstractTypiePackage, AppGlobal, TypieRowItem, TypieCore, getPath} from "typie-sdk";
-import {shell} from "electron";
+import {app, shell} from "electron";
 import Path from "path";
 import axios, {AxiosPromise} from "axios";
 import download from "download-git-repo";
@@ -19,7 +19,7 @@ export default class SubTypieInstall extends AbstractTypiePackage {
         console.log("activate install", item.getPath());
         this.win.send("listLoading", {data: "Downloading Package..."});
         this.win.send("resultMsg", {data: "Downloading..."});
-        const pkgDir = Path.join(AppGlobal.get("staticPath"), "packages/" + item.getTitle());
+        const pkgDir = Path.join(app.getPath("userData"), "packages", item.getTitle());
         fs.remove(pkgDir)
             .then(() => this.startDownload(pkgDir, item))
             .catch(e => {
