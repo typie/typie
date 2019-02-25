@@ -34,7 +34,7 @@
     "typie-sdk": "^1.0.13"
   },
   "devDependencies": {
-    "electron": "^1.8.6",
+    "electron": "^4.0.5",
     "electron-builder": "^20.11.1",
     "electron-mocha": "^6.0.2",
     "electron-rebuild": "^1.7.3",
