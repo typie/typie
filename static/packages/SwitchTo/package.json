@@ -15,12 +15,10 @@
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "typie-sdk": "^1.0.10",
-    "winctl": "^1.0.2"
+    "typie-sdk": "^1.0.10"
   },
   "repository": {
-    "type": "git",
-    "url": "https://github.com/typie/switch-to-pkg.git"
+    "type": "git"
   },
   "typie": {
     "title": "SwitchTo",
