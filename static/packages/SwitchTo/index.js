@@ -20,10 +20,7 @@ class SwitchTo extends AbstractTypiePackage {
 
     activate(pkgList, item, cb) {
         this.win.hide();
-        setTimeout(() => {
-            console.log(item);
-            this.typie.remove(item).go()
-        }, 2000);
+        this.typie.remove(item).go()
     }
 
     // remove(pkgList, item, cb) {
