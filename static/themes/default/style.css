@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:800|Roboto+Condensed:300");
 @import url("https://fonts.googleapis.com/css?family=Montserrat:800|Roboto+Condensed:300");
 @import url("https://fonts.googleapis.com/css?family=Montserrat:800|Roboto+Condensed:300");
-@import url("themes/default/animate.css");
+@import url("animate.css");
 .search {
     width: 100%;
     outline: none;
@@ -49,6 +49,9 @@
     width: 20px;
     height: 20px;
     text-align: center;
+
+    -webkit-app-region: no-drag !important;
+    user-select: unset !important;
 }
 
 .search .close:hover {

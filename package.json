@@ -3,6 +3,7 @@
   "version": "1.0.15",
   "license": "MIT",
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
+  "description": "Typie - the fastest, fuzzy search, open source key launcher around",
   "homepage": "https://github.com/typie",
   "scripts": {
     "dev": "electron-webpack dev --inspect --disable-gpu --enable-transparent-visuals",
