@@ -8443,10 +8443,10 @@ typie-go@^0.1.6:
   resolved "https://registry.yarnpkg.com/typie-go/-/typie-go-0.1.6.tgz#13e9d93ebacb786e55bbff95450497581f16b60e"
   integrity sha512-mrRvAz6L6G6niIsgGvfgjKvvEFQks+FO47upmo7F2jPBj939LiWf/NuxIBXHMWKQss8ioFKngjAWHlcAvyGaYg==
 
-typie-sdk@^1.0.14:
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/typie-sdk/-/typie-sdk-1.0.14.tgz#876d591e9677aa3e51db8a2f62b0dcf69b3ed78a"
-  integrity sha512-eWnhHi5UaRpkDOTyRRj7XT/I2MfHwFqjkXYxoPrpGkP6hgJMfU3HFv7aKyq0Yx4Opu4VFZd/pWyoG5mDcnlv9w==
+typie-sdk@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/typie-sdk/-/typie-sdk-1.0.16.tgz#bc03981be4abd49259f9f9e35b5ea1b2bc7dd1cd"
+  integrity sha512-qqo5C6IUzfmRvlozgGaTaNr72MtSmMIlpQ2xHmvJh5fztGDy55oBuEolDo/TMk/mhjEmvXaf2GJcwLeNfdYRDw==
   dependencies:
     electron-is-dev "0.3.0"
     typie-go "^0.1.6"

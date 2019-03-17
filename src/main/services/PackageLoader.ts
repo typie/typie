@@ -27,10 +27,13 @@ export default class PackageLoader {
         this.packages = {};
         this.timeoutsArray = {};
 
-        this.loadTypiePkg();
-        this.loadPackages();
         config.on("reloadPackage", pkgName => this.loadPackage(pkgName));
         AppGlobal.set("PackageLoader", this);
+    }
+
+    public loadAll() {
+        this.loadTypiePkg();
+        this.loadPackages();
     }
 
     public getPackage(pkg: string): Promise<AbstractTypiePackage> {
