@@ -92,7 +92,10 @@
     color: #fff;
     /*-webkit-font-smoothing: subpixel-antialiased !important;*/
 }
-
+.results li span b {
+    font-weight: bold;
+    color: lawngreen;
+}
 .results li p {
     font-family: "Roboto Condensed", sans-serif;
     font-size: 12px;
@@ -133,12 +136,13 @@
 }
 
 .results li.selected {
-    background-color: #2e2e2e;
+    background-color: #37175b;
     border-left: 2px solid #a6e5ff;
 }
 
 .results li.selected span {
-    color: #a6e5ff;
+    /*color: #a6e5ff;*/
+    color: white;
 }
 
 .results li span.label {

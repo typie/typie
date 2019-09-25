@@ -32,7 +32,7 @@ class TypieSearch extends PolymerElement {
                     <li onclick="click()" class$="[[item.selected]]">
                         <img src="[[item.i]]">
                         <div class="texts">
-                            <span>[[ item.title ]]</span>
+                            <span inner-h-t-m-l="[[item.titleHighLight]]"></span>
                             <template is="dom-repeat" items="[[item.l]]" as="label">
                                 <span class$="label [[label.style]]">[[ label.text ]]</span>
                             </template>
@@ -289,6 +289,19 @@ class TypieSearch extends PolymerElement {
         // console.log('updateList', data);
         this.clearLoading();
         if (data && data.data && data.data.length > 0) {
+            data.data = data.data.map((o) => {
+                let i;
+                o.titleHighLight = o.title;
+                if (o.idxs) {
+                    for (i of o.idxs.reverse()) {
+                        let tmp = o.titleHighLight.split('');
+                        tmp.splice(i+1, 0, "</b>");
+                        tmp.splice(i, 0, "<b>");
+                        o.titleHighLight = tmp.join('');
+                    }
+                }
+                return o;
+            });
             this.set('itemList', data.data);
             this.set('jsonList', JSON.stringify(data.data));
             this.set('selectedIndex', -1);
