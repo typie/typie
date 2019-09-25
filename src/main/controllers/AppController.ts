@@ -14,12 +14,16 @@ export default class AppController {
     public static bootstrapGoDispatcher(win: MainWindowController, config: ConfigLoader): Promise<any> {
         return new Promise((resolve, reject) => {
             AppController.goDispatcher = new GoDispatcher(AppGlobal.paths().getGoDispatchPath());
+            AppGlobal.set("GoDispatcher", AppController.goDispatcher);
+            const packageLoader = new PackageLoader(win, config);
+            GoDispatcher.emitter.on("typieServiceListening", () => {
+                packageLoader.loadAll();
+            });
             let bootstrapTimeout = 10000;
             const bootstrap = setInterval(() => {
                 if (GoDispatcher.listening && win.isExist) {
                     clearInterval(bootstrap);
-                    AppGlobal.set("GoDispatcher", AppController.goDispatcher);
-                    AppController.typieListener = new TypieListener(new PackageLoader(win, config));
+                    AppController.typieListener = new TypieListener(packageLoader);
                     resolve();
                 }
                 bootstrapTimeout--;

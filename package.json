@@ -1,8 +1,9 @@
 {
   "name": "Typie",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "license": "MIT",
   "author": "Rotem Grimberg <rotemgrim@gmail.com>",
+  "description": "Typie - the fastest, fuzzy search, open source key launcher around",
   "homepage": "https://github.com/typie",
   "scripts": {
     "dev": "electron-webpack dev --inspect --disable-gpu --enable-transparent-visuals",
@@ -31,7 +32,7 @@
     "npm": "^6.0.1",
     "source-map-support": "^0.5.5",
     "typie-go": "^0.1.6",
-    "typie-sdk": "^1.0.13"
+    "typie-sdk": "^1.0.16"
   },
   "devDependencies": {
     "electron": "^4.0.5",

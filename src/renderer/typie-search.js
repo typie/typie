@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {TypieRowItem} from "typie-sdk";
 import '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/polymer/lib/elements/dom-repeat.js';
@@ -25,11 +25,11 @@ class TypieSearch extends PolymerElement {
                     [[loadingTitle]]
                 </div>
                 <input autofocus id="inputField" type="text" placeholder=""/>
-                <div class="close" onclick="close()">x</div>
+                <div class="close" on-click="handleCloseClick">x</div>
             </div>
             <ul class="results">
                 <template id="resultList" is="dom-repeat" items="[[itemList]]" as="item">
-                    <li onclick="click()" class$="[[item.selected]]">
+                    <li on-click="handleClickItem" class$="[[item.selected]]">
                         <img src="[[item.i]]">
                         <div class="texts">
                             <span inner-h-t-m-l="[[item.titleHighLight]]"></span>
@@ -119,10 +119,18 @@ class TypieSearch extends PolymerElement {
         return desc || actions;
     }
 
-//            click() {
-//                console.log('click');
-//                console.log(this.itemList[this.selectedIndex]);
-//            }
+    handleClickItem(e) {
+        const li = e.target.closest('li');
+        const nodes = Array.from(li.closest('ul').children);
+        this.selectedIndex = nodes.indexOf(li);
+        this.onEnter(e);
+    }
+
+    handleCloseClick(e) {
+        console.log(e);
+        this.onEscape(e);
+    }
+
     keyDown(e) {
         switch (e.code) {
             case "Tab":
