@@ -300,13 +300,18 @@ class TypieSearch extends PolymerElement {
             data.data = data.data.map((o) => {
                 let i;
                 o.titleHighLight = o.title;
-                if (o.idxs) {
+                if (o.idxs && o.idxs.length > 0) {
                     for (i of o.idxs.reverse()) {
                         let tmp = o.titleHighLight.split('');
-                        tmp.splice(i+1, 0, "</b>");
-                        tmp.splice(i, 0, "<b>");
+                        tmp.splice(i+1, 0, "|TBE|");
+                        tmp.splice(i, 0, "|TB|");
                         o.titleHighLight = tmp.join('');
                     }
+                    o.titleHighLight = this.escapeHtml(o.titleHighLight);
+                    o.titleHighLight = o.titleHighLight.replace(/\|TB\|/g, "<b>");
+                    o.titleHighLight = o.titleHighLight.replace(/\|TBE\|/g, "</b>");
+                } else {
+                    o.titleHighLight = this.escapeHtml(o.title);
                 }
                 return o;
             });
@@ -493,6 +498,17 @@ class TypieSearch extends PolymerElement {
         this.dispatchEvent(new CustomEvent('setHeight', {
             detail: height
         }));
+    }
+
+    escapeHtml(str) {
+        return str.replace(/[&<>'"]/g,
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag));
     }
 }
 customElements.define('typie-search', TypieSearch);
