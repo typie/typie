@@ -20,7 +20,7 @@
     "@polymer/polymer": "^3.0.2",
     "@types/js-yaml": "^3.10.1",
     "@webcomponents/webcomponentsjs": "^2.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "chokidar": "^2.0.3",
     "download-git-repo": "^1.0.2",
     "electron-is": "^2.4.0",
