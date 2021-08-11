@@ -21,6 +21,8 @@ if (is.windows()) {
     goDispatchPath = Path.join(__static, "bin/typie_go.exe");
 } else if (is.osx()) {
     goDispatchPath = Path.join(__static, "bin/typie_go");
+} else {
+    goDispatchPath = Path.join(__static, "bin/typie_go");
 }
 
 AppGlobal.startTime = Date.now();

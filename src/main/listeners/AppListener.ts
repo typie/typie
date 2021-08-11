@@ -10,11 +10,13 @@ export default class AppListener {
     public static init(win: MainWindowController): void {
         const config = new ConfigLoader();
         app.on("ready", async () => {
-            await AppController.bootstrapApp(win, config);
-            await AppController.bootstrapGoDispatcher(win, config);
-            ShortcutListener.listen(win, config);
-            TrayBuilder.init();
-            AppListener.listen(win, config);
+            setTimeout(async () => {
+                await AppController.bootstrapApp(win, config);
+                await AppController.bootstrapGoDispatcher(win, config);
+                ShortcutListener.listen(win, config);
+                TrayBuilder.init();
+                AppListener.listen(win, config);
+            }, 1000);
         });
         app.on("window-all-closed", () => AppController.windowAllClosed());
         app.on("will-quit", (e) => AppController.willQuit(e));
