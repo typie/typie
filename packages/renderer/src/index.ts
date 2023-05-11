@@ -4,10 +4,6 @@
 // createApp(App).mount("#app");
 
 import "./typie-search";
-console.log("test1");
-// const {ipcRenderer} = require("electron");
-// const Path = require("path");
-//
 const typieSearch= document.createElement("typie-search");
 document.getElementById("app")?.appendChild(typieSearch);
 document.body.style.margin = "0";
@@ -24,7 +20,7 @@ typieSearch.addEventListener("activate", (e: CustomEvent) => window.electronAPI.
 typieSearch.addEventListener("enterPkg", (e: CustomEvent) => window.electronAPI.enterPkg(e.detail));
 typieSearch.addEventListener("clear", (e: CustomEvent) => window.electronAPI.clear(e.detail));
 typieSearch.addEventListener("delete", (e: CustomEvent) => window.electronAPI.delete(e.detail));
-typieSearch.addEventListener("escape", (e: CustomEvent) => window.electronAPI.hide());
+typieSearch.addEventListener("escape", (e: CustomEvent) => window.electronAPI.escape());
 typieSearch.addEventListener("setHeight", (e: CustomEvent) => window.electronAPI.setHeight(e.detail));
 
 // // listen for main process events and pass them to the ui

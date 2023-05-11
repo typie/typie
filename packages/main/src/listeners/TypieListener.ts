@@ -2,7 +2,7 @@ import {ipcMain} from "electron";
 import type { SearchObject} from "/@/services/sdk/index";
 import {TypieCore, TypieRowItem, getPath} from "/@/services/sdk/index";
 import type PackageLoader from "../services/PackageLoader";
-import type AbstractTypiePackage from "/@/services/sdk/index/AbstractTypiePackage";
+import type AbstractTypiePackage from "../services/sdk/AbstractTypiePackage";
 import Calculator from "../packages/calculator/Calculator";
 
 export default class TypieListener {

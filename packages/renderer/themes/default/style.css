@@ -2,7 +2,8 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:800|Roboto+Condensed:300");
 @import url("https://fonts.googleapis.com/css?family=Montserrat:800|Roboto+Condensed:300");
 @import url("https://fonts.googleapis.com/css?family=Montserrat:800|Roboto+Condensed:300");
-@import url("/themes/default/animate.css");
+@import url("animate.css");
+
 .search {
     width: 100%;
     outline: none;
@@ -13,7 +14,7 @@
     justify-content: center;
 }
 
-.search .pkgList, .search .prefix, .search input, .search .loading {
+.pkgList, .search .prefix, .search input, .search .loading {
     white-space: nowrap;
     color: #fff;
     font-family: "Montserrat", arial;
@@ -154,12 +155,12 @@
     letter-spacing: 0.05em;
 }
 
-.results li span.label.green{
+.results li span.label.green {
     color: black;
     background-color: #18b195;
 }
 
-.results li span.label.orange{
+.results li span.label.orange {
     color: black;
     background-color: #e27824;
 }
@@ -241,12 +242,15 @@ body {
 }
 
 #app > div {
-    -webkit-app-region: drag; user-select: none;
+    -webkit-app-region: drag;
+    user-select: none;
 }
+
 #app > ul {
     -webkit-app-region: no-drag !important;
     user-select: none !important;
 }
+
 #app input {
     -webkit-app-region: no-drag !important;
     user-select: text !important;
@@ -304,14 +308,6 @@ body {
     font-size: small;
     color: #868686;
 }
-
-
-
-
-
-
-
-
 
 
 .spinner {

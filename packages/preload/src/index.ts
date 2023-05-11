@@ -2,21 +2,21 @@
  * @module preload
  */
 
-export {sha256sum} from "./nodeCrypto";
-export {versions} from "./versions";
+// export {sha256sum} from "./nodeCrypto";
+// export {versions} from "./versions";
 
 
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
     // listen for ui events and pass them to the main process
-    search: (e: CustomEvent) => ipcRenderer.send("search", e.detail),
-    activate: (e: CustomEvent) => ipcRenderer.send("activate", e.detail),
-    enterPkg: (e: CustomEvent) => ipcRenderer.send("enterPkg", e.detail),
-    clear: (e: CustomEvent) => ipcRenderer.send("clear", e.detail),
-    delete: (e: CustomEvent) => ipcRenderer.send("delete", e.detail),
-    escape: (e: CustomEvent) => ipcRenderer.send("hide"),
-    setHeight: (e: CustomEvent) => ipcRenderer.send("setHeight", e.detail),
+    search: (e: any) => ipcRenderer.send("search", e),
+    activate: (e: any) => ipcRenderer.send("activate", e),
+    enterPkg: (e: any) => ipcRenderer.send("enterPkg", e),
+    clear: (e: any) => ipcRenderer.send("clear", e),
+    delete: (e: any) => ipcRenderer.send("delete", e),
+    escape: () => ipcRenderer.send("hide"),
+    setHeight: (e: any) => ipcRenderer.send("setHeight", e),
 
 
     // listen for main process events and pass them to the ui

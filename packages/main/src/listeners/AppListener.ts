@@ -15,6 +15,7 @@ export default class AppListener {
             ShortcutListener.listen(win, config);
             TrayBuilder.init();
             AppListener.listen(win, config);
+            win.loadWin();
         });
         app.on("window-all-closed", () => AppController.windowAllClosed());
         app.on("will-quit", (e) => AppController.willQuit(e));

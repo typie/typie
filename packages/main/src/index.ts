@@ -1,5 +1,5 @@
 import {app} from "electron";
-import "./security-restrictions";
+// import "./security-restrictions";
 import {restoreOrCreateWindow} from "/@/mainWindow";
 import {platform} from "node:process";
 

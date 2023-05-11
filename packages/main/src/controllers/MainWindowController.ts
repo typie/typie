@@ -26,8 +26,8 @@ export default class MainWindowController extends AbstractWindowController {
 
             nodeIntegration: true,
             contextIsolation: true,
-            sandbox: false, // Sandbox disabled because the demo of preload script depend on the Node.js api
-            webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
+            // sandbox: false, // Sandbox disabled because the demo of preload script depend on the Node.js api
+            // webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
             preload: join(app.getAppPath(), "packages/preload/dist/index.cjs"),
         },
         width: 475,

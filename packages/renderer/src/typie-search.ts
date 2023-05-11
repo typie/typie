@@ -5,17 +5,26 @@ import TypieRowItem from "../../main/src/services/sdk/models/TypieRowItem";
 @customElement("typie-search")
 class TypieSearch extends LitElement {
 
-    private selectedIndex: number;
+    @state()
+    private _selectedIndex: number;
+    @state()
     private selectedItem: any;
+    @state()
     private pkgList: any;
-    private itemList: any;
+    @state()
+    private itemList: any = [];
+    @state()
     private jsonList: string;
+    @state()
     private searchTime: string;
+    @state()
     private totalItems: number;
 
     @state()
     private isLoading: string;
+    @state()
     private loadingTitle: string;
+    @state()
     private resultMsg: string;
 
     @query("#inputField")
@@ -26,27 +35,17 @@ class TypieSearch extends LitElement {
 
     constructor() {
         super();
-        console.log("test3");
         this.pkgList = [];
         this.clearResultMsg();
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-
-        // this.shadowRoot.addEventListener("dom-change", (e) => {
-        //     this.setHeight();
-        // });
+    set selectedIndex(num: number) {
+        this._selectedIndex = num;
+        this._indexChange();
     }
 
-    disconnectedCallback() {
-        // this.input.removeEventListener("input", () => this.change());
-        // this.input.removeEventListener("keydown", e => this.keyDown(e));
-    }
-
-    firstUpdated() {
-        this.input.addEventListener("input", () => this.inputChange());
-        this.input.addEventListener("keydown", e => this.keyDown(e));
+    get selectedIndex(): number {
+        return this._selectedIndex;
     }
 
     isEmpty(variable) {
@@ -55,10 +54,6 @@ class TypieSearch extends LitElement {
 
     hideScore(score) {
         return !score || score === 0;
-    }
-
-    hideAction(actions) {
-        return !actions;
     }
 
     hideDesc(description, actions) {
@@ -244,7 +239,7 @@ class TypieSearch extends LitElement {
     }
 
     updateList(data) {
-        // console.log('updateList', data);
+        console.log("updateList", data);
         this.clearLoading();
         if (data && data.data && data.data.length > 0) {
             this.itemList = data.data;
@@ -290,9 +285,9 @@ class TypieSearch extends LitElement {
 
     _indexChange() {
         // console.log('active change');
-        if (this.jsonList && this.selectedIndex >= 0) {
+        if (this.jsonList && this._selectedIndex >= 0) {
             const tmp = JSON.parse(this.jsonList);
-            tmp[this.selectedIndex].selected = "selected";
+            tmp[this._selectedIndex].selected = "selected";
             this.itemList = tmp;
         }
     }
@@ -432,10 +427,12 @@ class TypieSearch extends LitElement {
             <div id="app" class="${this.isLoading}">
                 <div class="icon"></div>
                 <div class="search">
-                    <template id="pkgList" is="dom-repeat" items="[[pkgList]]" as="pkg">
-                        <span class="prefix">[[pkg]]</span>
-                        <span class="arrow">&#9658;</span>
-                    </template>
+                    <div class="pkgList">
+                        ${this.pkgList.map(pkg => html`
+                            <span class="prefix">${pkg}</span>
+                            <span class="arrow">&#9658;</span>
+                        `)}
+                    </div>
                     <div class="loading">
                         <div class="spinner">
                             <div class="rect1"></div>
@@ -444,41 +441,49 @@ class TypieSearch extends LitElement {
                             <div class="rect4"></div>
                             <div class="rect5"></div>
                         </div>
-                        [[loadingTitle]]
+                        ${this.loadingTitle}
                     </div>
-                    <input autofocus id="inputField" type="text" placeholder="" />
-                    <div class="close" on-click="handleCloseClick">x</div>
+                    <input
+                        @input="${this.inputChange}"
+                        @keydown="${this.keyDown}"
+                        autofocus
+                        id="inputField"
+                        type="text"
+                        placeholder="" />
+                    <div class="close" @click="${this.handleCloseClick}">x</div>
                 </div>
                 <ul class="results">
-                    <template id="resultList" is="dom-repeat" items="[[itemList]]" as="item">
-                        <li on-click="handleClickItem" class$="[[item.selected]]">
-                            <img src="[[item.i]]">
-                            <div class="texts">
-                                <span>[[ item.title ]]</span>
-                                <template is="dom-repeat" items="[[item.l]]" as="label">
-                                    <span class$="label [[label.style]]">[[ label.text ]]</span>
-                                </template>
-                                <p class$="selectedAction animated [[item.actionFlip]]"
-                                   hidden$="[[hideAction(item.a)]]">[[ item.a.0.description ]]</p>
-                                <p hidden$="[[hideDesc(item.d, item.a)]]">[[item.d]]</p>
-                                <p hidden$="[[hidePath(item.d, item.a)]]">[[item.p]]</p>
-                            </div>
-                            <div class="score">
-                                <span hidden$="[[hideScore(item.score)]]">[[item.score]]</span>
-                                <span hidden$="[[hideScore(item.c)]]"> + [[item.c]]</span>
-                            </div>
-                        </li>
-                    </template>
+                    ${this.itemList.map(item =>
+                        html`
+                            <li @click="${this.handleClickItem}"
+                                class="${item.selected ? "selected" : ""}">
+                                <img src="${item.i}">
+                                <div class="texts">
+                                    <span>${item.title}</span>
+                                    ${item.l?.map(label => html`
+                                        <span class="label ${label.style}">${label.text}</span>
+                                    `)}
+                                    <p class="selectedAction animated ${item.actionFlip}"
+                                       ?hidden="${!item.a || item.a?.length == 0}">
+                                        ${item.a?.[0]?.description}
+                                    </p>
+                                    <p ?hidden="${item.a || !item.d || item.d == ""}">${item.d}</p>
+                                    <p ?hidden="${item.d || item.a}">${item.p}</p>
+                                </div>
+                                <div class="score">
+                                    <span ?hidden="${!item.score || item.score == 0}">${item.score}</span>
+                                    <span ?hidden="${!item.score && item.c}"> + ${item.c}</span>
+                                </div>
+                            </li>`)}
                 </ul>
                 <div class="footer">
                     <div class="search-time">
-                        <span>[[searchTime]]</span>
-                        <span hidden$="[[isEmpty(resultMsg)]]"> | [[resultMsg]]</span>
+                        <span>${this.searchTime}</span>
+                        <span ?hidden="${!this.resultMsg}"> | ${this.resultMsg}</span>
                     </div>
 
                     <div class="handle">· · · ·</div>
                     <div class="status">Typie {%VERSION%}</div>
-                    <!--<div class="status">[[totalItems]] items in Catalog · Typie {%VERSION%}</div>-->
                 </div>
             </div>
         `;
