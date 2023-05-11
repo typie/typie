@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "esnext",
+        "sourceMap": false,
+        "moduleResolution": "Node",
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "noImplicitAny": false,
+        "isolatedModules": true,
+        "types": ["node"],
+        "baseUrl": ".",
+        "paths": {
+            "/@/*": ["./src/*"]
+        }
+    },
+    "include": ["src/**/*.ts", "../../types/**/*.d.ts"],
+    "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}

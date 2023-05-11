@@ -1,91 +1,67 @@
 {
-  "name": "Typie",
-  "version": "1.0.18",
-  "license": "MIT",
-  "author": "Rotem Grimberg <rotemgrim@gmail.com>",
-  "description": "Typie - the fastest, fuzzy search, open source key launcher around",
-  "homepage": "https://github.com/typie",
-  "scripts": {
-    "dev": "electron-webpack dev --inspect --disable-gpu --enable-transparent-visuals",
-    "compile": "electron-webpack",
-    "dist": "yarn compile && build",
-    "release": "yarn compile && build",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
-    "check": "./node_modules/.bin/tslint --project tsconfig.json --config tslint.json",
-    "fix": "./node_modules/.bin/tslint --fix --project tsconfig.json --config tslint.json",
-    "test": "./node_modules/.bin/electron-mocha test/main --reporter list",
-    "version": "npm -v"
-  },
-  "dependencies": {
-    "@polymer/polymer": "^3.0.2",
-    "@types/js-yaml": "^3.10.1",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
-    "axios": "^0.18.0",
-    "chokidar": "^2.0.3",
-    "download-git-repo": "^1.0.2",
-    "electron-is": "^2.4.0",
-    "electron-log": "^2.2.14",
-    "fs-extra": "^5.0.0",
-    "js-yaml": "^3.11.0",
-    "mathjs": "^5.0.0",
-    "mkdirp": "^0.5.1",
-    "npm": "^6.0.1",
-    "source-map-support": "^0.5.5",
-    "typie-go": "^0.1.6",
-    "typie-sdk": "^1.0.16"
-  },
-  "devDependencies": {
-    "electron": "^4.0.5",
-    "electron-builder": "^20.11.1",
-    "electron-mocha": "^6.0.2",
-    "electron-rebuild": "^1.7.3",
-    "electron-webpack": "^1.13.0",
-    "electron-webpack-ts": "^1.4.0",
-    "string-replace-loader": "^2.1.1",
-    "tslint": "^5.9.1",
-    "tslint-loader": "^3.6.0",
-    "typescript": "^2.8.3",
-    "webpack": "^3.11.0",
-    "yarn": "^1.6.0"
-  },
-  "resolutions": {
-    "webpack-sources": "1.0.1"
-  },
-  "electronWebpack": {
-    "renderer": {
-      "webpackConfig": "webpack.config.js"
+    "name": "Typie2",
+    "version": "2.0.23",
+    "license": "MIT",
+    "author": "Rotem Grimberg <rotemgrim@gmail.com>",
+    "description": "Typie - the fastest, fuzzy search, open source key launcher around",
+    "homepage": "https://github.com/typie",
+    "main": "packages/main/dist/index.cjs",
+    "scripts": {
+        "build": "npm run build:main && npm run build:preload && npm run build:renderer",
+        "build:main": "cd ./packages/main && vite build",
+        "build:preload": "cd ./packages/preload && vite build",
+        "build:renderer": "cd ./packages/renderer && vite build",
+        "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=false",
+        "compile:pack": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --config.asar=true --win",
+        "test": "npm run test:main && npm run test:preload && npm run test:renderer && npm run test:e2e",
+        "test:e2e": "npm run build && vitest run",
+        "test:main": "vitest run -r packages/main --passWithNoTests",
+        "test:preload": "vitest run -r packages/preload --passWithNoTests",
+        "test:renderer": "vitest run -r packages/renderer --passWithNoTests",
+        "watch": "node scripts/watch.mjs",
+        "lint": "eslint . --ext js,mjs,cjs,ts,mts,cts,vue",
+        "lint:fix": "eslint . --ext js,mjs,cjs,ts,mts,cts,vue --fix",
+        "typecheck:main": "tsc --noEmit -p packages/main/tsconfig.json",
+        "typecheck:preload": "tsc --noEmit -p packages/preload/tsconfig.json",
+        "typecheck:renderer": "vue-tsc --noEmit -p packages/renderer/tsconfig.json",
+        "typecheck": "npm run typecheck:main && npm run typecheck:preload && npm run typecheck:renderer",
+        "postinstall": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/update-electron-vendors.mjs",
+        "format": "npx prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,vue,json}\""
     },
-    "main": {
-      "webpackConfig": "webpack.config.js"
+    "devDependencies": {
+        "@types/node": "20.1.1",
+        "@typescript-eslint/eslint-plugin": "5.59.5",
+        "@vitejs/plugin-vue": "4.2.1",
+        "@vue/test-utils": "2.3.2",
+        "cross-env": "7.0.3",
+        "electron": "24.2.0",
+        "electron-builder": "23.6.0",
+        "eslint": "8.40.0",
+        "eslint-plugin-vue": "9.11.1",
+        "happy-dom": "9.10.9",
+        "lit": "^2.7.4",
+        "nano-staged": "0.8.0",
+        "playwright": "1.33.0",
+        "simple-git-hooks": "2.8.1",
+        "typescript": "5.0.4",
+        "unplugin-auto-expose": "0.0.4",
+        "vite": "4.3.5",
+        "vitest": "0.31.0",
+        "vue": "3.2.47",
+        "vue-tsc": "1.6.4"
+    },
+    "dependencies": {
+        "axios": "^1.4.0",
+        "chokidar": "^3.5.3",
+        "download-git-repo": "^3.0.2",
+        "electron-is": "^3.0.0",
+        "electron-log": "^4.4.8",
+        "electron-updater": "5.3.0",
+        "fs-extra": "^11.1.1",
+        "js-yaml": "^4.1.0",
+        "mathjs": "^11.8.0",
+        "mkdirp": "^3.0.1",
+        "npm": "^7.0.0",
+        "typie-sdk": "github:typie/typie-sdk"
     }
-  },
-  "build": {
-    "appId": "typie",
-    "directories": {
-      "buildResources": "static/themes/default/images/icons/"
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
-    "win": {
-      "target": "nsis"
-    }
-  }
 }

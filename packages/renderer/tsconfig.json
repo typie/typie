@@ -1,0 +1,37 @@
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "esnext",
+        "sourceMap": false,
+        "moduleResolution": "Node",
+        "skipLibCheck": true,
+        "strict": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "types": ["node"],
+        "baseUrl": ".",
+        "paths": {
+            "#preload": ["../preload/src/index"],
+            "/@/*": ["./src/*"]
+        },
+        "lib": ["ESNext", "dom", "dom.iterable", "es2022"],
+
+        "declaration": true,
+        "strictPropertyInitialization": false,
+        "strictFunctionTypes": false,
+        "noImplicitThis": false,
+        "noImplicitAny": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "forceConsistentCasingInFileNames": true,
+        "useUnknownInCatchVariables": true,
+        "useDefineForClassFields": false,
+    },
+    "include": ["src/**/*.vue", "src/**/*.ts", "src/**/*.tsx", "types/**/*.d.ts", "../../types/**/*.d.ts"],
+    "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}
