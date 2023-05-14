@@ -27,9 +27,9 @@ class AbstractWindowController {
     }
 
     public loadWin() {
-        if (is.dev()) {
-            this.win!.webContents.openDevTools();
-        }
+        // if (is.dev()) {
+        //     this.win!.webContents.openDevTools();
+        // }
 
         if (is.dev() && import.meta.env.VITE_DEV_SERVER_URL) {
             console.debug(`load url: ${import.meta.env.VITE_DEV_SERVER_URL}`);

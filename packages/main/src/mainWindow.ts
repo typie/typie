@@ -1,7 +1,6 @@
 import {app, BrowserWindow} from "electron";
 import {join, resolve} from "node:path";
 
-
 process.on("uncaughtException", e => console.log("uncaughtException was fired", e));
 
 import "./helpers/ApplicationEnvironment";
@@ -9,12 +8,14 @@ import AppListener from "./listeners/AppListener";
 import MakeSingular from "./helpers/MakeSingleInstance";
 import MainWindowController from "./controllers/MainWindowController";
 import {AppGlobal} from "/@/services/sdk/index";
+import NotificationWindowController from "/@/controllers/NotificationWindowController";
 
 const mainWindow = new MainWindowController();
+const notificationWindow = new NotificationWindowController();
 (async () => {
     try {
         await MakeSingular.init();
-        AppListener.init(mainWindow);
+        AppListener.init(mainWindow, notificationWindow);
     } catch (e) {
         console.log(e);
         throw new Error("Oops! Something went wrong");

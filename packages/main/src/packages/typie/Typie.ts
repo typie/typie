@@ -4,6 +4,7 @@ import Path from "path";
 import SubTypieConfigure from "./SubTypieConfigure";
 import SubTypieInstall from "./SubTypieInstall";
 import SubTypieShowLogs from "./SubTypieShowLogs";
+import dgram from "node:dgram";
 
 export default class Typie extends AbstractTypiePackage {
 
@@ -23,6 +24,9 @@ export default class Typie extends AbstractTypiePackage {
         switch (path) {
             case "quit":
                 app.quit();
+                break;
+            case "test-notification":
+                demoNotify();
                 break;
             default:
                 shell.openPath(item.getPath());
@@ -89,8 +93,26 @@ export default class Typie extends AbstractTypiePackage {
                 .setIcon(this.icon)
                 .setPath(AppGlobal.paths().getSelectedThemePath()));
 
+        itemsArray.push(
+            new TypieRowItem("Test notification")
+                .setDB(this.packageName)
+                .setPackage(this.packageName)
+                .setDescription("send demo notification")
+                .setIcon(this.icon)
+                .setPath("test-notification"));
+
         this.typie.multipleInsert(itemsArray).go()
             .then(data => console.info("Typie plugin done adding", data))
             .catch(err => console.error("Typie plugin insert error", err));
     }
+}
+
+function demoNotify() {
+    const payload = Buffer.from(JSON.stringify({
+        msg: "<span><span style='color: #ea8484'>Typie</span> <span style='color: #18b195'>is ready</span></span> ✅",
+    }));
+    const client = dgram.createSocket("udp4");
+    client.send(payload, 41234, "localhost", function(err, bytes) {
+        client.close();
+    });
 }

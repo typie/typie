@@ -5,6 +5,7 @@ import PackageLoader from "../services/PackageLoader";
 import type ConfigLoader from "../services/ConfigLoader";
 import type MainWindowController from "./MainWindowController";
 import {createFolderIfNotExist} from "../helpers/HelperFunc";
+import type NotificationWindowController from "/@/controllers/NotificationWindowController";
 
 export default class AppController {
 
@@ -35,7 +36,7 @@ export default class AppController {
         });
     }
 
-    public static async bootstrapApp(win: MainWindowController, config: ConfigLoader): Promise<void> {
+    public static async bootstrapApp(win: MainWindowController, nWin: NotificationWindowController, config: ConfigLoader): Promise<void> {
         return new Promise((resolve, reject) => {
             Promise.all([
                 createFolderIfNotExist(AppGlobal.paths().getConfigDir()),
@@ -44,6 +45,7 @@ export default class AppController {
             ]).then(() => {
                 config.init();
                 win.createWindow();
+                nWin.createWindow();
                 resolve();
             }).catch(err => {
                 console.error("Could not start Application", err);

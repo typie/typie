@@ -30,4 +30,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     clearValue: (callback: any) => ipcRenderer.on("clearValue", callback),
     hideCss: (callback: any) => ipcRenderer.on("hideCss", callback),
     showCss: (callback: any) => ipcRenderer.on("showCss", callback),
+
+    // listen for main process events on notifications
+    notification: (callback: any) => ipcRenderer.on("notification", callback),
 });

@@ -8,11 +8,6 @@ const typieSearch= document.createElement("typie-search");
 document.getElementById("app")?.appendChild(typieSearch);
 document.body.style.margin = "0";
 
-declare global {
-    interface Window {
-        electronAPI: any;
-    }
-}
 
 // listen for ui events and pass them to the main process
 typieSearch.addEventListener("search", (e: CustomEvent) => window.electronAPI.search(e.detail));
@@ -36,3 +31,9 @@ window.electronAPI.clearValue((event, data) => typieSearch.clearValue());
 window.electronAPI.hideCss((event, data) => document.body.style.opacity = "0");
 window.electronAPI.showCss((event, data) => document.body.style.opacity = "1");
 
+
+declare global {
+    interface Window {
+        electronAPI: any;
+    }
+}

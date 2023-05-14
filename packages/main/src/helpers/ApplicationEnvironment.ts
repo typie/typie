@@ -5,12 +5,14 @@ import * as is from "electron-is";
 import {AppGlobal} from "/@/services/sdk/index";
 // declare const __static: any;
 
-if (process.env.NODE_ENV === "development") {
+if (is.dev()) {
     global.__static = Path.join(__dirname, "../../static").replace(/\\/g, "\\\\");
     global.__themesPath = Path.join(__dirname, "../renderer/themes").replace(/\\/g, "\\\\");
 } else {
     global.__static = Path.join(__dirname, "../../static").replace(/\\/g, "\\\\");
     global.__themesPath = Path.join(__dirname, "../renderer/themes").replace(/\\/g, "\\\\");
+    // global.__static = Path.join(__dirname, '../static').replace(/\\/g, '\\\\')
+    // global.__themesPath = Path.join(__dirname, '../renderer/themes').replace(/\\/g, '\\\\')
 }
 
 const userDataPath = app.getPath("userData");
