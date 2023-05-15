@@ -1,4 +1,4 @@
-import {app, ipcMain} from "electron";
+import {app, ipcMain, protocol} from "electron";
 import AppController from "../controllers/AppController";
 import ConfigLoader from "../services/ConfigLoader";
 import type MainWindowController from "../controllers/MainWindowController";
@@ -6,12 +6,17 @@ import ShortcutListener from "../listeners/ShortcutListener";
 import TrayBuilder from "../helpers/TrayBuilder";
 import type NotificationWindowController from "/@/controllers/NotificationWindowController";
 import NotificationListener from "/@/listeners/NotificationListener";
+import url from "node:url";
 
 export default class AppListener {
 
     public static init(win: MainWindowController, notificationWin: NotificationWindowController): void {
         const config = new ConfigLoader();
         app.on("ready", async () => {
+            protocol.registerFileProtocol("atom", (request, callback) => {
+                const filePath = url.fileURLToPath("file://" + request.url.slice("atom://".length));
+                callback(filePath);
+            });
             await AppController.bootstrapApp(win, notificationWin, config);
             await AppController.bootstrapGoDispatcher(win, config);
             ShortcutListener.listen(win, config);

@@ -22,7 +22,7 @@ export default class MainWindowController extends AbstractWindowController {
         transparent: true,
 
         webPreferences: {
-            // webSecurity: false,
+            webSecurity: false,
 
             nodeIntegration: true,
             contextIsolation: true,

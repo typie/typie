@@ -7,12 +7,10 @@ import {AppGlobal} from "/@/services/sdk/index";
 
 if (is.dev()) {
     global.__static = Path.join(__dirname, "../../static").replace(/\\/g, "\\\\");
-    global.__themesPath = Path.join(__dirname, "../renderer/themes").replace(/\\/g, "\\\\");
+    global.__themesPath = Path.join(__dirname, "../../static/themes").replace(/\\/g, "\\\\");
 } else {
     global.__static = Path.join(__dirname, "../../static").replace(/\\/g, "\\\\");
-    global.__themesPath = Path.join(__dirname, "../renderer/themes").replace(/\\/g, "\\\\");
-    // global.__static = Path.join(__dirname, '../static').replace(/\\/g, '\\\\')
-    // global.__themesPath = Path.join(__dirname, '../renderer/themes').replace(/\\/g, '\\\\')
+    global.__themesPath = Path.join(__dirname, "../../static/themes").replace(/\\/g, "\\\\");
 }
 
 const userDataPath = app.getPath("userData");

@@ -18,6 +18,7 @@ const config = {
     mode: process.env.MODE,
     root: PACKAGE_ROOT,
     envDir: PROJECT_ROOT,
+    publicDir: "../static/",
     resolve: {
         alias: {
             "/@/": join(PACKAGE_ROOT, "src") + "/",

@@ -457,7 +457,7 @@ class TypieSearch extends LitElement {
                         html`
                             <li @click="${this.handleClickItem}"
                                 class="${item.selected ? "selected" : ""}">
-                                <img src="${item.i}">
+                                <img src="${getProtocol(item.i)}">
                                 <div class="texts">
                                     <span>${item.title}</span>
                                     ${item.l?.map(label => html`
@@ -487,6 +487,18 @@ class TypieSearch extends LitElement {
                 </div>
             </div>
         `;
+    }
+}
+
+function getProtocol(staticPath: string) {
+    if (staticPath.startsWith("data:")
+        || staticPath.includes("://") // file: http: atom:
+        || staticPath.includes("../")
+        || staticPath.startsWith("themes")
+        || staticPath.startsWith("/")) {
+        return staticPath;
+    } else {
+        return `file://${staticPath}`;
     }
 }
 

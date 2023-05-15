@@ -5,6 +5,7 @@ import Packet from "./models/Packet";
 import SearchObject from "./models/SearchObject";
 import TypieRowItem from "./models/TypieRowItem";
 import TypieCore from "./TypieCore";
+import is from "electron-is";
 
 export {
     AbstractTypiePackage,
@@ -17,10 +18,9 @@ export {
     SearchObject,
 };
 
-import * as isDev from "electron-is-dev";
 const getPath = (staticPath): string => {
-    if (!isDev) {
-        return "../static/" + staticPath;
+    if (!is.dev()) {
+        return "./../../static/" + staticPath;
     } else {
         return staticPath;
     }
