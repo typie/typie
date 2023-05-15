@@ -1,6 +1,6 @@
 import {css, html, LitElement} from "lit";
 import {customElement, state, query} from "lit/decorators.js";
-import {TypieToasterItem} from "./typie-toaster-item";
+import type {TypieToasterItem} from "./typie-toaster-item";
 import "./typie-toaster-item";
 
 @customElement("typie-toaster")
@@ -25,7 +25,20 @@ class TypieToaster extends LitElement {
         .removing {
             animation: slide-out-right 0.5s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
         }
+        .adding {
+            animation: slide-in-right 0.5s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+        }
 
+        @keyframes slide-in-right {
+            0% {
+                transform: translateX(1000px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
         @keyframes slide-out-right {
             0% {
                 transform: translateX(0);
@@ -54,7 +67,7 @@ class TypieToaster extends LitElement {
 
     removeItem(e) {
         console.log("remove item", e);
-        const itemEl = e.composedPath()[0];
+        const itemEl = e.composedPath()[0] as TypieToasterItem;
         itemEl.remove();
         this.numOfItemsToShow--;
     }
@@ -64,6 +77,7 @@ class TypieToaster extends LitElement {
             <div class="container" @remove-me="${this.removeItem}">
                 ${this.items.map((x, i) => html`
                     <typie-toaster-item
+                        class="adding"
                         timeToHide="4000"
                         msg="${x}">
                     </typie-toaster-item>

@@ -46,6 +46,7 @@ export class TypieToasterItem extends LitElement {
                 super.remove();
             }, 1000);
         }, false);
+        this.classList.remove("adding");
         this.classList.add("removing");
     }
 
