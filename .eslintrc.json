@@ -43,6 +43,7 @@
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/semi": ["error"],
         "no-async-promise-executor": "off",
-        "no-prototype-builtins": "off"
+        "no-prototype-builtins": "off",
+        "no-useless-escape": "warn"
     }
 }

@@ -109,7 +109,8 @@ export default class Typie extends AbstractTypiePackage {
 
 function demoNotify() {
     const payload = Buffer.from(JSON.stringify({
-        msg: "<span><span style='color: #ea8484'>Typie</span> <span style='color: #18b195'>is ready</span></span> ✅",
+        msg: "<span><span style='color: #ea8484'>Typie</span> " +
+            "<span style='color: white'>is testing the notification system </span> </span> 🤪",
     }));
     const client = dgram.createSocket("udp4");
     client.send(payload, 41234, "localhost", function(err, bytes) {

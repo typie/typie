@@ -82,7 +82,7 @@ export default class ConfigLoader extends EventEmitter {
     }
 
     public watchConfDir(): void {
-        console.info("Watching Config folder...");
+        console.info("Watching Config folder...", this.configDir);
 
         // Initialize watcher.
         const watcher = chokidar.watch(this.configDir, {
