@@ -53,7 +53,7 @@ class TypieToaster extends LitElement {
 
     @state()
     items: string[] = [
-        "<span><span style='color: yellow'>Typie</span> <span style='color: #18b195'>is ready</span></span> ✅",
+        "<span><span style='color: white;'>Typie</span> <span style='color: #18b195'>is ready</span></span> ✅",
     ];
 
     @state()

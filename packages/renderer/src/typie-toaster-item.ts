@@ -2,8 +2,6 @@ import {css, html, LitElement} from "lit";
 import {customElement, state, query, property} from "lit/decorators.js";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
-import TypieRowItem from "../../main/src/services/sdk/models/TypieRowItem";
-
 
 @customElement("typie-toaster-item")
 export class TypieToasterItem extends LitElement {
