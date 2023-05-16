@@ -33,6 +33,7 @@ class TypieSearch extends LitElement {
     private input;
     private searchTimer: number;
     private resultMsgTimer: ReturnType<typeof setTimeout>;
+    private focusDebounce: ReturnType<typeof setTimeout>;
 
     constructor() {
         super();
@@ -406,8 +407,10 @@ class TypieSearch extends LitElement {
     }
 
     focus() {
-        // console.log('do focus');
-        this.input.focus();
+        clearTimeout(this.focusDebounce);
+        this.focusDebounce = setTimeout(() => {
+            this.input.focus();
+        });
     }
 
     isCaretAtEnd() {
