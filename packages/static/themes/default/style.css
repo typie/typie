@@ -105,6 +105,11 @@
     -webkit-font-smoothing: subpixel-antialiased !important;
 }
 
+.results li b {
+    color: greenyellow;
+    font-weight: normal;
+}
+
 .results li p.selectedAction {
     display: table-cell;
     color: greenyellow;

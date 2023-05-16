@@ -1,6 +1,8 @@
+import type { TemplateResult} from "lit";
 import {html, LitElement} from "lit";
 import {customElement, state, query} from "lit/decorators.js";
 import TypieRowItem from "../../main/src/services/sdk/models/TypieRowItem";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 @customElement("typie-search")
 class TypieSearch extends LitElement {
@@ -238,10 +240,45 @@ class TypieSearch extends LitElement {
         }
     }
 
+    escapeHtml(str) {
+        return str.replace(/[&<>'"]/g,
+            tag => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                "'": "&#39;",
+                '"': "&quot;",
+            }[tag] || tag));
+    }
+
+    highLight(data) {
+        data.data = data.data.map((o) => {
+            let i;
+            console.log("test", o);
+            o.titleHighLight = o.title;
+            if (o.idxs && o.idxs.length > 0) {
+                for (i of o.idxs.reverse()) {
+                    const tmp = o.titleHighLight.split("");
+                    tmp.splice(i+1, 0, "|TBE|");
+                    tmp.splice(i, 0, "|TB|");
+                    o.titleHighLight = tmp.join("");
+                }
+                o.titleHighLight = this.escapeHtml(o.titleHighLight);
+                o.titleHighLight = o.titleHighLight.replace(/\|TB\|/g, "<b>");
+                o.titleHighLight = o.titleHighLight.replace(/\|TBE\|/g, "</b>");
+            } else {
+                o.titleHighLight = this.escapeHtml(o.title);
+            }
+            return o;
+        });
+        return data;
+    }
+
     updateList(data) {
         console.log("updateList", data);
         this.clearLoading();
         if (data && data.data && data.data.length > 0) {
+            data = this.highLight(data);
             this.itemList = data.data;
             this.jsonList = JSON.stringify(data.data);
             this.selectedIndex = -1;
@@ -422,6 +459,14 @@ class TypieSearch extends LitElement {
         }));
     }
 
+    getTitle(item): TemplateResult {
+        let title = item.title;
+        if (item.titleHighLight) {
+            title = unsafeHTML(item.titleHighLight);
+        }
+        return html`${title}`;
+    }
+
     render() {
         return html`
             <div id="app" class="${this.isLoading}">
@@ -459,7 +504,7 @@ class TypieSearch extends LitElement {
                                 class="${item.selected ? "selected" : ""}">
                                 <img src="${getProtocol(item.i)}">
                                 <div class="texts">
-                                    <span>${item.title}</span>
+                                    <span>${this.getTitle(item)}</span>
                                     ${item.l?.map(label => html`
                                         <span class="label ${label.style}">${label.text}</span>
                                     `)}
