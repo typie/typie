@@ -260,6 +260,7 @@ class TypieSearch extends LitElement {
                     tmp.splice(i, 0, "|TB|");
                     o.titleHighLight = tmp.join("");
                 }
+                // you can't get any performance here - it must be in that order with the strange TB/TBE
                 o.titleHighLight = this.escapeHtml(o.titleHighLight);
                 o.titleHighLight = o.titleHighLight.replace(/\|TB\|/g, "<b>");
                 o.titleHighLight = o.titleHighLight.replace(/\|TBE\|/g, "</b>");
@@ -509,7 +510,7 @@ class TypieSearch extends LitElement {
                                 </div>
                                 <div class="score">
                                     <span ?hidden="${!item.score || item.score == 0}">${item.score}</span>
-                                    <span ?hidden="${!item.score && item.c}"> + ${item.c}</span>
+                                    <span ?hidden="${!item.score || !item.c || item.c == 0}"> + ${item.c}</span>
                                 </div>
                             </li>`)}
                 </ul>
